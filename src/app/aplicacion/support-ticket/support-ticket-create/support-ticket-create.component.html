@@ -1,0 +1,25 @@
+<mat-card class="dialog-card">
+  <mat-card-header>
+    <mat-card-title>Crear ticket</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form #ticketForm="ngForm">
+
+      <div class="row">
+        <mat-form-field class="col-12">
+          <mat-label>Describinos tu problema</mat-label>
+          <textarea matInput type="text" [(ngModel)]="supportTicket.description" name="descripcion" #name="ngModel"
+            required rows="4" minlength="1"></textarea>
+          <mat-error *ngIf="name.invalid && (name.dirty || name.touched)">
+            La descripcion no puede estar vacía.
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-card-content>
+  <mat-card-actions class="action-buttons">
+    <button mat-stroked-button color="secondary" (click)="cancel()"> Cancelar</button>
+    <button mat-flat-button type="submit" color="primary" (click)="createSupportTicket($event)"
+      [disabled]="ticketForm.invalid || validaDescripcion()">Crear</button>
+  </mat-card-actions>
+</mat-card>

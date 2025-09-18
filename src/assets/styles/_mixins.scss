@@ -1,0 +1,19 @@
+// Breakpoints
+  $breakpoints: (
+    "xs": 0,
+    // mobile
+    "sm": 576px,
+    // tablets
+    "md": 768px,
+    // tablets más grandes / inicio desktop
+    "lg": 992px,
+    // desktop
+    "xl": 1200px // desktop grande
+  );
+
+  // Mixin para media queries
+  @mixin respond-to($breakpoint) {
+    @media (min-width: map-get($breakpoints, $breakpoint)) {
+      @content;
+    }
+  }

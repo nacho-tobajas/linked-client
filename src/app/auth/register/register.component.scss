@@ -1,0 +1,107 @@
+.register-card {
+    max-width: 400px;
+    margin: 2em auto;
+    padding: 2em;
+    border-radius: 8px;
+
+    .register-card-header {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1.5em;
+    }
+
+    .register-card-title {
+        color: #a65cfa;
+        font-size: 1.8em;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 0.4em;
+    }
+
+    .full-width {
+        width: 100%;
+        margin-bottom: 1.4em;
+    }
+
+    .register-card-actions {
+        display: flex;
+        justify-content: center;
+        padding-top: 1.5em;
+    }
+
+    .register-button {
+        width: 100%;
+        padding: 0.8em;
+    }
+
+    .already-account-text {
+        text-align: center;
+        margin-top: 1.5em;
+        font-size: 0.9em;
+
+        .login-link {
+            color: #a65cfa;
+            cursor: pointer;
+            text-decoration: underline;
+            margin-left: 0.3em;
+        }
+    }
+
+    .p2 {
+        margin-top: 1.3em;
+    }
+}
+
+@media (max-width: 600px) {
+    .register-card {
+        width: 100%;
+        border-radius: 12px;
+        padding: 1.5em;
+    }
+
+    .register-card-title {
+        font-size: 1.6em;
+    }
+}
+
+@media (min-width: 600px) and (max-width: 992px) {
+    .register-card {
+        max-width: 500px;
+    }
+}
+
+@media (min-width: 992px) {
+    .register-card {
+        max-width: 600px;
+    }
+}
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
+
+input[type="password"]::-webkit-contacts-auto-fill-button,
+input[type="password"]::-webkit-credentials-auto-fill-button {
+    display: none !important;
+}
+
+input[type="password"]::-webkit-textfield-decoration-container {
+    display: none;
+}
+
+.password-field {
+    margin-bottom: 1.5em;
+}
+
+@media (max-width: 768px) {
+    .password-field1 {
+        margin-bottom: 6vh;
+    }
+}
+
+mat-error {
+    min-height: 1.2em;
+    display: block;
+}

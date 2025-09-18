@@ -1,0 +1,96 @@
+.row {
+  margin-bottom: 1.3em;
+}
+
+
+.login-card {
+  max-width: 400px;
+  margin: 2em auto;
+  padding: 2em;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+
+  .login-card-header {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5em;
+  }
+
+  .login-card-title {
+    color: #a65cfa;
+    font-size: 1.8em;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+  }
+
+  .login-icon {
+    color: #a65cfa;
+  }
+
+  .full-width {
+    width: 100%;
+    margin-bottom: 1.2em;
+  }
+
+  .login-card-actions {
+    display: flex;
+    justify-content: center;
+    padding-top: 1.5em;
+  }
+
+  .login-button {
+    width: 100%;
+    padding: 0.8em;
+    font-weight: bold;
+  }
+
+  .link-register-forgotpassword {
+    text-align: left;
+    font-size: 1em;
+    margin-top: -0.8em;
+    margin-bottom: 1em;
+
+    a {
+      color: #8d3cea;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  }
+
+  ::ng-deep mat-error {
+    margin-top: -1.2em;
+  }
+}
+
+@media (max-width: 600px) {
+  .login-card {
+    width: 100%;
+    border-radius: 12px;
+    padding: 1.5em;
+  }
+
+  .login-card-title {
+    font-size: 1.6em;
+  }
+}
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
+input[type="password"]::-webkit-contacts-auto-fill-button,
+input[type="password"]::-webkit-credentials-auto-fill-button {
+  display: none !important;
+}
+
+input[type="password"]::-webkit-textfield-decoration-container {
+  display: none;
+}

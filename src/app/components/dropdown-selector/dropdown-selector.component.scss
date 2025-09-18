@@ -1,0 +1,39 @@
+/* Borde del mat-form-field */
+::ng-deep .mat-mdc-form-field {
+  --mdc-outlined-text-field-outline-color: #673ab7; /* color del borde */
+  --mdc-outlined-text-field-hover-outline-color: #7e57c2; /* hover */
+  --mdc-outlined-text-field-focused-outline-color: #9575cd; /* focus */
+  --mdc-outlined-text-field-label-text-color: var(--dropdown-label-txt-color);
+  --mdc-outlined-text-field-hover-label-text-color: #550f85;
+  --mdc-outlined-text-field-focus-label-text-color: #9575cd;
+}
+
+/* Texto y label */
+::ng-deep .mat-mdc-select-value,
+::ng-deep .mat-mdc-select-placeholder,
+::ng-deep .mat-mdc-form-field-label,
+::ng-deep.mat-mdc-select-arrow{
+  color: var(--dropdown-txt-arrow-inside-color)!important; /* texto */
+}
+
+/* Fondo del trigger */
+::ng-deep .mat-mdc-select-trigger {
+  border-radius: 4px;
+}
+
+/* Panel desplegable */
+::ng-deep .mat-mdc-select-panel {
+  background-color: #e9e9e9 !important;
+  color: #fff !important;
+}
+
+/* Opción hover */
+::ng-deep .mat-mdc-option:hover {
+  background-color: #c97bf7 !important;
+}
+
+/* Opción seleccionada */
+::ng-deep .mat-mdc-option.mdc-list-item--selected {
+  background-color: #c9c9c9 !important;
+  color: white !important;
+}

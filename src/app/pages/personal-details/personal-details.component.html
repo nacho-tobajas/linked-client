@@ -1,0 +1,95 @@
+<p *ngIf="errorMessage.length !== 0" class="text-danger">{{ errorMessage }}</p>
+
+<!-- Datos Personales -->
+
+<div class="card-container">
+  <mat-card *ngIf="(userLoginOn && !editMode) || !userLoginOn" class="personal-details-card">
+    <mat-card-header>
+      <!-- Foto de perfil proximamente integrar a bdd-->
+      <div mat-card-avatar class="profile-picture" [ngStyle]="{ 'background-image': 'url(https://picsum.photos/200)' }">
+      </div>
+      <!--[ngStyle]="{ 'background-image': 'url()' }"  ' + user?.profileImageUrl + '-->
+      <mat-card-title>{{ user?.realname }} {{ user?.surname }}</mat-card-title>
+      <mat-card-subtitle>Usuario: {{ user?.username }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-divider></mat-divider>
+
+    <mat-card-content>
+      <p><b>Fecha de Nacimiento:</b> {{ user?.birth_date | date }}</p>
+      <p><b>Fecha de creacion:</b> {{ user?.creationtimestamp | date }}</p>
+      <p><b>Rol/Tipo de usuario:</b> {{ userRol }}</p>
+    </mat-card-content>
+
+    <mat-divider></mat-divider>
+
+    <mat-card-actions *ngIf="userLoginOn && !editMode" class="action-buttons">
+      <div class="edit-button" color="primary" (click)="editMode = true">
+        <mat-icon>edit</mat-icon>
+        <span>Editar datos</span>
+      </div>
+
+      <div class="edit-button" color="primary" routerLink="/forgotPass">
+        <mat-icon>lock</mat-icon>
+        <span>Cambiar contraseña</span>
+      </div>
+    </mat-card-actions>
+  </mat-card>
+
+  <!-- Edición -->
+  <mat-card *ngIf="userLoginOn && editMode" class="edit-form-card">
+    <mat-card-title class="profile-title">Editar datos personales</mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="registerForm">
+
+        <div class="row">
+          <mat-form-field appearance="outline" class="col-12">
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="realname" />
+          </mat-form-field>
+        </div>
+
+        <div class="row">
+          <mat-form-field appearance="outline" class="col-12">
+            <mat-label>Apellido</mat-label>
+            <input matInput formControlName="surname" />
+          </mat-form-field>
+        </div>
+
+        <div class="row">
+          <mat-form-field appearance="outline" class="col-12">
+            <mat-label>E-Mail</mat-label>
+            <input matInput formControlName="email" />
+          </mat-form-field>
+        </div>
+
+        <div class="row">
+          <mat-form-field appearance="outline" class="col-6">
+            <mat-label>Nombre de usuario</mat-label>
+            <input matInput formControlName="username" />
+          </mat-form-field>
+
+          <!-- Fecha de nacimiento -->
+          <mat-form-field appearance="outline" class="col-6">
+            <mat-label>Nacimiento</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="birth_date" [max]="today"
+              (input)="onDateInput($event)" placeholder="dd/mm/yyyy" />
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+
+        </div>
+
+      </form>
+    </mat-card-content>
+    <mat-card-actions class="action-buttons">
+
+      <button mat-stroked-button color="warn" (click)="editMode = false">
+        Cancelar
+      </button>
+      <button mat-raised-button color="primary" (click)="savePersonalDetailsData()" [disabled]="registerForm.invalid">
+        Guardar
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

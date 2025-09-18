@@ -1,0 +1,36 @@
+<mat-card class="dialog-card">
+  <mat-card-header>
+    <mat-card-title>Actualizar roles</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <form #userForm="ngForm" class="form-grid">
+      <!-- Roles (múltiples) -->
+      <div class="row">
+        <mat-form-field appearance="outline" class="col-12">
+          <mat-label>Roles</mat-label>
+          <mat-select name="rolDescriptions" multiple required [(ngModel)]="userRoles">
+
+
+            <mat-option *ngFor="let rol of allRoles" [value]="rol.id">
+              {{ rol.description }}
+            </mat-option>
+
+          </mat-select>
+
+
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-card-content>
+
+
+  <mat-card-actions class="action-buttons">
+    <button mat-stroked-button color="warn" type="button" (click)="cancel()">
+      Cancelar
+    </button>
+    <button mat-raised-button color="primary" type="submit" (click)="onUpdateUser()" [disabled]="userForm.invalid">
+      Actualizar
+    </button>
+  </mat-card-actions>
+</mat-card>

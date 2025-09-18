@@ -1,0 +1,74 @@
+.reset-password-card {
+  max-width: 400px;
+  margin: 2em auto;
+  padding: 2em;
+  border-radius: 8px;
+
+
+  .reset-password-card-header {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5em;
+  }
+
+  .reset-password-card-title {
+    color: #a65cfa;
+    font-size: 1.8em;
+    font-weight: bold;
+  }
+
+  .full-width {
+    width: 100%;
+    margin-bottom: 1.2em;
+  }
+
+  .login-card-actions {
+    display: flex;
+    justify-content: center;
+    padding-top: 1.5em;
+  }
+
+  .login-button {
+    width: 100%;
+    padding: 0.8em;
+  }
+}
+
+
+@media (max-width: 600px) {
+  .reset-password-card {
+    width: 100%;
+    border-radius: 12px;
+    padding: 1.5em;
+  }
+
+  .reset-password-card-title {
+    font-size: 1.6em;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 992px) {
+  .reset-password-card {
+    max-width: 500px;
+  }
+}
+
+@media (min-width: 992px) {
+  .reset-password-card {
+    max-width: 600px;
+  }
+}
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
+input[type="password"]::-webkit-contacts-auto-fill-button,
+input[type="password"]::-webkit-credentials-auto-fill-button {
+  display: none !important;
+}
+
+input[type="password"]::-webkit-textfield-decoration-container {
+  display: none;
+}

@@ -1,0 +1,49 @@
+<mat-card class="detail-view-card">
+  <mat-card-header>
+    <div mat-card-avatar class="header-icon">
+      <mat-icon>support_agent</mat-icon>
+    </div>
+    <mat-card-title>Ticket N° {{ data.supportTicket.id }}</mat-card-title>
+    <mat-card-subtitle>Soporte Técnico</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="detail-grid">
+      <div class="detail-item">
+        <span class="label">Estado:</span>
+        <span>{{ statusLabel }}</span>
+      </div>
+
+      <div class="detail-item">
+        <span class="label">Descripción del problema:</span>
+        <span>{{ data.supportTicket.description }}</span>
+      </div>
+
+      <div class="detail-item">
+        <span class="label">Fecha de carga:</span>
+        <span>{{ data.supportTicket.creationtimestamp | date:'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+
+      <div class="detail-item">
+        <span class="label">Fecha de modificación:</span>
+        <span>
+          {{ data.supportTicket.modificationtimestamp ? (data.supportTicket.modificationtimestamp | date:'dd/MM/yyyy HH:mm') : '—' }}
+        </span>
+      </div>
+
+      <div class="detail-item">
+        <span class="label">Cargado por:</span>
+        <span>{{ data.supportTicket.creationuser }}</span>
+      </div>
+
+      <div class="detail-item">
+        <span class="label">Modificado por:</span>
+        <span>{{ data.supportTicket.modificationuser || '—' }}</span>
+      </div>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    <button mat-stroked-button color="primary" (click)="onClose()">Cerrar</button>
+  </mat-card-actions>
+</mat-card>

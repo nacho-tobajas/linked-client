@@ -1,0 +1,11 @@
+<app-header></app-header>
+
+<div class="main-container">
+  <app-sweitemmenu *ngIf="userLoginOn"></app-sweitemmenu> <!-- Moverlo aquí -->
+  <div *ngIf="!userLoginOn" class="content-container">
+    <app-loading-overlay *ngIf="isLoading$ | async"></app-loading-overlay>
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+<app-footer></app-footer>
