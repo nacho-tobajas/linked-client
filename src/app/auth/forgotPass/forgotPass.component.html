@@ -1,0 +1,29 @@
+<form [formGroup]="forgotPassForm" (ngSubmit)="forgotPass()">
+  <mat-card class="forgot-password-card">
+    <mat-card-header class="forgot-password-card-header">
+      <mat-card-title class="forgot-password-card-title">RECUPERAR CONTRASEÑA</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Correo Electrónico</mat-label>
+        <input
+          matInput
+          formControlName="email"
+          placeholder="Ingrese su correo electrónico"
+          required
+        />
+        <mat-error *ngIf="forgotPassForm.get('email')?.invalid && (forgotPassForm.get('email')?.dirty || forgotPassForm.get('email')?.touched)">
+          <div *ngIf="forgotPassForm.get('email')?.hasError('required')">El correo electrónico es requerido.</div>
+          <div *ngIf="forgotPassForm.get('email')?.hasError('email')">Ingrese un correo electrónico válido.</div>
+        </mat-error>
+      </mat-form-field>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-raised-button color="primary" type="submit" class="forgot-password-button">
+        Enviar enlace de recuperación
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>

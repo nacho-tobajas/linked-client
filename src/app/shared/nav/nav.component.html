@@ -1,0 +1,74 @@
+<!-- Toolbar -->
+<div role="banner">
+  <nav class="nav-main-container">
+    <div class="toolbar-container">
+
+      <header class="header toolbar">
+        <div class="header-content">
+          <img src="assets/images/logo.png" alt="Linked Logo" class="logo" routerLink="/inicio" />
+        </div>
+      </header>
+
+      <div class="center-section">
+        <div class="col-12 col-lg-5 col-md-8 col-sm-8">
+          <div class="search-bar">
+            <!-- Botón buscar -->
+            <button (click)="onSearch()">
+              <mat-icon class="search-icon">search</mat-icon>
+            </button>
+
+            <!-- Input -->
+            <input type="text" [(ngModel)]="searchTerm" (keydown.enter)="onSearch()" />
+
+            <!-- Botón limpiar (se muestra solo si hay texto) -->
+            <button *ngIf="searchTerm" (click)="clearSearch()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="right-section">
+        <div *ngIf="!userLoginOn" class="user-actions">
+          <button mat-icon-button [matMenuTriggerFor]="menu" style="color: white;">
+            <mat-icon>person</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="login()" routerLink="/iniciar-sesion">
+              <span>Iniciar Sesión</span>
+            </button>
+            <button mat-menu-item (click)="register()" routerLink="/register">
+              <span>Registrarse</span>
+            </button>
+          </mat-menu>
+
+          <button mat-icon-button (click)="openHelp()" aria-label="Ayuda" style="color: white;">
+            <mat-icon>help_outline</mat-icon>
+          </button>
+          <app-theme-toggle-button></app-theme-toggle-button>
+
+        </div>
+
+        <div *ngIf="userLoginOn" class="user-actions">
+          <button mat-icon-button [matMenuTriggerFor]="menu" style="color: white;">
+            <mat-icon class="header-item-button">person</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item routerLink="/info">
+              <span>Mi Perfil</span>
+            </button>
+            <button mat-menu-item (click)="logout()">
+              <span>Cerrar Sesión</span>
+            </button>
+          </mat-menu>
+
+          <button mat-icon-button (click)="carrito()" aria-label="Carrito de compras" style="color: white;">
+            <mat-icon class="header-item-button">shopping_cart</mat-icon>
+          </button>
+          <app-theme-toggle-button></app-theme-toggle-button>
+        </div>
+      </div>
+
+    </div>
+  </nav>
+</div>

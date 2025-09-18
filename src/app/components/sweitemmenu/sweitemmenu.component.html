@@ -1,0 +1,49 @@
+<mat-drawer-container class="sidenav-container" [hasBackdrop]="true">
+    <mat-drawer #drawer class="sidenav" mode="over">
+        <div class="sidenav-header">
+            <button mat-icon-button (click)="drawer.toggle()" class="sidenav-toggle-button">
+                <mat-icon>chevron_left</mat-icon>
+            </button>
+        </div>
+
+        <mat-nav-list>
+            <mat-list-item *ngFor="let item of menuItems" [ngStyle]="{ 'height': getItemHeight(item) }">
+                <div class="menu-item-container">
+                    <button mat-button [disabled]="item.endpoint == null" (click)="navigate(item.endpoint)"
+                        class="menu-button">
+                        {{ item.title }}
+                    </button>
+
+                    <button *ngIf="item.subMenus?.length" mat-icon-button (click)="toggleSubMenu(item)"
+                        class="expand-button">
+                        <mat-icon>{{ item.expanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+                    </button>
+                </div>
+
+                <mat-nav-list *ngIf="item.expanded" class="submenu-list">
+                    <mat-list-item *ngFor="let subItem of item.subMenus" class="submenu-item">
+                        <button mat-button (click)="navigate(subItem.endpoint)">
+                            {{ subItem.title }}
+                        </button>
+                        <mat-list-item *ngFor="let subItemHijo of subItem.subMenus" class="submenu-item">
+                            <button mat-button (click)="navigate(subItemHijo.endpoint)">
+                                {{ subItemHijo.title }}
+                            </button>
+                        </mat-list-item>
+
+                    </mat-list-item>
+                </mat-nav-list>
+            </mat-list-item>
+        </mat-nav-list>
+    </mat-drawer>
+
+    <mat-drawer-content>
+        <div class="navbar-container">
+            <button mat-icon-button (click)="drawer.toggle()" *ngIf="!drawer.opened" class="menu-open-button">
+                <mat-icon>menu</mat-icon>
+            </button>
+        </div>
+
+        <router-outlet></router-outlet>
+    </mat-drawer-content>
+</mat-drawer-container>

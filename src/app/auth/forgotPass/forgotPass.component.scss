@@ -1,0 +1,63 @@
+::ng-deep mat-error {
+  margin-top: -1.2em;
+}
+
+.forgot-password-card {
+  max-width: 400px;
+  margin: 2em auto;
+  padding: 2em;
+  border-radius: 8px;
+
+  .forgot-password-card-header {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5em;
+  }
+
+  .forgot-password-card-title {
+    color: #a65cfa;
+    font-size: 1.8em;
+    font-weight: bold;
+  }
+
+  .full-width {
+    width: 100%;
+    margin-bottom: 1.2em;
+  }
+
+  .login-card-actions {
+    display: flex;
+    justify-content: center;
+    padding-top: 1.5em;
+  }
+
+  .login-button {
+    width: 100%;
+    padding: 0.8em;
+  }
+}
+
+
+@media (max-width: 600px) {
+  .forgot-password-card {
+    width: 100%;
+    border-radius: 12px;
+    padding: 1.5em;
+  }
+
+  .forgot-password-card-title {
+    font-size: 1.6em;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 992px) {
+  .forgot-password-card {
+    max-width: 500px;
+  }
+}
+
+@media (min-width: 992px) {
+  .forgot-password-card {
+    max-width: 600px;
+  }
+}

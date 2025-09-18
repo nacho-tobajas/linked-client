@@ -1,0 +1,158 @@
+@import "src/assets/styles/_variables.scss";
+
+
+.nav-main-container{
+  background-color: $nav-bar-background-color; 
+  padding: 10px 20px;
+}
+.toolbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  gap: 10px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  img.logo {
+    width: 75px;
+    height: 75px;
+    cursor: pointer;
+  }
+}
+
+.left-section,
+.right-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--white-color);
+  flex-shrink: 0;
+}
+
+.app-name {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.center-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.search-bar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-shrink: 1;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+  overflow: hidden;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+
+  input {
+    flex: 1;
+    padding: 6px 8px;
+    border: none;
+    background: transparent;
+    color: var(--input-text-color);
+    outline: none;
+  }
+
+  .divider {
+    width: 1px;
+    height: 60%;
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+
+  button {
+    background: transparent;
+    border: none;
+    padding: 6px 8px;
+    color: var(--button-text-color);
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+}
+
+@media (max-width: 1195px) and (min-width: 769px) {
+  .center-section {
+    justify-content: flex; // Esto parece incompleto, quizás querías "flex-end"
+  }
+}
+
+@media (max-width: 768px) {
+  .toolbar-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .header {
+    order: 1;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .header-content {
+    flex-direction: row;
+    text-align: center;
+
+    img.logo {
+      width: 60px;
+      height: 60px;
+    }
+  }
+
+  .center-section,
+  .right-section {
+    width: 100%;
+  }
+
+  .center-section {
+    order: 3;
+  }
+
+  .right-section {
+    order: 2;
+  }
+
+  .user-actions {
+    justify-content: flex-end;
+  }
+
+  .search-bar {
+    height: 70%;
+  }
+
+  .search-icon {
+    font-size: 20px;
+    padding-top: 2px;
+    padding-left: 5px;
+  }
+
+  .header-item-button {
+    font-size: 20px;
+    margin: 0 0 0 0;
+  }
+
+}
