@@ -12,10 +12,21 @@
   <div class="days">
     <ng-container *ngFor="let week of weeks">
       <ng-container *ngFor="let day of week">
-        <div class="day" [class.empty]="!day">
+        <div class="day" [class.other-month]="day.getMonth !== currentDate.getMonth"
+          [class.selected]="isSelected(day)"
+          (click)="selectDate(day)">
           {{ day ? day.getDate() : '' }}
         </div>
       </ng-container>
     </ng-container>
+  </div>
+
+  <div class="confirm-section" *ngIf="selectedDate">
+    <p>Fecha seleccionada: <strong>{{selectedDate | date:'fullDate'}}</strong></p>
+    <button class="btn-confirmar" (click)="confirmDate()">Confirmar</button>
+  </div>
+
+  <div *ngIf="confirmedDate" class="confirmed">
+    Has confirmado el día: <strong>{{confirmedDate | date:'fullDate'}}</strong>
   </div>
 </div>

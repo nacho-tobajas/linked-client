@@ -10,6 +10,8 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 export class CalendarioComponent {
   currentDate: Date = new Date();
   weeks: Date[][] = [];
+  selectedDate: Date | null = null;
+  confirmedDate: Date | null = null; //Confirmo la fecha
 
   ngOnInit() {
     this.generateCalendar(this.currentDate);
@@ -45,4 +47,19 @@ export class CalendarioComponent {
     this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 1);
     this.generateCalendar(this.currentDate);
   }
+
+  selectDate(day: Date){
+    this.selectedDate = day;
+  }
+  isSelected(day: Date){
+    return this.selectedDate?.toDateString() === day.toDateString();
+  }
+
+  confirmDate(){
+    if(this.selectedDate){
+      this.confirmedDate = this.selectedDate;
+      console.log(this.confirmedDate); //Para ver la fecha
+    }
+  }
+
 }
