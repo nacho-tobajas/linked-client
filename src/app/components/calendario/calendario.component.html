@@ -1,0 +1,20 @@
+<div class="calendario">
+  <div class="header">
+    <button (click)="prevMonth()">&lt;</button>
+    <h2>{{ currentDate | date: 'MMMM yyyy' }}</h2>
+    <button (click)="nextMonth()">&gt;</button>
+  </div>
+
+  <div class="weekdays">
+    <div *ngFor = "let day of ['Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab', 'Dom']">{{day}}</div>
+  </div>
+
+    <div class="week">
+        <div class="week" *ngFor="let week of weeks">
+            <div class="day" *ngFor="let day of week">
+                {{day.getDate()}}
+            </div>
+        </div>
+    </div>
+
+</div>
