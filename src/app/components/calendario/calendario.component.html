@@ -1,20 +1,21 @@
 <div class="calendario">
   <div class="header">
-    <button (click)="prevMonth()">&lt;</button>
-    <h2>{{ currentDate | date: 'MMMM yyyy' }}</h2>
-    <button (click)="nextMonth()">&gt;</button>
+    <button (click)="prevMonth()">⬅</button>
+    <h2>{{ currentDate | date:'MMMM yyyy' }}</h2>
+    <button (click)="nextMonth()">➡</button>
   </div>
 
   <div class="weekdays">
-    <div *ngFor = "let day of ['Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab', 'Dom']">{{day}}</div>
+    <div *ngFor="let d of ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom']">{{d}}</div>
   </div>
 
-    <div class="week">
-        <div class="week" *ngFor="let week of weeks">
-            <div class="day" *ngFor="let day of week">
-                {{day.getDate()}}
-            </div>
+  <div class="days">
+    <ng-container *ngFor="let week of weeks">
+      <ng-container *ngFor="let day of week">
+        <div class="day" [class.empty]="!day">
+          {{ day ? day.getDate() : '' }}
         </div>
-    </div>
-
+      </ng-container>
+    </ng-container>
+  </div>
 </div>
