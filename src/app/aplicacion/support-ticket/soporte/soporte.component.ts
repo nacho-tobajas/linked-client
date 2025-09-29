@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { SupportTicketCreateComponent } from 'src/app/aplicacion/support-ticket/support-ticket-create/support-ticket-create.component';
 import { LoginService } from 'src/app/services/auth/login.service';
-//comentario prueba dos
 @Component({
   selector: 'app-soporte',
   templateUrl: './soporte.component.html',
