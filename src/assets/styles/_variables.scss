@@ -1,133 +1,132 @@
 //colores principales
-$main-color: #673ab7;
-$main-header-color: #48185c;
-$side-nav-primary-color: #48185c;
-$section-title-main-color: #6c3483;
-$gral-box-shadow:#2e2e2e36;
-$nav-bar-background-color: #371148;
+$main-color: #393e31;
+$main-header-color: #393e31;
+$side-nav-primary-color: #414e3b;
+$section-title-main-color: #5d6a58;
+$gral-box-shadow: #2e2e2e36;
+$nav-bar-background-color: #393e31;
 
 :root,
 .light-theme {
   //body
-  --body-background-color:#ffffff;
+  --body-background-color: #ffffff;
   --bs-body-bg: #f5f5f5;
-  --title-text-color: #f5f5f5;
+  --title-text-color: #393e31;
 
   //menu
-  --menu-text-color: whitesmoke;
-  --menu-arrow-color: white;
-  --menu-open-button: #48185c;
+  --menu-text-color: #f5f5f5;
+  --menu-arrow-color: #ccd0d0;
+  --menu-open-button: #393e31;
 
-  //unclisified colors
+  //unclassified colors
   --light-gray-background-color: #f5f5f5;
   --white-color: #ffffff;
-  --text-color: #f8f8f8;
-  --button-text-color:#f5f5f5;
-  --input-text-color:#f5f5f5;
-  --line-divider: #e0e0e0;
+  --text-color: #414e3b;
+  --button-text-color: #f5f5f5;
+  --input-text-color: #f5f5f5;
+  --line-divider: #ccd0d0;
 
   //dropdown component
-  --dropdown-label-txt-color: #673ab7;
-  --dropdown-txt-arrow-inside-color: #535353;
+  --dropdown-label-txt-color: #393e31;
+  --dropdown-txt-arrow-inside-color: #7a7e73;
 
   //Titulos para cada listado gestionar sistema
-  --title-crud-h3: Black;
+  --title-crud-h3: #1c1c1c;
 
   //carousel
-  --carousel-dot-color: #371148;
-  --carousel-arrow-color: #371148;
+  --carousel-dot-color: #5d6a58;
+  --carousel-arrow-color: #393e31;
 
   //game-item
   --game-card-bg-color: #eeeeee;
-  --game-card-border-color:#dadada;
-  --game-card-title-color: #2c2c2c;
-  --game-card-subtitle-color: #2c2c2c;
-  --game-card-price-txt-color:#920909;
+  --game-card-border-color: #dadada;
+  --game-card-title-color: #1c1c1c;
+  --game-card-subtitle-color: #515046;
+  --game-card-price-txt-color: #b0a881;
 
-  --game-item-border-bottom:  1px black solid;
-  --game-item-border-bottom-hover:  2px rgb(82, 10, 87) solid;
-  --game-item-bg-color:#ececec;
-  --game-list-item-titulo: #222222;
-  --game-list-item-price: #505050;
+  --game-item-border-bottom: 1px #393e31 solid;
+  --game-item-border-bottom-hover: 2px #5d6a58 solid;
+  --game-item-bg-color: #f5f5f5;
+  --game-list-item-titulo: #393e31;
+  --game-list-item-price: #b0a881;
 
   //biblioteca de juegos
-  --titulo-bilbioteca-juegos: #444444;
-  --sub-titulo-bilbioteca-juegos: #777777;
+  --titulo-bilbioteca-juegos: #393e31;
+  --sub-titulo-bilbioteca-juegos: #7a7e73;
 
   //whishlist
-  --titulo-whish-list-section: #444444;
+  --titulo-whish-list-section: #393e31;
 
   //cart
-  --cart-title-h2-color: #1d1c1c;
-  --cart-total-price-color:#1b1a1a;
-  --cart-card-bg-color: whitesmoke;
-  --cart-card-title-txt-color:  #1d1c1c;
-  --cart-unfilled-txt-msg: #303030;
-  --cart-unit-price-txt-color: #303030; 
+  --cart-title-h2-color: #1c1c1c;
+  --cart-total-price-color: #393e31;
+  --cart-card-bg-color: #f5f5f5;
+  --cart-card-title-txt-color: #414e3b;
+  --cart-unfilled-txt-msg: #7a7e73;
+  --cart-unit-price-txt-color: #393e31;
 
   //footer
-  --footer-text-color: whitesmoke;
+  --footer-text-color: #ccd0d0;
 }
+
 .dark-theme {
   //body
-  --bs-body-bg:#181717;
-  --body-background-color:#1e1e1e;
-  --title-text-color: #e7db28;
+  --bs-body-bg: #1c1c1c;
+  --body-background-color: #1e1e1e;
+  --title-text-color: #b0a881;
 
   //menu
-  --menu-text-color: whitesmoke;
-  --menu-arrow-color: white;
-  --menu-open-button: white;
+  --menu-text-color: #ccd0d0;
+  --menu-arrow-color: #ccd0d0;
+  --menu-open-button: #393e31;
 
-  //unclisified colors
+  //unclassified colors
   --light-gray-background-color: #1e1e1e;
   --white-color: #121212;
-  --text-color:  #e7db28;
-  --button-text-color: #e7db28;
-  --input-text-color: #e7db28;
-  --line-divider: #696969;
+  --text-color: #b0a881;
+  --button-text-color: #b0a881;
+  --input-text-color: #b0a881;
+  --line-divider: #515046;
 
   //dropdown component
-  --dropdown-label-txt-color: whitesmoke;
-    --dropdown-txt-arrow-inside-color: whitesmoke;
+  --dropdown-label-txt-color: #ccd0d0;
+  --dropdown-txt-arrow-inside-color: #b0a881;
 
   //Titulos para cada listado gestionar sistema
-  --title-crud-h3: white;
+  --title-crud-h3: #f5f5f5;
 
   //carousel
-  --carousel-dot-color: #c7c2ca;
-  --carousel-arrow-color: #b19415;
-  
+  --carousel-dot-color: #555568;
+  --carousel-arrow-color: #b0a881;
 
   //game-item
-  --game-card-bg-color: #121313;
-  --game-card-border-color:#313030;
-  --game-card-title-color: #dadada;
-  --game-card-subtitle-color: #dadada;
-  --game-card-price-txt-color:#cabe10;
-  
-  --game-item-border-bottom:  1.3px #e53ae5 solid;
-  --game-item-border-bottom-hover:  2px rgb(82, 10, 87) solid;
-  --game-item-bg-color:#353435;
-  --game-list-item-titulo: #ebebeb;
-  --game-list-item-price: rgb(175, 164, 11);
+  --game-card-bg-color: #121212;
+  --game-card-border-color: #3e4046;
+  --game-card-title-color: #ccd0d0;
+  --game-card-subtitle-color: #7a7e73;
+  --game-card-price-txt-color: #b0a881;
+
+  --game-item-border-bottom: 1px #b0a881 solid;
+  --game-item-border-bottom-hover: 2px #5d6a58 solid;
+  --game-item-bg-color: #393e31;
+  --game-list-item-titulo: #f5f5f5;
+  --game-list-item-price: #b0a881;
 
   //biblioteca de juegos
-  --titulo-bilbioteca-juegos:  #e9e9e9;
-  --sub-titulo-bilbioteca-juegos: #b8b8b8;
+  --titulo-bilbioteca-juegos: #ccd0d0;
+  --sub-titulo-bilbioteca-juegos: #7a7e73;
 
   //whishlist
-  --titulo-whish-list-section:  #e9e9e9;
+  --titulo-whish-list-section: #ccd0d0;
 
-   //cart
-  --cart-title-h2-color: whitesmoke;
-  --cart-total-price-color:whitesmoke;
-  --cart-card-bg-color: #303030;
-  --cart-card-title-txt-color: whitesmoke;
-  --cart-unfilled-txt-msg: whitesmoke;
-  --cart-unit-price-txt-color: whitesmoke; 
+  //cart
+  --cart-title-h2-color: #ccd0d0;
+  --cart-total-price-color: #b0a881;
+  --cart-card-bg-color: #2a2a2a;
+  --cart-card-title-txt-color: #ccd0d0;
+  --cart-unfilled-txt-msg: #7a7e73;
+  --cart-unit-price-txt-color: #b0a881;
 
   //footer
-  --footer-text-color: whitesmoke;
-  
+  --footer-text-color: #7a7e73;
 }
