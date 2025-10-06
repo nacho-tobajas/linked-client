@@ -2,7 +2,7 @@ import { Component, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
-import { Prereserva } from "./prereserva.model";
+import { Prereserva } from "../../aplicacion/prereserva/prereserva.model";
 
 @Injectable({
     providedIn: 'root',

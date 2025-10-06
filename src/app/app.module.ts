@@ -68,6 +68,8 @@ import { registerLocaleData } from '@angular/common';
 import localeEsAr from '@angular/common/locales/es-AR';
 import { HttpErrorInterceptor } from './services/auth/http-error.interceptor';
 import { CUSTOM_DATE_FORMATS, CustomDateAdapter } from './components/custom-date-adapter/custom-date-adapter.js';
+import { CalendarioComponent } from "./components/calendario/calendario.component";
+import { PrereservaComponent } from './aplicacion/prereserva/prereserva.component';
 
 
 registerLocaleData(localeEsAr); // 👈 Esto registra el locale
@@ -99,40 +101,40 @@ registerLocaleData(localeEsAr); // 👈 Esto registra el locale
         ThemeToggleComponent,
         DropdownSelectComponent,
         ResetPassComponent,
-        ForgotPassComponent
+        ForgotPassComponent,
+        PrereservaComponent
     ],
     bootstrap: [AppComponent], imports: [CommonModule,
-        BrowserModule,
-        FormsModule,
-        ReactiveFormsModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatDialogModule,
-        MatToolbarModule,
-        MatTableModule,
-        MatPaginatorModule,
-        MatSortModule,
-        MatIconModule,
-        MatCardModule,
-        MatCardActions,
-        MatDatepickerModule,
-        MatNativeDateModule,
-        MatSelectModule,
-        MatExpansionModule,
-        MatDividerModule,
-        MatSnackBarModule,
-        MatListModule,
-        MatSidenavModule,
-        MatMenuModule,
-        MatProgressSpinnerModule,
-        CarouselModule,
-        MatChipsModule,
-        MatTooltipModule,
-        MatSliderModule
-    ]
+    BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatToolbarModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatIconModule,
+    MatCardModule,
+    MatCardActions,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSelectModule,
+    MatExpansionModule,
+    MatDividerModule,
+    MatSnackBarModule,
+    MatListModule,
+    MatSidenavModule,
+    MatMenuModule,
+    MatProgressSpinnerModule,
+    CarouselModule,
+    MatChipsModule,
+    MatTooltipModule,
+    MatSliderModule, CalendarioComponent]
     , providers: [
         RegisterService,
         RegisterService,

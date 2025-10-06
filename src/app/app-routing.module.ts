@@ -20,6 +20,7 @@ import { ForgotPassComponent } from './auth/forgotPass/forgotPass.component';
 import { ResetPassComponent } from './auth/resetPass/resetPass.component';
 import { UsuariosComponent } from './aplicacion/usuarios/usuarios.component';
 import { adminModGuard } from './guards/admin-mod.guard';
+import { PrereservaComponent } from './aplicacion/prereserva/prereserva.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/inicio', pathMatch: 'full' },
@@ -32,6 +33,7 @@ const routes: Routes = [
   { path: 'forgotPass', component: ForgotPassComponent },
   { path: 'reset-password', component: ResetPassComponent },
   { path: 'info', component: PersonalDetailsComponent },
+  { path: 'prereserva', component: PrereservaComponent },
   { path: 'support-ticket', component: SupportTicketComponent, canActivate: [adminModGuard] },
   { path: '**', redirectTo: '/inicio', pathMatch: 'full' }, //redireccionar a inicio si no hay match
 ];
