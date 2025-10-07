@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, output } from '@angular/core';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 
 @Component({
@@ -7,7 +7,8 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
   templateUrl: './calendario.component.html',
   styleUrl: './calendario.component.scss'
 })
-export class CalendarioComponent {
+export class CalendarioComponent implements OnInit{
+  @Output() dateSelected = new EventEmitter<Date>();
   currentDate: Date = new Date();
   weeks: Date[][] = [];
   selectedDate: Date | null = null;
@@ -48,8 +49,11 @@ export class CalendarioComponent {
     this.generateCalendar(this.currentDate);
   }
 
-  selectDate(day: Date){
-    this.selectedDate = day;
+  selectDate(day: Date | null): void {
+    if (day) {
+      this.selectedDate = day;
+      this.dateSelected.emit(day);
+    }
   }
   isSelected(day: Date){
     return this.selectedDate?.toDateString() === day.toDateString();
