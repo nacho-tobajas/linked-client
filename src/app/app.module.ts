@@ -68,6 +68,9 @@ import { registerLocaleData } from '@angular/common';
 import localeEsAr from '@angular/common/locales/es-AR';
 import { HttpErrorInterceptor } from './services/auth/http-error.interceptor';
 import { CUSTOM_DATE_FORMATS, CustomDateAdapter } from './components/custom-date-adapter/custom-date-adapter.js';
+import { CaptchaComponent } from './components/captcha/captcha.component';
+import { RECAPTCHA_V3_SITE_KEY, RecaptchaFormsModule, RecaptchaModule, RecaptchaV3Module } from 'ng-recaptcha-angular19';
+import { NgxCaptchaModule } from 'ngx-captcha';
 
 
 registerLocaleData(localeEsAr); // 👈 Esto registra el locale
@@ -99,46 +102,51 @@ registerLocaleData(localeEsAr); // 👈 Esto registra el locale
         ThemeToggleComponent,
         DropdownSelectComponent,
         ResetPassComponent,
-        ForgotPassComponent
+        ForgotPassComponent,
+        CaptchaComponent
     ],
     bootstrap: [AppComponent], imports: [CommonModule,
-        BrowserModule,
-        FormsModule,
-        ReactiveFormsModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatDialogModule,
-        MatToolbarModule,
-        MatTableModule,
-        MatPaginatorModule,
-        MatSortModule,
-        MatIconModule,
-        MatCardModule,
-        MatCardActions,
-        MatDatepickerModule,
-        MatNativeDateModule,
-        MatSelectModule,
-        MatExpansionModule,
-        MatDividerModule,
-        MatSnackBarModule,
-        MatListModule,
-        MatSidenavModule,
-        MatMenuModule,
-        MatProgressSpinnerModule,
-        CarouselModule,
-        MatChipsModule,
-        MatTooltipModule,
-        MatSliderModule
-    ]
+    BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatToolbarModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatIconModule,
+    MatCardModule,
+    MatCardActions,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSelectModule,
+    MatExpansionModule,
+    MatDividerModule,
+    MatSnackBarModule,
+    MatListModule,
+    MatSidenavModule,
+    MatMenuModule,
+    MatProgressSpinnerModule,
+    CarouselModule,
+    MatChipsModule,
+    MatTooltipModule,
+    MatSliderModule,
+    RecaptchaModule,
+    RecaptchaFormsModule,
+    RecaptchaV3Module,
+    NgxCaptchaModule]
     , providers: [
         RegisterService,
         RegisterService,
         SweItemMenuService,
         { provide: DateAdapter, useClass: CustomDateAdapter },
         { provide: MAT_DATE_FORMATS, useValue: CUSTOM_DATE_FORMATS },
+        { provide: RECAPTCHA_V3_SITE_KEY, useValue: '6Lf2POArAAAAAOrcTMk-1KkTk4001YPTDufjUHKL' },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: JwtInterceptorService,

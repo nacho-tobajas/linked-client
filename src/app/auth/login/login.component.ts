@@ -18,6 +18,7 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   loginError: string = '';
   hide = true; 
+  isCaptchaValid = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -48,10 +49,11 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    if (this.loginForm.valid) {
+    if (this.loginForm.valid && this.captchaToken) {
       const loginRequest: LoginRequest = {
         username: this.username?.value,
-        password: this.encryptedPassword
+        password: this.encryptedPassword,
+        recaptchaToken: this.captchaToken
       };
 
       this.loginService.login(loginRequest).subscribe({
@@ -63,6 +65,8 @@ export class LoginComponent implements OnInit {
         complete: () => {
           this.router.navigateByUrl('/inicio');
           this.loginForm.reset();
+          this.captchaToken = null; 
+          this.captchaValid = false;
         },
       });
     } else {
@@ -79,5 +83,13 @@ export class LoginComponent implements OnInit {
     this.dialog.open(ErrorDialogComponent, {
       data: { message: errorMessage, type: 'error' },
     });
+  }
+
+  captchaValid = false;
+  captchaToken: string | null = null;
+
+  onCaptchaResolved(token: string | null) {
+  this.captchaToken = token;
+  this.captchaValid = !!token; // true si el token existe
   }
 }
