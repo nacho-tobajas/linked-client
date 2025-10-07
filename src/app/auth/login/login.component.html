@@ -53,8 +53,13 @@
       </div>
     </mat-card-content>
 
+    <re-captcha
+      siteKey="6LfpC-ErAAAAAElCUyzRD1hS7p0VBHyK9RLOHV32"
+      (resolved)="onCaptchaResolved($event)">
+    </re-captcha>
+
     <mat-card-actions>
-      <button mat-raised-button color="primary" type="submit" class="login-button">
+      <button mat-raised-button color="primary" type="submit" class="login-button" [disabled]="!captchaValid || loginForm.invalid">
         Iniciar Sesión
       </button>
     </mat-card-actions>

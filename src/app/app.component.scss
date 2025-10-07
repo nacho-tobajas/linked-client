@@ -25,11 +25,14 @@
   align-items: center;
 }
 
+.prueba {
+  margin: 1%;
+}
+
 .content-container {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 16px;
 }
 
 h1,
