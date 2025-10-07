@@ -70,6 +70,7 @@ import { HttpErrorInterceptor } from './services/auth/http-error.interceptor';
 import { CUSTOM_DATE_FORMATS, CustomDateAdapter } from './components/custom-date-adapter/custom-date-adapter.js';
 import { CalendarioComponent } from "./components/calendario/calendario.component";
 import { PrereservaComponent } from './aplicacion/prereserva/prereserva.component';
+import { ConfirmarReservaComponent } from './components/confirmar-reserva/confirmar-reserva.component';
 
 
 registerLocaleData(localeEsAr); // 👈 Esto registra el locale
@@ -102,7 +103,9 @@ registerLocaleData(localeEsAr); // 👈 Esto registra el locale
         DropdownSelectComponent,
         ResetPassComponent,
         ForgotPassComponent,
-        PrereservaComponent
+        PrereservaComponent,
+        ConfirmarReservaComponent
+        
     ],
     bootstrap: [AppComponent], imports: [CommonModule,
     BrowserModule,
@@ -134,7 +137,10 @@ registerLocaleData(localeEsAr); // 👈 Esto registra el locale
     CarouselModule,
     MatChipsModule,
     MatTooltipModule,
-    MatSliderModule, CalendarioComponent]
+    MatSliderModule,
+    CalendarioComponent,
+    
+]
     , providers: [
         RegisterService,
         RegisterService,
