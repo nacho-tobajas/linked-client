@@ -142,10 +142,7 @@ registerLocaleData(localeEsAr); // 👈 Esto registra el locale
         MatChipsModule,
         MatTooltipModule,
         MatSliderModule,
-       
-    CalendarioComponent,
-    
-,
+        CalendarioComponent,
         MatSliderModule,
         RecaptchaModule,
         RecaptchaFormsModule,

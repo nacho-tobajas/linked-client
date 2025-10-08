@@ -16,22 +16,24 @@ import { Subscription } from 'rxjs';
   standalone: false
 })
 export class PersonalDetailsComponent implements OnInit {
-  errorMessage: String = '';
+  errorMessage: string = '';
   userId: number | null = null;
   user?: User;
   userLoginOn: boolean = false;
   editMode: boolean = false;
   userRol: string | null = null;
   today: Date = new Date();
+  selectedFile: File | null = null;
   private subscriptions: Subscription = new Subscription();
 
   registerForm = this.formBuilder.group({
-    id: this.formBuilder.control<string | null>(null),
-    surname: this.formBuilder.control<string | null>(null,),
-    realname: this.formBuilder.control<string | null>(null,),
+    id: this.formBuilder.control<number | null>(null),
+    surname: this.formBuilder.control<string | null>(null),
+    realname: this.formBuilder.control<string | null>(null),
     username: this.formBuilder.control<string | null>(null, Validators.required),
     email: this.formBuilder.control<string | null>(null, Validators.required),
-    birth_date: this.formBuilder.control<Date | null>(null, Validators.required)
+    birth_date: this.formBuilder.control<Date | null>(null, Validators.required),
+    profileImage: this.formBuilder.control<File | null>(null) // campo para subir foto
   });
 
   constructor(
@@ -50,34 +52,40 @@ export class PersonalDetailsComponent implements OnInit {
       }
     });
 
-    // Suscribirse al estado de userLoginOn
+    // Suscribirse al estado de login
     this.loginService.userLoginOn.subscribe({
       next: (userLoginOn) => {
         this.userLoginOn = userLoginOn;
         if (!this.userLoginOn) {
-          this.router.navigate(['/inicio']); // Redirige a la página de inicio si no está logueado
+          this.router.navigate(['/inicio']);
         }
       },
     });
   }
 
+  /** Manejo del archivo seleccionado */
+  onFileSelected(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.registerForm.patchValue({ profileImage: file });
+    }
+  }
+
+  /** Carga los datos del usuario */
   loadUserData(userId: number) {
-    // Reemplaza environment.userId con this.userId
     this.userService.getUser(userId).subscribe({
       next: (userData) => {
         this.user = userData;
 
-        this.registerForm.controls.id.setValue(
-          userData.idUser.toString() ?? ''
-        );
-
-        this.registerForm.controls.realname.setValue(this.user.realname ?? '');
-        this.registerForm.controls.surname.setValue(this.user.surname ?? '');
+        this.registerForm.controls.id.setValue(userData.idUser ?? null);
+        this.registerForm.controls.realname.setValue(userData.realname ?? '');
+        this.registerForm.controls.surname.setValue(userData.surname ?? '');
         this.registerForm.controls.birth_date.setValue(
-          this.user.birth_date ? new Date(this.user.birth_date) : null
+          userData.birth_date ? new Date(userData.birth_date) : null
         );
-        this.registerForm.controls.username.setValue(this.user.username!);
-        this.registerForm.controls.email.setValue(this.user.email!);
+        this.registerForm.controls.username.setValue(userData.username ?? '');
+        this.registerForm.controls.email.setValue(userData.email ?? '');
 
         this.loadUserRol();
       },
@@ -85,14 +93,14 @@ export class PersonalDetailsComponent implements OnInit {
         this.errorMessage = errorData;
       }
     });
-
   }
 
+  /** Carga el rol del usuario */
   loadUserRol(): void {
     this.subscriptions.add(
       this.loginService.userRol.subscribe({
         next: (role) => {
-          this.userRol = role; // Asigna el rol
+          this.userRol = role;
         },
         error: (err) => {
           console.error('Error al obtener el rol del usuario', err);
@@ -101,49 +109,52 @@ export class PersonalDetailsComponent implements OnInit {
     );
   }
 
-  get realname() {
-    return this.registerForm.controls.realname;
-  }
-
-  get surname() {
-    return this.registerForm.controls.surname;
-  }
-
-  get email() {
-    return this.registerForm.controls.email;
-  }
-
-  get birth_date() {
-    return this.registerForm.controls.birth_date;
-  }
-
-  get username() {
-    return this.registerForm.controls.username;
-  }
-
+  /** Guarda los datos del formulario */
   savePersonalDetailsData() {
     if (this.registerForm.valid && this.userId) {
-      this.userService
-        .updateUser(this.userId, this.registerForm.value as unknown as User)
-        .subscribe({
-          next: () => {
-            this.editMode = false;
-            this.user = this.registerForm.value as unknown as User;
-            location.reload();
-          },
-          error: (errorData) => console.error(errorData),
-        });
+      const formData = new FormData();
+      const userToSend: User = {
+        ...this.user!,
+        id: this.userId,
+        idUser: this.userId,
+        surname: this.registerForm.value.surname ?? '',
+        realname: this.registerForm.value.realname ?? '',
+        username: this.registerForm.value.username ?? '',
+        email: this.registerForm.value.email ?? '',
+        birth_date: this.registerForm.value.birth_date ?? undefined,
+      };
+
+      formData.append('user', JSON.stringify(userToSend));
+
+      if (this.selectedFile) {
+        formData.append('image', this.selectedFile);
+      }
+
+      this.userService.updateUser(this.userId, formData).subscribe({
+        next: () => {
+          this.editMode = false;
+          this.user = { ...this.user, ...userToSend };
+          location.reload();
+        },
+        error: (errorData) => console.error(errorData),
+      });
+  
     }
   }
 
+  /** Formatea la fecha al escribir */
   onDateInput(event: any) {
-    let value: string = event.target.value.replace(/\D/g, ''); // solo números
-    if (value.length >= 2) {
-      value = value.slice(0, 2) + '/' + value.slice(2);
-    }
-    if (value.length >= 5) {
-      value = value.slice(0, 5) + '/' + value.slice(5, 9);
-    }
+    let value: string = event.target.value.replace(/\D/g, '');
+    if (value.length >= 2) value = value.slice(0, 2) + '/' + value.slice(2);
+    if (value.length >= 5) value = value.slice(0, 5) + '/' + value.slice(5, 9);
     event.target.value = value;
   }
+
+  // Getters de conveniencia
+  get realname() { return this.registerForm.controls.realname; }
+  get surname() { return this.registerForm.controls.surname; }
+  get email() { return this.registerForm.controls.email; }
+  get birth_date() { return this.registerForm.controls.birth_date; }
+  get username() { return this.registerForm.controls.username; }
+
 }

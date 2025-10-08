@@ -20,6 +20,7 @@ export class User {
   status?: boolean;
   modificationuser?: string;
   modificationtimestamp?: string | null = null;
+  profileImageUrl?: string;
 }
 
 export interface UserPage extends Page<User> {

@@ -6,8 +6,23 @@
   <mat-card *ngIf="(userLoginOn && !editMode) || !userLoginOn" class="personal-details-card">
     <mat-card-header>
       <!-- Foto de perfil proximamente integrar a bdd-->
-      <div mat-card-avatar class="profile-picture" [ngStyle]="{ 'background-image': 'url(https://picsum.photos/200)' }">
-      </div>
+      <!-- <div mat-card-avatar class="profile-picture" [ngStyle]="{ 'background-image': 'url(https://picsum.photos/200)' }">
+      </div>-->
+      <div mat-card-avatar class="profile-picture">
+      <img
+        *ngIf="user?.profileImageUrl; else defaultImage"
+        [src]="user?.profileImageUrl"
+        alt="Foto de perfil"
+        class="rounded-full w-16 h-16 object-cover"
+      />
+      <ng-template #defaultImage>
+        <img
+          src="assets/images/default-profile.png"
+          alt="Sin imagen"
+          class="rounded-full w-16 h-16 object-cover"
+        />
+      </ng-template>
+    </div>
       <!--[ngStyle]="{ 'background-image': 'url()' }"  ' + user?.profileImageUrl + '-->
       <mat-card-title>{{ user?.realname }} {{ user?.surname }}</mat-card-title>
       <mat-card-subtitle>Usuario: {{ user?.username }}</mat-card-subtitle>
@@ -79,6 +94,17 @@
           </mat-form-field>
 
         </div>
+        <div class="row">
+          <label for="profileImage">Imagen de perfil:</label>
+          <input type="file" id="profileImage" (change)="onFileSelected($event)" />
+        </div>
+
+        <img
+          *ngIf="selectedFile"
+          [src]="selectedFile ? (selectedFile) : ''"
+          alt="Vista previa"
+          width="120"
+        />
 
       </form>
     </mat-card-content>
