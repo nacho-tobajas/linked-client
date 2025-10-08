@@ -10,7 +10,7 @@ interface Tatuador {
 @Component({
   selector: 'app-prereserva',
   templateUrl: './prereserva.component.html',
-  styleUrls: ['./prereserva.component.scss'],
+  styleUrl: './prereserva.component.scss',
   standalone: false
 })
 export class PrereservaComponent {

@@ -70,6 +70,7 @@ import { HttpErrorInterceptor } from './services/auth/http-error.interceptor';
 import { CUSTOM_DATE_FORMATS, CustomDateAdapter } from './components/custom-date-adapter/custom-date-adapter.js';
 import { CalendarioComponent } from "./components/calendario/calendario.component";
 import { PrereservaComponent } from './aplicacion/prereserva/prereserva.component';
+import { ConfirmarReservaComponent } from './components/confirmar-reserva/confirmar-reserva.component';
 import { CaptchaComponent } from './components/captcha/captcha.component';
 import { RECAPTCHA_V3_SITE_KEY, RecaptchaFormsModule, RecaptchaModule, RecaptchaV3Module } from 'ng-recaptcha-angular19';
 import { NgxCaptchaModule } from 'ngx-captcha';
@@ -106,6 +107,8 @@ registerLocaleData(localeEsAr); // 👈 Esto registra el locale
         ResetPassComponent,
         ForgotPassComponent,
         PrereservaComponent,
+        ConfirmarReservaComponent
+        ,
         CaptchaComponent
     ],
     bootstrap: [AppComponent], imports: [CommonModule,
@@ -139,7 +142,10 @@ registerLocaleData(localeEsAr); // 👈 Esto registra el locale
         MatChipsModule,
         MatTooltipModule,
         MatSliderModule,
-        CalendarioComponent,
+       
+    CalendarioComponent,
+    
+,
         MatSliderModule,
         RecaptchaModule,
         RecaptchaFormsModule,
