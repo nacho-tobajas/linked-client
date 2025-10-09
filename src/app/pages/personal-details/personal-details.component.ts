@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { User } from '../../models/user.model';
 import { UserService } from '../../services/user/user.service';
 import { LoginService } from 'src/app/services/auth/login.service';
@@ -6,6 +6,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { environment } from 'src/environments/environment.js';
 
 
 @Component({
@@ -16,9 +17,13 @@ import { Subscription } from 'rxjs';
   standalone: false
 })
 export class PersonalDetailsComponent implements OnInit {
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+
+  environment: string = '';
   errorMessage: string = '';
   userId: number | null = null;
   user?: User;
+  environmentImg = environment.urlImg;
   userLoginOn: boolean = false;
   editMode: boolean = false;
   userRol: string | null = null;
@@ -64,12 +69,40 @@ export class PersonalDetailsComponent implements OnInit {
   }
 
   /** Manejo del archivo seleccionado */
+ 
+  triggerFileInput(): void {
+    this.fileInput.nativeElement.click();
+  }
+
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
     if (file) {
       this.selectedFile = file;
-      this.registerForm.patchValue({ profileImage: file });
+
+      // Podés mostrar una vista previa si querés:
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (this.user) this.user.profile_photo = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+
+      // Subida automática o junto al guardado
+      this.uploadProfileImage();
     }
+  }
+
+  uploadProfileImage(): void {
+    if (!this.selectedFile || !this.userId) return;
+
+    this.userService.updateProfilePhoto(this.userId, this.selectedFile).subscribe({
+      next: (response) => {
+        console.log(response.message);
+        this.user!.profile_photo = response.profile_photo; // actualiza vista
+      },
+      error: (err) => {
+        console.error('Error al actualizar imagen', err);
+      }
+    });
   }
 
   /** Carga los datos del usuario */

@@ -5,27 +5,35 @@
 <div class="card-container">
   <mat-card *ngIf="(userLoginOn && !editMode) || !userLoginOn" class="personal-details-card">
     <mat-card-header>
-      <!-- Foto de perfil proximamente integrar a bdd-->
-      <!-- <div mat-card-avatar class="profile-picture" [ngStyle]="{ 'background-image': 'url(https://picsum.photos/200)' }">
-      </div>-->
-      <div mat-card-avatar class="profile-picture">
+
+      <!-- Avatar -->
+  <div mat-card-avatar class="profile-picture-container">
+    <img
+      *ngIf="user?.profile_photo; else defaultImage"
+      [src]=" environmentImg + user?.profile_photo"
+      alt="Foto de perfil"
+      class="profile-picture"
+    />
+    <ng-template #defaultImage>
       <img
-        *ngIf="user?.profileImageUrl; else defaultImage"
-        [src]="user?.profileImageUrl"
-        alt="Foto de perfil"
-        class="rounded-full w-16 h-16 object-cover"
+        src="assets/images/default-profile.png"
+        alt="Sin imagen"
+        class="profile-picture"
       />
-      <ng-template #defaultImage>
-        <img
-          src="assets/images/default-profile.png"
-          alt="Sin imagen"
-          class="rounded-full w-16 h-16 object-cover"
-        />
-      </ng-template>
-    </div>
-      <!--[ngStyle]="{ 'background-image': 'url()' }"  ' + user?.profileImageUrl + '-->
-      <mat-card-title>{{ user?.realname }} {{ user?.surname }}</mat-card-title>
-      <mat-card-subtitle>Usuario: {{ user?.username }}</mat-card-subtitle>
+    </ng-template>
+
+    <!-- Botón de edición -->
+    <button mat-icon-button class="edit-icon" (click)="triggerFileInput()">
+      <mat-icon>edit</mat-icon>
+    </button>
+    <input type="file" hidden (change)="onFileSelected($event)" #fileInput />
+  </div>
+
+  <!-- Texto alineado -->
+  <div mat-card-header-text>
+    <mat-card-title>{{ user?.realname }} {{ user?.surname }}</mat-card-title>
+    <mat-card-subtitle>Usuario: {{ user?.username }}</mat-card-subtitle>
+  </div>
     </mat-card-header>
 
     <mat-divider></mat-divider>

@@ -1,3 +1,6 @@
+// REVISAR ESTILOS, HAY DUPLICADOS, PERO QUE QUEDE COMO SE ESTA VIENDO. 
+//SOLO ACHICAR ICONO DE LAPIZ
+
 .card-container {
   display: flex;
   justify-content: center;
@@ -28,14 +31,31 @@
     justify-content: center;
     align-items: center;
     margin: 1em 0;
+    gap: 1em;
 
-    .profile-picture {
-      width: 60px;
-      height: 60px;
-      margin: 0;
-      background-size: cover;
-      background-position: center;
+    .profile-picture-container {
+      position: relative;
+      display: inline-block;
 
+      .profile-picture {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .edit-icon {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background-color: white;
+        border-radius: 50%;
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+        transform: translate(20%, 20%);
+        padding: 2px;
+        min-width: 20px;
+        min-height: 20px;
+      }
     }
   }
 
@@ -120,4 +140,157 @@
 
 
 
+}
+
+
+.card-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+
+  .personal-details-card,
+  .edit-form-card {
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 1em;
+  }
+
+  .profile-title {
+    font-size: 1.7em;
+    text-transform: uppercase;
+  }
+
+  .mat-mdc-card-header {
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 1em;
+
+    .mat-card-header-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+  }
+
+  .mat-mdc-card-content {
+    margin: 1.2em 0;
+  }
+
+  .action-buttons {
+    display: flex;
+    justify-content: flex-start;
+    gap: 20px;
+    margin-top: 1em;
+
+    .edit-button {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+
+      span {
+        text-decoration: underline;
+      }
+
+      .mat-icon {
+        font-size: 20px;
+      }
+    }
+  }
+
+  .full-width {
+    width: 100%;
+  }
+
+  /* Media queries para tablet */
+  @media (min-width: 600px) {
+
+    .personal-details-card,
+    .edit-form-card {
+      padding: 1.5em;
+    }
+
+    .mat-mdc-card-header .profile-picture {
+      width: 70px;
+      height: 70px;
+    }
+
+    .action-buttons {
+      gap: 25px;
+    }
+
+    .edit-button {
+      font-size: 14px;
+
+      .mat-icon {
+        font-size: 22px;
+      }
+    }
+  }
+
+  /* Media queries para desktop */
+  @media (min-width: 992px) {
+
+    .personal-details-card,
+    .edit-form-card {
+      padding: 2em;
+    }
+
+    .mat-mdc-card-header .profile-picture {
+      width: 100px;
+      height: 100px;
+    }
+  }
+}
+
+/* Contenedor de foto + icono */
+.profile-picture-container {
+  position: relative;
+  width: 60px;
+  height: 60px;
+
+  .profile-picture {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .edit-icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+    transform: translate(30%, 30%);
+    padding: 2px;
+    min-width: 20px;
+    min-height: 20px;
+    font-size: 16px;
+  }
+
+  /* Media queries para la foto */
+  @media (min-width: 600px) {
+    width: 70px;
+    height: 70px;
+
+    .profile-picture {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  @media (min-width: 992px) {
+    width: 100px;
+    height: 100px;
+
+    .profile-picture {
+      width: 100%;
+      height: 100%;
+    }
+  }
 }
