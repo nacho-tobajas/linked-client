@@ -111,26 +111,6 @@ export class NavComponent implements OnInit, OnDestroy {
     window.location.reload();
   }
 
-  info() {
-    this.router.navigate(['/info']);
-  }
-
-  wishlist() {
-    this.router.navigate(['/wishlist']);
-  }
-
-  library() {
-    this.router.navigate(['/biblioteca']);
-  }
-
-  soporte() {
-    this.router.navigate(['/soporte']);
-  }
-
-  carrito() {
-    this.router.navigate(['/cart']);
-  }
-
   onSearch() {
     if (this.searchTerm.trim()) {
       this.router.navigate(['/resultados'], {
