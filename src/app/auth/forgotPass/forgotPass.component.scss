@@ -1,3 +1,5 @@
+@import "src/assets/styles/_variables.scss";
+
 ::ng-deep mat-error {
   margin-top: -1.2em;
 }
@@ -15,7 +17,7 @@
   }
 
   .forgot-password-card-title {
-    color: #a65cfa;
+    color: $main-color;
     font-size: 1.8em;
     font-weight: bold;
   }
@@ -34,6 +36,14 @@
   .login-button {
     width: 100%;
     padding: 0.8em;
+  }
+
+  .forgot-password-button {
+    width: 100%;
+    padding: 0.8em;
+    font-weight: bold;
+    background-color: $main-color;
+    color: white;
   }
 }
 

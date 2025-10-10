@@ -1,3 +1,5 @@
+@import "src/assets/styles/_variables.scss";
+
 .row {
   margin-bottom: 1.3em;
 }
@@ -18,7 +20,7 @@
   }
 
   .login-card-title {
-    color: #a65cfa;
+    color: $main-color;
     font-size: 1.8em;
     font-weight: bold;
     display: flex;
@@ -27,7 +29,7 @@
   }
 
   .login-icon {
-    color: #a65cfa;
+    color: $main-color;
   }
 
   .full-width {
@@ -45,6 +47,19 @@
     width: 100%;
     padding: 0.8em;
     font-weight: bold;
+    background-color: $main-color;
+    color: white;
+
+    &:hover:not(:disabled) {
+      background-color: lighten($main-color, 10%);
+    }
+
+    &:disabled {
+      background-color: #bdbdbd !important;
+      color: #666 !important;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
   }
 
   .link-register-forgotpassword {
@@ -54,7 +69,7 @@
     margin-bottom: 1em;
 
     a {
-      color: #8d3cea;
+      color: $main-color;
       cursor: pointer;
       text-decoration: none;
     }

@@ -1,9 +1,10 @@
 @use 'sass:math';
+@use 'theme' as *;
 @import 'assets/styles/_mixins';
 
 @import '../src/assets/styles/variables';
 @import "../node_modules/bootstrap/scss/bootstrap";
-@import "@angular/material/prebuilt-themes/deeppurple-amber.css";
+//@import "@angular/material/prebuilt-themes/deeppurple-amber.css";
 @import "./app/shared/header/header.component.scss";
 @import "./app/shared/nav/nav.component.scss";
 
@@ -277,9 +278,19 @@ mat-divider {
   }
 }
 
+.normal-button {
+  background-color: $main-color !important;
+  color: white !important;
+}
+
+.normal-button:hover {
+  background-color: $main-color-hover !important;
+}
+
 .mat-mdc-table .mat-mdc-header-cell {
   text-align: center;
-  background-color: #bc71fe !important;
+  background-color: $main-color !important;
+  color: white;
   text-transform: uppercase;
   font-style: normal;
 }
