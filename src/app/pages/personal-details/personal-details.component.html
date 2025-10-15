@@ -114,6 +114,8 @@
           width="120"
         />
 
+        <app-tatuador *ngIf="userId && userRol === 'Tatuador'" [userId]="userId"></app-tatuador>
+
       </form>
     </mat-card-content>
     <mat-card-actions class="action-buttons">

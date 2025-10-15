@@ -1,4 +1,4 @@
-import { LOCALE_ID, NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, LOCALE_ID, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -79,6 +79,8 @@ import { EspecialidadCreateComponent } from './aplicacion/gestion-sistema/especi
 import { EspecialidadDetailComponent } from './aplicacion/gestion-sistema/especialidades/especialidad-detail/especialidad-detail.component';
 import { EspecialidadUpdateComponent } from './aplicacion/gestion-sistema/especialidades/especialidad-update/especialidad-update.component';
 import { EspecialidadDeleteComponent } from './aplicacion/gestion-sistema/especialidades/especialidad-delete/especialidad-delete.component';
+import { TatuadorComponent } from './pages/personal-details/tatuador/tatuador.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 
 registerLocaleData(localeEsAr); // 👈 Esto registra el locale
@@ -118,8 +120,9 @@ registerLocaleData(localeEsAr); // 👈 Esto registra el locale
         EspecialidadCreateComponent,
         EspecialidadDetailComponent,
         EspecialidadUpdateComponent,
-        EspecialidadDeleteComponent
-    ],
+        EspecialidadDeleteComponent,
+        TatuadorComponent
+    ],schemas: [CUSTOM_ELEMENTS_SCHEMA],
     bootstrap: [AppComponent], imports: [CommonModule,
         BrowserModule,
         FormsModule,
@@ -153,6 +156,7 @@ registerLocaleData(localeEsAr); // 👈 Esto registra el locale
         MatSliderModule,
         CalendarioComponent,
         MatSliderModule,
+        MatAutocompleteModule,
         RecaptchaModule,
         RecaptchaFormsModule,
         RecaptchaV3Module,
