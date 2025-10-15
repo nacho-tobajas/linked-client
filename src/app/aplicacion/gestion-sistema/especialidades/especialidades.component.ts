@@ -12,7 +12,8 @@ import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-especialidades',
-  imports: [MatTableModule, MatIconModule],
+
+  standalone: false,
   templateUrl: './especialidades.component.html',
   styleUrl: './especialidades.component.scss'
 })
@@ -66,11 +67,11 @@ export class EspecialidadesComponent {
   showDetails(id: number): void {
     this.especialidadesService
       .getEspecialidad(id)
-      .subscribe((Especialidades) => {
+      .subscribe((especialidad) => {
         const dialogRef = this.dialog.open(EspecialidadDetailComponent, {
           width: '400px',
           disableClose: true,
-          data: { Especialidades },
+          data: { especialidad },
         });
       });
   }
