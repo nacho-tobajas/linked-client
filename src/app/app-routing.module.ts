@@ -9,19 +9,18 @@ import { LoginComponent } from './auth/login/login.component';
 
 import { AppComponent } from './app.component';
 
-
 import { RegisterComponent } from './auth/register/register.component';
 import { HomeComponent } from './pages/home/home.component';
 import { PersonalDetailsComponent } from './pages/personal-details/personal-details.component';
 import { SoporteComponent } from './aplicacion/support-ticket/soporte/soporte.component';
 import { SupportTicketComponent } from './aplicacion/support-ticket/support-ticket.component';
-import { SupportTicketCreateComponent } from './aplicacion/support-ticket/support-ticket-create/support-ticket-create.component';
 import { ForgotPassComponent } from './auth/forgotPass/forgotPass.component';
 import { ResetPassComponent } from './auth/resetPass/resetPass.component';
 import { UsuariosComponent } from './aplicacion/usuarios/usuarios.component';
 import { adminModGuard } from './guards/admin-mod.guard';
 import { PrereservaComponent } from './aplicacion/prereserva/prereserva.component';
 import { ConfirmarReservaComponent } from './components/confirmar-reserva/confirmar-reserva.component';
+import { EspecialidadesComponent } from './aplicacion/gestion-sistema/especialidades/especialidades.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/inicio', pathMatch: 'full' },
@@ -37,6 +36,7 @@ const routes: Routes = [
   { path: 'prereserva', component: PrereservaComponent },
   { path: 'ConfirmarReserva', component: ConfirmarReservaComponent },
   { path: 'support-ticket', component: SupportTicketComponent, canActivate: [adminModGuard] },
+  { path: 'especialidades', component: EspecialidadesComponent, canActivate: [adminModGuard] },
   { path: '**', redirectTo: '/inicio', pathMatch: 'full' }, //redireccionar a inicio si no hay match
 ];
 
