@@ -74,6 +74,11 @@ import { ConfirmarReservaComponent } from './components/confirmar-reserva/confir
 import { CaptchaComponent } from './components/captcha/captcha.component';
 import { RECAPTCHA_V3_SITE_KEY, RecaptchaFormsModule, RecaptchaModule, RecaptchaV3Module } from 'ng-recaptcha-angular19';
 import { NgxCaptchaModule } from 'ngx-captcha';
+import { EspecialidadesComponent } from './aplicacion/gestion-sistema/especialidades/especialidades.component';
+import { EspecialidadCreateComponent } from './aplicacion/gestion-sistema/especialidades/especialidad-create/especialidad-create.component';
+import { EspecialidadDetailComponent } from './aplicacion/gestion-sistema/especialidades/especialidad-detail/especialidad-detail.component';
+import { EspecialidadUpdateComponent } from './aplicacion/gestion-sistema/especialidades/especialidad-update/especialidad-update.component';
+import { EspecialidadDeleteComponent } from './aplicacion/gestion-sistema/especialidades/especialidad-delete/especialidad-delete.component';
 
 
 registerLocaleData(localeEsAr); // 👈 Esto registra el locale
@@ -107,9 +112,13 @@ registerLocaleData(localeEsAr); // 👈 Esto registra el locale
         ResetPassComponent,
         ForgotPassComponent,
         PrereservaComponent,
-        ConfirmarReservaComponent
-        ,
-        CaptchaComponent
+        ConfirmarReservaComponent,
+        CaptchaComponent,
+        EspecialidadesComponent,
+        EspecialidadCreateComponent,
+        EspecialidadDetailComponent,
+        EspecialidadUpdateComponent,
+        EspecialidadDeleteComponent
     ],
     bootstrap: [AppComponent], imports: [CommonModule,
         BrowserModule,

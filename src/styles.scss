@@ -286,6 +286,43 @@ mat-divider {
   background-color: $main-color-hover !important;
 }
 
+.login-button {
+  width: 100%;
+  padding: 0.8em;
+  font-weight: bold;
+  background-color: $main-color !important;
+  color: white !important;
+
+  &:hover:not(:disabled) {
+    background-color: lighten($main-color, 10%);
+  }
+
+  &:disabled {
+    background-color: #bdbdbd !important;
+    color: #666 !important;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+
+.create-button {
+  padding: 0.8em;
+  font-weight: bold;
+  background-color: $main-color !important;
+  color: white !important;
+
+  &:hover:not(:disabled) {
+    background-color: lighten($main-color, 10%) !important;
+  }
+
+  &:disabled {
+    background-color: #bdbdbd !important;
+    color: #666 !important;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+
 .mat-mdc-table .mat-mdc-header-cell {
   text-align: center;
   background-color: $main-color !important;
