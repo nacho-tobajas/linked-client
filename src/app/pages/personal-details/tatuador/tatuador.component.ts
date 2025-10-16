@@ -41,7 +41,6 @@ export class TatuadorComponent implements OnInit {
   private loadEspecialidades(): void {
     // Cargar especialidades del tatuador
     this.tatuadorService.getEspecialidadesTatuador(this.userId!).subscribe(res => {
-      console.log(this.userId)
       this.especialidades = res;
     });
 

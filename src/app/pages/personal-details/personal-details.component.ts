@@ -76,33 +76,60 @@ export class PersonalDetailsComponent implements OnInit {
 
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
-    if (file) {
-      this.selectedFile = file;
+    if (!file) return;
 
-      // Podés mostrar una vista previa si querés:
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (this.user) this.user.profile_photo = reader.result as string;
-      };
-      reader.readAsDataURL(file);
+      // 🔹 Validar tipo y tamaño
+  const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+  const maxSizeMB = 2;
 
-      // Subida automática o junto al guardado
-      this.uploadProfileImage();
+  if (!validTypes.includes(file.type)) {
+    alert('Solo se permiten imágenes JPG o PNG.');
+    return;
+  }
+
+  if (file.size > maxSizeMB * 1024 * 1024) {
+    alert(`El archivo excede el tamaño máximo (${maxSizeMB} MB).`);
+    return;
+  }
+
+  this.selectedFile = file;
+
+  // 🔹 Mostrar preview inmediatamente
+  const reader = new FileReader();
+  reader.onload = () => {
+    if (this.user) {
+      this.user.profile_photo = reader.result as string; // preview inmediata
     }
+  };
+  reader.readAsDataURL(file);
+
+  // 🔹 Subir imagen sin recargar
+  this.uploadProfileImage();
   }
 
   uploadProfileImage(): void {
     if (!this.selectedFile || !this.userId) return;
 
-    this.userService.updateProfilePhoto(this.userId, this.selectedFile).subscribe({
-      next: (response) => {
-        console.log(response.message);
-        this.user!.profile_photo = response.profile_photo; // actualiza vista
-      },
-      error: (err) => {
-        console.error('Error al actualizar imagen', err);
-      }
-    });
+this.userService.updateProfilePhoto(this.userId, this.selectedFile).subscribe({
+    next: (response) => {
+      if (!this.user) return;
+
+      // 🔹 Actualiza la URL del servidor + evita caché
+      const updatedPhotoUrl = response.profile_photo
+        ? `${this.environmentImg}${response.profile_photo}?v=${new Date().getTime()}`
+        : this.user.profile_photo;
+
+      // 🔹 Mantiene el preview actual hasta que se confirme la subida
+      this.user.profile_photo = updatedPhotoUrl;
+
+      // Limpia el input y archivo seleccionado
+      this.selectedFile = null;
+      this.fileInput.nativeElement.value = '';
+    },
+    error: (err) => {
+      console.error('Error al actualizar imagen', err);
+    }
+  });
   }
 
   /** Carga los datos del usuario */
@@ -167,7 +194,6 @@ export class PersonalDetailsComponent implements OnInit {
         next: () => {
           this.editMode = false;
           this.user = { ...this.user, ...userToSend };
-          location.reload();
         },
         error: (errorData) => console.error(errorData),
       });

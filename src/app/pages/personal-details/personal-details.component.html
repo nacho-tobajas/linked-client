@@ -21,12 +21,6 @@
         class="profile-picture"
       />
     </ng-template>
-
-    <!-- Botón de edición -->
-    <button mat-icon-button class="edit-icon" (click)="triggerFileInput()">
-      <mat-icon>edit</mat-icon>
-    </button>
-    <input type="file" hidden (change)="onFileSelected($event)" #fileInput />
   </div>
 
   <!-- Texto alineado -->
@@ -62,6 +56,48 @@
   <!-- Edición -->
   <mat-card *ngIf="userLoginOn && editMode" class="edit-form-card">
     <mat-card-title class="profile-title">Editar datos personales</mat-card-title>
+
+    <div class="profile-picture-dual-horizontal">
+  <!-- Imagen grande -->
+  <div class="profile-picture-large-container">
+    <img
+      *ngIf="user?.profile_photo; else defaultImage"
+      [src]="environmentImg + user?.profile_photo"
+      alt="Foto de perfil grande"
+      class="profile-picture-large"
+    />
+    <ng-template #defaultImage>
+      <img
+        src="../../../assets/images/default-profile.jpg"
+        alt="Sin imagen"
+        class="profile-picture-large"
+      />
+    </ng-template>
+  </div>
+
+  <!-- Imagen pequeña con botón -->
+  <div class="profile-picture-small-container">
+    <img
+      *ngIf="user?.profile_photo; else defaultSmall"
+      [src]="environmentImg + user?.profile_photo"
+      alt="Foto de perfil pequeña"
+      class="profile-picture-small"
+    />
+    <ng-template #defaultSmall>
+      <img
+        src="../../../assets/images/default-profile.jpg"
+        alt="Sin imagen"
+        class="profile-picture-small"
+      />
+    </ng-template>
+
+    <!-- Botón de edición -->
+    <button mat-icon-button class="edit-icon" (click)="triggerFileInput()">
+      <mat-icon>edit</mat-icon>
+    </button>
+    <input type="file" hidden (change)="onFileSelected($event)" #fileInput />
+  </div>
+</div>
     <mat-card-content>
       <form [formGroup]="registerForm">
 
@@ -102,19 +138,9 @@
           </mat-form-field>
 
         </div>
-        <div class="row">
-          <label for="profileImage">Imagen de perfil:</label>
-          <input type="file" id="profileImage" (change)="onFileSelected($event)" />
-        </div>
 
-        <img
-          *ngIf="selectedFile"
-          [src]="selectedFile ? (selectedFile) : ''"
-          alt="Vista previa"
-          width="120"
-        />
-
-        <app-tatuador *ngIf="userId && userRol === 'Tatuador'" [userId]="userId"></app-tatuador>
+      <!-- Especialidades -->
+      <app-tatuador *ngIf="userId && userRol === 'Tatuador'" [userId]="userId"></app-tatuador>
 
       </form>
     </mat-card-content>
@@ -123,7 +149,7 @@
       <button mat-stroked-button color="warn" (click)="editMode = false">
         Cancelar
       </button>
-      <button mat-raised-button color="primary" (click)="savePersonalDetailsData()" [disabled]="registerForm.invalid">
+      <button mat-raised-button class="normal-button" (click)="savePersonalDetailsData()" [disabled]="registerForm.invalid">
         Guardar
       </button>
     </mat-card-actions>
