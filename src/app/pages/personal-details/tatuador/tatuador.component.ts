@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Especialidad } from 'src/app/aplicacion/gestion-sistema/especialidades/especialidades.model';
 import { EspecialidadesService } from 'src/app/aplicacion/gestion-sistema/especialidades/especialidades.service';
@@ -15,6 +15,7 @@ import { Observable, map, startWith } from 'rxjs';
 })
 export class TatuadorComponent implements OnInit {
   @Input() userId!: number|undefined;
+  @Output() especialidadesChange = new EventEmitter<Especialidad[]>();
 
   especialidades: Especialidad[] = [];
   todasEspecialidades: Especialidad[] = [];
@@ -42,6 +43,7 @@ export class TatuadorComponent implements OnInit {
     // Cargar especialidades del tatuador
     this.tatuadorService.getEspecialidadesTatuador(this.userId!).subscribe(res => {
       this.especialidades = res;
+      this.emitChanges();
     });
 
     // Cargar todas las especialidades
@@ -52,19 +54,25 @@ export class TatuadorComponent implements OnInit {
 
   addEspecialidad(event: MatAutocompleteSelectedEvent): void {
     const especialidad = event.option.value as Especialidad;
-
-    // Actualizar backend
-    const ids = [...this.especialidades.map(e => e.id), especialidad.id];
-    this.tatuadorService.assignEspecialidades(this.userId!, ids).subscribe(updated => {
-      this.especialidades = updated;
-      this.especialidadCtrl.setValue('');
-    });
+    if (!this.especialidades.some((e) => e.id === especialidad.id)) {
+      this.especialidades.push(especialidad);
+      this.emitChanges(); // Avisamos al componente padre
+    }
+    this.especialidadCtrl.setValue('');
   }
 
   removeEspecialidad(especialidad: Especialidad): void {
-    this.tatuadorService.removeEspecialidad(this.userId!, especialidad.id).subscribe(updated => {
-      this.especialidades = updated;
-    });
+  // Encuentra el índice y elimina localmente
+  const index = this.especialidades.findIndex(e => e.id === especialidad.id);
+
+  if (index >= 0) {
+    this.especialidades.splice(index, 1);
+    this.emitChanges(); // Avisamos al componente padre que la lista cambió
+  }
+  }
+
+  private emitChanges(): void {
+    this.especialidadesChange.emit(this.especialidades);
   }
 
   private _filter(value: string | Especialidad): Especialidad[] {

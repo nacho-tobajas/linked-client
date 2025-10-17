@@ -5,8 +5,10 @@ import { LoginService } from 'src/app/services/auth/login.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment.js';
+import { Especialidad } from 'src/app/aplicacion/gestion-sistema/especialidades/especialidades.model';
+import { TatuadorService } from 'src/app/services/user/tatuador.service';
 
 
 @Component({
@@ -19,6 +21,7 @@ import { environment } from 'src/environments/environment.js';
 export class PersonalDetailsComponent implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
+  previewImageUrl: string | ArrayBuffer | null = null;
   environment: string = '';
   errorMessage: string = '';
   userId: number | null = null;
@@ -43,29 +46,60 @@ export class PersonalDetailsComponent implements OnInit {
 
   constructor(
     private userService: UserService,
+    private tatuadorService : TatuadorService,
     private formBuilder: FormBuilder,
     private loginService: LoginService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    // Obtener el userId desde UserService
+    this.loadUserSession();
+    this.watchLoginState();
+  }
+
+  private loadUserSession(): void {
     this.userService.getUserId().subscribe((id) => {
       this.userId = id;
-      if (this.userId) {
-        this.loadUserData(this.userId);
-      }
+      if (id) this.loadUserData(id);
     });
+  }
 
-    // Suscribirse al estado de login
-    this.loginService.userLoginOn.subscribe({
-      next: (userLoginOn) => {
-        this.userLoginOn = userLoginOn;
-        if (!this.userLoginOn) {
-          this.router.navigate(['/inicio']);
-        }
+  private watchLoginState(): void {
+    this.subscriptions.add(
+      this.loginService.userLoginOn.subscribe((logged) => {
+        this.userLoginOn = logged;
+        if (!logged) this.router.navigate(['/inicio']);
+      })
+    );
+  }
+
+  // ----------------------------------------------------------
+  // Cargar datos del usuario
+  // ----------------------------------------------------------
+  private loadUserData(id: number): void {
+    this.userService.getUser(id).subscribe({
+      next: (data) => {
+        this.user = data;
+        this.registerForm.patchValue({
+          surname: data.surname ?? '',
+          realname: data.realname ?? '',
+          username: data.username ?? '',
+          email: data.email ?? '',
+          birth_date: data.birth_date ? new Date(data.birth_date) : null,
+        });
+        this.loadUserRol();
       },
+      error: (err) => (this.errorMessage = err?.message || 'Error al cargar datos'),
     });
+  }
+
+  private loadUserRol(): void {
+    this.subscriptions.add(
+      this.loginService.userRol.subscribe({
+        next: (role) => (this.userRol = role),
+        error: (err) => console.error('Error al obtener el rol', err),
+      })
+    );
   }
 
   /** Manejo del archivo seleccionado */
@@ -75,130 +109,110 @@ export class PersonalDetailsComponent implements OnInit {
   }
 
   onFileSelected(event: any): void {
-    const file: File = event.target.files[0];
+  const file = event.target.files?.[0];
     if (!file) return;
 
-      // 🔹 Validar tipo y tamaño
-  const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-  const maxSizeMB = 2;
+    const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    const maxSizeMB = 3;
 
-  if (!validTypes.includes(file.type)) {
-    alert('Solo se permiten imágenes JPG o PNG.');
-    return;
-  }
-
-  if (file.size > maxSizeMB * 1024 * 1024) {
-    alert(`El archivo excede el tamaño máximo (${maxSizeMB} MB).`);
-    return;
-  }
-
-  this.selectedFile = file;
-
-  // 🔹 Mostrar preview inmediatamente
-  const reader = new FileReader();
-  reader.onload = () => {
-    if (this.user) {
-      this.user.profile_photo = reader.result as string; // preview inmediata
+    if (!validTypes.includes(file.type)) {
+      this.errorMessage = 'Solo se permiten imágenes JPG, PNG o WEBP.';
+      this.previewImageUrl = null;
+      return;
     }
+    if (file.size > maxSizeMB * 1024 * 1024) {
+      this.errorMessage = `El archivo no puede superar ${maxSizeMB}MB.`;
+      this.previewImageUrl = null;
+      return;
+    }
+
+    this.selectedFile = file;
+    this.errorMessage = '';
+
+    // Vista previa
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.previewImageUrl = reader.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // ----------------------------------------------------------
+  // Guardar cambios (todos los endpoints)
+  // ----------------------------------------------------------
+
+  especialidadesSeleccionadas: number[] = [];
+
+  onEspecialidadesChange(especialidades: Especialidad[]): void {
+    this.especialidadesSeleccionadas = especialidades.map(e => e.id);
+  }
+
+  onUpdateProfile(): void {
+  if (!this.userId || !this.user) {
+    return;
+  }
+
+  if (this.registerForm.invalid) {
+    return;
+  }
+
+    const requests = [];
+
+    // 1. Actualizar datos del usuario
+  const formValues = this.registerForm.value;
+  const updatedUser: Partial<User> = {
+    ...this.user,
+    realname: formValues.realname ?? undefined,
+    surname: formValues.surname ?? undefined,
+    username: formValues.username ?? undefined,
+    email: formValues.email ?? undefined,
+    birth_date: formValues.birth_date
+      ? new Date(formValues.birth_date)
+      : undefined,
   };
-  reader.readAsDataURL(file);
 
-  // 🔹 Subir imagen sin recargar
-  this.uploadProfileImage();
-  }
+    requests.push(this.userService.updateUser(this.userId, updatedUser));
 
-  uploadProfileImage(): void {
-    if (!this.selectedFile || !this.userId) return;
-
-this.userService.updateProfilePhoto(this.userId, this.selectedFile).subscribe({
-    next: (response) => {
-      if (!this.user) return;
-
-      // 🔹 Actualiza la URL del servidor + evita caché
-      const updatedPhotoUrl = response.profile_photo
-        ? `${this.environmentImg}${response.profile_photo}?v=${new Date().getTime()}`
-        : this.user.profile_photo;
-
-      // 🔹 Mantiene el preview actual hasta que se confirme la subida
-      this.user.profile_photo = updatedPhotoUrl;
-
-      // Limpia el input y archivo seleccionado
-      this.selectedFile = null;
-      this.fileInput.nativeElement.value = '';
-    },
-    error: (err) => {
-      console.error('Error al actualizar imagen', err);
+    // 2. Subir imagen si hay nueva
+    if (this.selectedFile) {
+      requests.push(this.userService.updateProfilePhoto(this.userId, this.selectedFile));
     }
-  });
-  }
 
-  /** Carga los datos del usuario */
-  loadUserData(userId: number) {
-    this.userService.getUser(userId).subscribe({
-      next: (userData) => {
-        this.user = userData;
-
-        this.registerForm.controls.id.setValue(userData.idUser ?? null);
-        this.registerForm.controls.realname.setValue(userData.realname ?? '');
-        this.registerForm.controls.surname.setValue(userData.surname ?? '');
-        this.registerForm.controls.birth_date.setValue(
-          userData.birth_date ? new Date(userData.birth_date) : null
-        );
-        this.registerForm.controls.username.setValue(userData.username ?? '');
-        this.registerForm.controls.email.setValue(userData.email ?? '');
-
-        this.loadUserRol();
-      },
-      error: (errorData) => {
-        this.errorMessage = errorData;
-      }
-    });
-  }
-
-  /** Carga el rol del usuario */
-  loadUserRol(): void {
-    this.subscriptions.add(
-      this.loginService.userRol.subscribe({
-        next: (role) => {
-          this.userRol = role;
-        },
-        error: (err) => {
-          console.error('Error al obtener el rol del usuario', err);
-        },
-      })
+    //  3. Si es tatuador, actualizar especialidades
+if (this.userRol === 'Tatuador' && this.especialidadesSeleccionadas.length >= 0) {
+  requests.push(
+      this.tatuadorService.assignEspecialidades(this.userId, this.especialidadesSeleccionadas)
     );
   }
 
-  /** Guarda los datos del formulario */
-  savePersonalDetailsData() {
-    if (this.registerForm.valid && this.userId) {
-      const formData = new FormData();
-      const userToSend: User = {
-        ...this.user!,
-        id: this.userId,
-        idUser: this.userId,
-        surname: this.registerForm.value.surname ?? '',
-        realname: this.registerForm.value.realname ?? '',
-        username: this.registerForm.value.username ?? '',
-        email: this.registerForm.value.email ?? '',
-        birth_date: this.registerForm.value.birth_date ?? undefined,
-      };
-
-      formData.append('user', JSON.stringify(userToSend));
-
-      if (this.selectedFile) {
-        formData.append('image', this.selectedFile);
+    //  Ejecutar todas las llamadas juntas
+    forkJoin(requests).subscribe({
+      next: (responses) => {
+        this.editMode = false;
+        this.selectedFile = null;
+        this.fileInput.nativeElement.value = '';
+        this.previewImageUrl = null;
+        
+        if (this.userId) {
+        this.loadUserData(this.userId); 
       }
+      },
+      error: (err) => {
+        console.error('Error al guardar perfil', err);
+        this.errorMessage = 'Error al guardar los cambios.';
+      },
+    });
+  }
 
-      this.userService.updateUser(this.userId, formData).subscribe({
-        next: () => {
-          this.editMode = false;
-          this.user = { ...this.user, ...userToSend };
-        },
-        error: (errorData) => console.error(errorData),
-      });
-  
-    }
+  // ----------------------------------------------------------
+  // Cancelar edición
+  // ----------------------------------------------------------
+  onCancel(): void {
+    this.editMode = false;
+    this.selectedFile = null;
+    this.fileInput.nativeElement.value = '';
+    this.previewImageUrl = null;
+    if (this.userId) this.loadUserData(this.userId);
   }
 
   /** Formatea la fecha al escribir */
