@@ -70,7 +70,6 @@ import { HttpErrorInterceptor } from './services/auth/http-error.interceptor';
 import { CUSTOM_DATE_FORMATS, CustomDateAdapter } from './components/custom-date-adapter/custom-date-adapter.js';
 import { CalendarioComponent } from "./components/calendario/calendario.component";
 import { PrereservaComponent } from './aplicacion/prereserva/prereserva.component';
-import { ConfirmarReservaComponent } from './components/confirmar-reserva/confirmar-reserva.component';
 import { CaptchaComponent } from './components/captcha/captcha.component';
 import { RECAPTCHA_V3_SITE_KEY, RecaptchaFormsModule, RecaptchaModule, RecaptchaV3Module } from 'ng-recaptcha-angular19';
 import { NgxCaptchaModule } from 'ngx-captcha';
@@ -81,6 +80,9 @@ import { EspecialidadUpdateComponent } from './aplicacion/gestion-sistema/especi
 import { EspecialidadDeleteComponent } from './aplicacion/gestion-sistema/especialidades/especialidad-delete/especialidad-delete.component';
 import { TatuadorComponent } from './pages/personal-details/tatuador/tatuador.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { ListadoTatuadoresComponent } from './aplicacion/prereserva/listado-tatuadores/listado-tatuadores.component';
+import { SeleccionarHorarioComponent } from './aplicacion/prereserva/seleccionar-horario/seleccionar-horario.component';
+import { ConfirmacionReservaComponent } from './aplicacion/prereserva/confirmacion-reserva/confirmacion-reserva.component';
 
 
 registerLocaleData(localeEsAr); // 👈 Esto registra el locale
@@ -114,14 +116,16 @@ registerLocaleData(localeEsAr); // 👈 Esto registra el locale
         ResetPassComponent,
         ForgotPassComponent,
         PrereservaComponent,
-        ConfirmarReservaComponent,
         CaptchaComponent,
         EspecialidadesComponent,
         EspecialidadCreateComponent,
         EspecialidadDetailComponent,
         EspecialidadUpdateComponent,
         EspecialidadDeleteComponent,
-        TatuadorComponent
+        TatuadorComponent,
+        ListadoTatuadoresComponent,
+        SeleccionarHorarioComponent,
+        ConfirmacionReservaComponent,
     ],schemas: [CUSTOM_ELEMENTS_SCHEMA],
     bootstrap: [AppComponent], imports: [CommonModule,
         BrowserModule,

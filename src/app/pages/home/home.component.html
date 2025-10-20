@@ -1,12 +1,18 @@
 <div class="row">
   <button class="option-card">
-    <mat-icon aria-label="Crear reserva de sesion">
+    <mat-icon 
+    matTooltip="Crear reserva de sesion"
+    aria-label="Crear reserva de sesion"
+    routerLink="/prereserva/listado">
       <span class="material-symbols-outlined"> assignment_add </span>
     </mat-icon>
   </button>
 
   <button class="option-card">
-    <mat-icon aria-label="Mis reservas">
+    <mat-icon 
+          matTooltip="Mis reservas"
+          aria-label="Mis reservas"
+          (click)="goToMisReservas()">
       <span class="material-symbols-outlined"> assignment </span>
     </mat-icon>
   </button>
@@ -23,6 +29,7 @@
     </mat-icon>
   </button>
 </div>
+
 
 <!-- <div class="mobile-container">
 
