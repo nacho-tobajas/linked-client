@@ -36,6 +36,21 @@
       <p><b>Fecha de Nacimiento:</b> {{ user?.birth_date | date }}</p>
       <p><b>Fecha de creacion:</b> {{ user?.creationtimestamp | date }}</p>
       <p><b>Rol/Tipo de usuario:</b> {{ userRol }}</p>
+
+      <ng-container *ngIf="userRol === 'Tatuador'">
+        <mat-divider style="margin: 1rem 0;"></mat-divider>
+        <h4 class="tatuador-section-title-view">Información Profesional</h4>
+
+        <p *ngIf="user?.estudio"> <b>Estudio:</b> {{ user?.estudio }}
+        </p>
+        <p *ngIf="user?.antiguedad !== undefined && user?.antiguedad !== null"> <b>Antigüedad:</b> {{ user?.antiguedad }} {{ user?.antiguedad === 1 ? 'año' : 'años' }} de experiencia
+        </p>
+        <div *ngIf="user?.especialidades && user?.especialidades!.length > 0"> <b>Especialidades:</b>
+          <mat-chip-list aria-label="Especialidades del tatuador" class="especialidades-view">
+            <mat-chip *ngFor="let esp of user?.especialidades">{{ esp.nombre }}</mat-chip>
+          </mat-chip-list>
+        </div>
+      </ng-container>
     </mat-card-content>
 
     <mat-divider></mat-divider>
@@ -149,8 +164,14 @@
 
         </div>
 
-      <!-- Especialidades -->
-      <app-tatuador *ngIf="userId && userRol === 'Tatuador'" [userId]="userId" (especialidadesChange)="onEspecialidadesChange($event)"></app-tatuador>
+      <!-- Tatuador -->
+      <app-tatuador
+        *ngIf="userId && userRol === 'Tatuador'"
+        [userId]="userId"
+        [initialEstudio]="user?.estudio"
+        [initialFechaInicio]="user?.fecha_inicio_actividad"
+        (especialidadesChange)="onEspecialidadesChange($event)">
+      </app-tatuador>
 
       </form>
     </mat-card-content>

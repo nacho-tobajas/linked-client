@@ -201,3 +201,70 @@
     }
   }
 }
+
+.action-buttons {
+  display: flex;
+  justify-content: space-evenly; // Para separarlos bien
+  gap: 16px;
+  padding: 16px;
+
+  .action-button-raised {
+    // Nuevo nombre de clase
+    display: flex;
+    align-items: center;
+    justify-content: center; // Centrar contenido
+    gap: 8px;
+    padding: 10px 20px;
+    border: none; // Sin borde
+    border-radius: 8px; // Bordes suaves
+    background-color: var(--button-background-light, #f0f0f0); // Fondo gris claro o tu variable
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); // Sombra suave
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    font-size: 0.9rem;
+    color: var(--text-color, #333); // Color de texto principal
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    &:hover {
+      transform: translateY(-2px); // Efecto levantar
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // Sombra más pronunciada
+    }
+
+    span {
+      text-decoration: none;
+    }
+
+    // Colores específicos
+    &.primary {
+      background-color: var(--primary-color, #3f51b5); // Tu color primario
+      color: var(--primary-contrast-color, #fff); // Color de texto para primario (usualmente blanco)
+
+      mat-icon {
+        color: var(--primary-contrast-color, #fff);
+      }
+    }
+
+    &.stroked-warn {
+      // Un estilo diferente para el segundo botón
+      background-color: transparent;
+      color: var(--warn-color, #f44336); // Tu color warn
+      border: 1px solid var(--warn-color-light-border, #ffcdd2); // Borde suave warn (un tono claro)
+      box-shadow: none;
+
+      mat-icon {
+        color: var(--warn-color, #f44336);
+      }
+
+      &:hover {
+        background-color: var(--warn-color-hover-light, #ffebee); // Fondo muy claro al pasar
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); // Sombra suave al pasar
+        transform: none; // Sin efecto levantar si es 'stroked'
+      }
+    }
+  }
+}
