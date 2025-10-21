@@ -51,24 +51,6 @@
   position: relative;
 }
 
-.back-button {
-  position: absolute;
-  top: 1rem;
-  left: 1.5rem;
-  width: 40px;
-  height: 40px;
-  border: none;
-  background: none;
-  cursor: pointer;
-  z-index: 10;
-
-  svg {
-    width: 28px;
-    height: 28px;
-    color: #000;
-  }
-}
-
 .screen-title {
   font-size: 1.8rem;
   font-weight: 600;
@@ -106,10 +88,12 @@
     align-items: center;
     min-height: 80vh;
     padding: 2rem;
+
   }
 
   .mobile-container {
-    max-width: 428px; // El tamaño de celular
+    max-width: 800px;
+    padding: 2em;
     min-height: 600px;
     border-radius: 40px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);

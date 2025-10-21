@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { Prereserva } from '../prereserva.model';
 import { Tatuador } from 'src/app/models/tatuador/tatuador.model';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { ReservaStateService } from 'src/app/services/prereserva/reserva-state.service';
+import { TatuadorService } from 'src/app/services/user/tatuador.service';
 
 @Component({
   selector: 'app-seleccionar-horario',
@@ -15,7 +16,9 @@ export class SeleccionarHorarioComponent {
 
   constructor(private router: Router,
               private reservaStateService: ReservaStateService,
-              private location: Location
+              private route: ActivatedRoute,
+              private location: Location,
+              private tatuadorService: TatuadorService
   ){
 
   }
@@ -38,6 +41,26 @@ export class SeleccionarHorarioComponent {
   imagenPrevia: string | null = null;
   imagenSubida: boolean = false;
 
+  ngOnInit(): void {
+    const tatuadorId = this.route.snapshot.paramMap.get('tatuadorId');
+
+    if (tatuadorId) {
+      this.tatuadorService.getTatuadores().subscribe(tatuadores => {
+        this.selectedTatuador = tatuadores.find(t => t.idUser === +tatuadorId) || null;
+        
+        if (!this.selectedTatuador) {
+          // Si no se encontró el tatuador, redirigimos
+          console.error('No se encontró el tatuador con ID:', tatuadorId);
+          this.router.navigate(['/prereserva/listado']);
+        }
+      });
+
+    } else {
+      // Si no hay ID en la URL, no podemos continuar. Volvemos al listado.
+      console.error('No se proporcionó ID de tatuador en la URL');
+      this.router.navigate(['/prereserva/listado']);
+    }
+  }
 
   onDateSelected(date: Date): void {
     this.selectedDate = date;

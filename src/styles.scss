@@ -286,6 +286,24 @@ mat-divider {
   background-color: $main-color-hover !important;
 }
 
+.back-button {
+  position: absolute;
+  top: 1rem;
+  left: 1.5rem;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  z-index: 10;
+
+  svg {
+    width: 28px;
+    height: 28px;
+    color: #000;
+  }
+}
+
 .login-button {
   width: 100%;
   padding: 0.8em;
@@ -306,13 +324,22 @@ mat-divider {
 }
 
 .create-button {
+  border: none;
+  border-radius: 25px;
   padding: 0.8em;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
   font-weight: bold;
   background-color: $main-color !important;
   color: white !important;
 
   &:hover:not(:disabled) {
     background-color: lighten($main-color, 10%) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
   }
 
   &:disabled {

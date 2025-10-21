@@ -41,6 +41,7 @@ export class ConfirmacionReservaComponent implements OnInit{
 
   ngOnInit(): void {  
   this.reserva = this.reservaStateService.getDatos();
+
   if (!this.reserva.tatuador) {
       // Si no hay datos, es porque el usuario entró directo a la URL. Lo mandamos al inicio.
       this.router.navigate(['/prereserva/listado']);

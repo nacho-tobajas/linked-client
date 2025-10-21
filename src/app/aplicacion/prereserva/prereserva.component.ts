@@ -1,11 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { User } from 'src/app/models/user.model';
-import { Especialidad } from '../gestion-sistema/especialidades/especialidades.model';
-import { Tatuador } from 'src/app/models/tatuador/tatuador.model';
-import { TatuadorService } from 'src/app/services/user/tatuador.service';
 import { Router } from '@angular/router';
-import { environment } from 'src/environments/environment.js';
-
 interface prereserva {
   id: number;
   nombre: string;
@@ -13,8 +7,6 @@ interface prereserva {
   imagen: string;
   estado: string;
 }
-
-type Step = 'listado' | 'horarios' | 'confirmacion' | 'misreservas' | 'prereserva';
 @Component({
   selector: 'app-prereserva',
   templateUrl: './prereserva.component.html',
@@ -25,12 +17,12 @@ export class PrereservaComponent{
   constructor( private router: Router){}
 
   iniciarPrereserva(): void {
-  this.router.navigate(['/prereserva/listado']);
+    this.router.navigate(['/prereserva/listado']);
   }
 
-irAMisReservas(): void {
-  this.router.navigate(['/mis-reservas']);
-}
+  irAMisReservas(): void {
+    this.router.navigate(['/mis-reservas']);
+  }
 
 /*
   // --- Lógica: Navegación General ---
