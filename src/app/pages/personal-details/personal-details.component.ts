@@ -32,6 +32,7 @@ export class PersonalDetailsComponent implements OnInit {
   userLoginOn: boolean = false;
   editMode: boolean = false;
   userRol: string | null = null;
+  especialidades: Especialidad[] = [];
   today: Date = new Date();
   selectedFile: File | null = null;
   private subscriptions: Subscription = new Subscription();
@@ -90,9 +91,31 @@ export class PersonalDetailsComponent implements OnInit {
           birth_date: data.birth_date ? new Date(data.birth_date) : null,
         });
         this.loadUserRol();
+        this.loadEspecialidades();
       },
       error: (err) => (this.errorMessage = err?.message || 'Error al cargar datos'),
     });
+  }
+
+  private loadEspecialidades(): void {
+if (!this.userId || !this.user) {
+    console.warn("Intentando cargar especialidades sin userId o sin objeto user inicializado.");
+    return;
+  }
+
+  this.tatuadorService.getEspecialidadesTatuador(this.userId).subscribe({
+      next: (res) => {
+        if (this.user) { 
+            this.user.especialidades = res;
+        }
+      },
+      error: (err) => {
+          console.error("Error al cargar especialidades del tatuador:", err);
+          if(this.user) {
+              this.user.especialidades = [];
+          }
+      }
+  });
   }
 
   private loadUserRol(): void {
