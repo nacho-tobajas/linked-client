@@ -1,0 +1,33 @@
+  <div class="screen">
+    <button class="back-button" (click)="goBack()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+    <div class="content confirmation-content">
+      <h2 class="screen-title">Turno confirmado</h2>
+      <div class="confirmation-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+      </div>
+      <div class="confirmation-details">
+        <div class="detail-line">
+          <span class="detail-icon">👤</span>
+          <span>{{ selectedTatuador?.realname }} {{ selectedTatuador?.surname }}</span>
+        </div>
+        <div class="detail-line">
+          <span class="detail-icon">📅</span>
+          <span>{{ selectedDate | date: 'dd/MM/yyyy' }}</span>
+        </div>
+        <div class="detail-line">
+          <span class="detail-icon">🕐</span>
+          <span>{{ selectedTime }}</span>
+        </div>
+      </div>
+      <button class="btn-done" (click)="volverInicio()">
+        Listo
+      </button>
+    </div>
+  </div>

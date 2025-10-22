@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LoginService } from 'src/app/services/auth/login.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -10,27 +11,16 @@ import { LoginService } from 'src/app/services/auth/login.service';
 })
 
 export class HomeComponent {
+  constructor(private router: Router) { }
 
-  userLoginOn: boolean = false;
-  private subscription: Subscription = new Subscription();
+  iniciarPrereserva(): void {
 
-  constructor
-    (
-      private loginService: LoginService
-    ) {
+    this.router.navigate(['/prereserva/listado']);
   }
 
-  ngOnInit(): void {
-    this.subscription.add(
-      this.loginService.userLoginOn.subscribe({
-        next: (userLoginOn) => {
-          this.userLoginOn = userLoginOn;
-        },
-        error: (err) => {
-          console.error('Error al suscribirse al estado de login', err);
-        },
-      })
-    );
+  goToMisReservas(): void {
+    console.log("entro")
+    this.router.navigate(['/mis-reservas']);
   }
 
 }

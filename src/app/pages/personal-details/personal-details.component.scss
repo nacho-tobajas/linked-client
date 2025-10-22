@@ -1,3 +1,5 @@
+@import '../../../assets/styles/_variables';
+
 /* --- CONTENEDOR PRINCIPAL --- */
 .card-container {
   display: flex;
@@ -200,4 +202,168 @@
       height: 90px;
     }
   }
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: space-evenly;
+  gap: 16px;
+  padding: 16px;
+
+  .action-button-raised {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--button-background-light, #f0f0f0);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    font-size: 0.9rem;
+    color: var(--text-color, #333);
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    &:hover {
+      transform: translateY(-2px); // Efecto levantar
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // Sombra más pronunciada
+    }
+
+    span {
+      text-decoration: none;
+    }
+
+    &.primary {
+      background-color: var(--primary-color, #3f51b5); // Tu color primario
+      color: var(--primary-contrast-color, #fff); // Color de texto para primario (usualmente blanco)
+
+      mat-icon {
+        color: var(--primary-contrast-color, #fff);
+      }
+    }
+
+    &.stroked-warn {
+      // Un estilo diferente para el segundo botón
+      background-color: transparent;
+      color: var(--warn-color, #f44336); // Tu color warn
+      border: 1px solid var(--warn-color-light-border, #ffcdd2); // Borde suave warn (un tono claro)
+      box-shadow: none;
+
+      mat-icon {
+        color: var(--warn-color, #f44336);
+      }
+
+      &:hover {
+        background-color: var(--warn-color-hover-light, #ffebee); // Fondo muy claro al pasar
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); // Sombra suave al pasar
+        transform: none; // Sin efecto levantar si es 'stroked'
+      }
+    }
+  }
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center; // Centrados
+  flex-wrap: wrap; // Permite que pasen a la línea de abajo si no caben
+  gap: 12px; // Espacio entre botones (un poco menos que antes)
+  padding: 16px 8px;
+
+  .edit-button {
+    // Mantenemos tu clase .edit-button
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px; // Padding ajustado
+    border: 1px solid #bbb; // Borde con tu variable --line-divider
+    border-radius: 20px; // Píldora
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s, border-color 0.2s;
+    font-size: 0.9rem;
+    color: var(--text-color, #414e3b); // Tu variable --text-color
+    background-color: transparent; // Fondo transparente por defecto
+    white-space: nowrap; // 👈 EVITA QUE EL TEXTO BAJE DE LÍNEA
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+
+    span {
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    &:hover {
+      background-color: var(--light-gray-background-color, #f5f5f5); // Tu variable --light-gray-background-color
+      border-color: #bbb; // Oscurece un poco el borde
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    // --- Colores Específicos ---
+
+    // Botón Editar Perfil (Principal)
+    &.primary {
+      border-color: $main-color; // Usa tu $main-color SCSS
+      color: $main-color;
+
+      mat-icon {
+        color: $main-color;
+      }
+
+      &:hover {
+        // Usa un lighten de tu color principal o una variable CSS si la tienes
+        background-color: lighten($main-color, 50%); // Muy claro para hover
+        // background-color: var(--primary-hover-light-bg, lighten($main-color, 50%));
+      }
+    }
+
+    // Botón Cambiar Contraseña (Secundario/Neutro)
+    // Dejamos el estilo por defecto (borde gris) para diferenciarlo
+    // Si quieres un color específico (ej. rojo suave), puedes crear una clase .warn
+    /*
+    &.warn {
+        border-color: var(--warn-color-soft, #f5c6cb); // Ejemplo rojo suave
+        color: var(--warn-color-dark, #dc3545);      // Ejemplo rojo oscuro
+        mat-icon { color: var(--warn-color-dark, #dc3545); }
+        &:hover {
+           background-color: var(--warn-color-hover-light, #f8d7da); // Ejemplo fondo rojo muy claro
+        }
+    }
+    */
+  }
+}
+
+.especialidades-container {
+
+  b {
+    display: block; //Salto de linea
+    margin-bottom: 0.5rem;
+
+  }
+}
+
+.especialidades-view {
+  mat-chip {
+    font-size: 0.75rem;
+    min-height: 24px;
+    padding: 4px 8px;
+    margin: 2px;
+  }
+}
+
+.tatuador-section-title-view {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  color: #333;
 }

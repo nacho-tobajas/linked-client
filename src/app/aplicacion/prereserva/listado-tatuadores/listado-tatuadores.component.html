@@ -1,0 +1,88 @@
+<div class="screen">
+  <button class="back-button" (click)="goBack()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+  </button>
+
+  <div class="content">
+    <h2 class="screen-title">LISTADO DE TATUADORES</h2>
+
+    <div class="search-box" style="margin-bottom: 2rem;">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+      <input type="text" placeholder="Filtrar tatuador..." class="search-input">
+    </div>
+
+    <div *ngIf="errorCarga" style="text-align: center; padding: 2rem; color: red;">
+      <p>{{ errorCarga }}</p>
+      <button (click)="cargarTatuadores()">Reintentar</button>
+    </div>
+
+    <div *ngIf="!errorCarga">
+      <div *ngIf="tatuadores.length > 0; else noHayTatuadores">
+        <div class="tatuadores-list">
+          
+          <div 
+            class="tatuador-item" 
+            *ngFor="let tatuador of tatuadores"
+            (click)="seleccionarTatuador(tatuador)"
+            [class.selected]="tatuador.idUser === selectedTatuadorId"> 
+            
+            <img [src]="environmentImg + tatuador?.profile_photo || '../../../assets/images/default-profile.jpg'" 
+                 [alt]="tatuador.realname" 
+                 class="tatuador-avatar">
+            
+            <div class="tatuador-info">
+              <h3>{{ tatuador.realname }} {{ tatuador.surname }}</h3>
+              
+              <div class="tatuador-meta">
+                <span>
+                  <mat-icon>storefront</mat-icon> 
+                  {{ tatuador.estudio || 'Estudio Propio' }}
+                </span>
+                <span>
+                  <mat-icon>calendar_today</mat-icon> 
+                  {{ tatuador.antiguedad || '1' }} años
+                </span>
+              </div>
+
+              <div class="chip-container">
+                <mat-chip-list>
+                  <mat-chip *ngFor="let esp of tatuador.especialidades.slice(0, 4)">
+                    {{ esp.nombre }}
+                  </mat-chip>
+                </mat-chip-list>
+                
+                <mat-chip class="chip-ellipsis" *ngIf="tatuador.especialidades.length > 4">
+                  ...
+                </mat-chip>
+              </div>
+              
+              <button 
+                class="btn-ver-trabajos" 
+                (click)="verTrabajos(tatuador.idUser, $event)">
+                Ver Trabajos
+              </button>
+            </div>
+            </div>
+        </div>
+
+        <button 
+          class="create-button" 
+          [disabled]="!selectedTatuadorId" 
+          (click)="confirmarSeleccion()">
+          Confirmar
+        </button>
+        
+      </div>
+      <ng-template #noHayTatuadores>
+        <div style="text-align: center; padding: 2rem; color: #888;">
+          <p>No hay tatuadores disponibles en este momento.</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

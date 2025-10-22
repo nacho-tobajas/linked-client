@@ -1,0 +1,19 @@
+  <div class="screen">
+    <button class="back-button" (click)="goBack()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+    <div class="content">
+      <h2 class="screen-title">Mis Reservas</h2>
+      <div class="tatuadores-list">
+        <div class="tatuador-item" *ngFor="let prereserva of prereservas" (click)="goToPreReserva(prereserva)">
+          <div class="tatuador-info">
+            <h3>{{ prereserva.nombre }}</h3>
+            <p>{{ prereserva.estado }}</p>
+            <p>{{ prereserva.fecha }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

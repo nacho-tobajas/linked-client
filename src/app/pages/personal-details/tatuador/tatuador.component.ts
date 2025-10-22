@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Especialidad } from 'src/app/aplicacion/gestion-sistema/especialidades/especialidades.model';
 import { EspecialidadesService } from 'src/app/aplicacion/gestion-sistema/especialidades/especialidades.service';
 import { TatuadorService } from 'src/app/services/user/tatuador.service';
@@ -15,8 +15,13 @@ import { Observable, map, startWith } from 'rxjs';
 })
 export class TatuadorComponent implements OnInit {
   @Input() userId!: number|undefined;
+  @Input() initialEstudio: string | null | undefined = null;
+  @Input() initialFechaInicio: Date | null | undefined = null;
+
   @Output() especialidadesChange = new EventEmitter<Especialidad[]>();
 
+  tatuadorForm: FormGroup;
+  today: Date = new Date();
   especialidades: Especialidad[] = [];
   todasEspecialidades: Especialidad[] = [];
 
@@ -27,8 +32,14 @@ export class TatuadorComponent implements OnInit {
 
   constructor(
     private tatuadorService: TatuadorService,
-    private especialidadesService: EspecialidadesService
-  ) {}
+    private especialidadesService: EspecialidadesService,
+    private fb: FormBuilder
+  ) {
+    this.tatuadorForm = this.fb.group({
+      estudio: [''],
+      fecha_inicio_actividad: [null]
+    });
+  }
 
   ngOnInit(): void {
     this.loadEspecialidades();
@@ -37,9 +48,29 @@ export class TatuadorComponent implements OnInit {
       startWith(''),
       map(value => this._filter(value!))
     );
+
+    this.patchFormIfNeeded();
+  }
+
+  // Detecta si los valores iniciales cambian después de ngOnInit
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['initialEstudio'] || changes['initialFechaInicio']) {
+      this.patchFormIfNeeded();
+    }
+  }
+
+  // Método para actualizar el formulario con los valores iniciales
+  private patchFormIfNeeded(): void {
+    if (this.tatuadorForm) { // Asegúrate que el form ya exista
+        this.tatuadorForm.patchValue({
+            estudio: this.initialEstudio ?? '',
+            fecha_inicio_actividad: this.initialFechaInicio ? new Date(this.initialFechaInicio) : null
+        });
+    }
   }
 
   private loadEspecialidades(): void {
+    if (!this.userId) return;
     // Cargar especialidades del tatuador
     this.tatuadorService.getEspecialidadesTatuador(this.userId!).subscribe(res => {
       this.especialidades = res;
@@ -81,5 +112,11 @@ export class TatuadorComponent implements OnInit {
       e => !this.especialidades.some(asig => asig.id === e.id) &&
            e.nombre.toLowerCase().includes(filterValue)
     );
+  }
+
+  //Metodo para que el componente padre obtenga los datos
+  
+  public getTatuadorData(): { estudio?: string | null, fecha_inicio_actividad?: Date | null } {
+    return this.tatuadorForm.value;
   }
 }

@@ -9,6 +9,7 @@ import { forkJoin, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment.js';
 import { Especialidad } from 'src/app/aplicacion/gestion-sistema/especialidades/especialidades.model';
 import { TatuadorService } from 'src/app/services/user/tatuador.service';
+import { TatuadorComponent } from './tatuador/tatuador.component';
 
 
 @Component({
@@ -20,6 +21,7 @@ import { TatuadorService } from 'src/app/services/user/tatuador.service';
 })
 export class PersonalDetailsComponent implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+  @ViewChild(TatuadorComponent) tatuadorComponentRef!: TatuadorComponent;
 
   previewImageUrl: string | ArrayBuffer | null = null;
   environment: string = '';
@@ -30,6 +32,7 @@ export class PersonalDetailsComponent implements OnInit {
   userLoginOn: boolean = false;
   editMode: boolean = false;
   userRol: string | null = null;
+  especialidades: Especialidad[] = [];
   today: Date = new Date();
   selectedFile: File | null = null;
   private subscriptions: Subscription = new Subscription();
@@ -88,9 +91,31 @@ export class PersonalDetailsComponent implements OnInit {
           birth_date: data.birth_date ? new Date(data.birth_date) : null,
         });
         this.loadUserRol();
+        this.loadEspecialidades();
       },
       error: (err) => (this.errorMessage = err?.message || 'Error al cargar datos'),
     });
+  }
+
+  private loadEspecialidades(): void {
+if (!this.userId || !this.user) {
+    console.warn("Intentando cargar especialidades sin userId o sin objeto user inicializado.");
+    return;
+  }
+
+  this.tatuadorService.getEspecialidadesTatuador(this.userId).subscribe({
+      next: (res) => {
+        if (this.user) { 
+            this.user.especialidades = res;
+        }
+      },
+      error: (err) => {
+          console.error("Error al cargar especialidades del tatuador:", err);
+          if(this.user) {
+              this.user.especialidades = [];
+          }
+      }
+  });
   }
 
   private loadUserRol(): void {
@@ -160,6 +185,16 @@ export class PersonalDetailsComponent implements OnInit {
 
     // 1. Actualizar datos del usuario
   const formValues = this.registerForm.value;
+
+  let tatuadorData: { estudio?: string | null, fecha_inicio_actividad?: Date | null } = {
+    estudio: undefined,
+    fecha_inicio_actividad: undefined
+    };
+
+    if (this.userRol === 'Tatuador' && this.tatuadorComponentRef) {
+        tatuadorData = this.tatuadorComponentRef.getTatuadorData();
+    }
+
   const updatedUser: Partial<User> = {
     ...this.user,
     realname: formValues.realname ?? undefined,
@@ -169,6 +204,8 @@ export class PersonalDetailsComponent implements OnInit {
     birth_date: formValues.birth_date
       ? new Date(formValues.birth_date)
       : undefined,
+    estudio: tatuadorData.estudio ?? undefined ,
+    fecha_inicio_actividad: tatuadorData.fecha_inicio_actividad ? new Date(tatuadorData.fecha_inicio_actividad) : undefined
   };
 
     requests.push(this.userService.updateUser(this.userId, updatedUser));
