@@ -1,0 +1,20 @@
+.header-agenda {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  margin-left: 1em;
+
+  h2 {
+    margin: 0;
+  }
+
+
+  button[mat-raised-button] {
+    margin-right: 1.5em;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+}

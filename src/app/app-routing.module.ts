@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { adminGuard } from './guards/admin.guard';
-import { authGuard } from './guards/auth.guard';
 import { NotAuthorizedComponent } from './components/not-authorized/not-authorized.component';
 
 import { LoginComponent } from './auth/login/login.component';
@@ -18,9 +17,9 @@ import { ForgotPassComponent } from './auth/forgotPass/forgotPass.component';
 import { ResetPassComponent } from './auth/resetPass/resetPass.component';
 import { UsuariosComponent } from './aplicacion/usuarios/usuarios.component';
 import { adminModGuard } from './guards/admin-mod.guard';
-import { PrereservaComponent } from './aplicacion/prereserva/prereserva.component';
 import { EspecialidadesComponent } from './aplicacion/gestion-sistema/especialidades/especialidades.component';
 import { MisReservasComponent } from './aplicacion/mis-reservas/mis-reservas.component';
+import { AgendaComponent } from './aplicacion/agenda/agenda.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/inicio', pathMatch: 'full' },
@@ -35,7 +34,8 @@ const routes: Routes = [
   { path: 'info', component: PersonalDetailsComponent },
   { path: 'support-ticket', component: SupportTicketComponent, canActivate: [adminModGuard] },
   { path: 'especialidades', component: EspecialidadesComponent, canActivate: [adminModGuard] },
-    {
+  { path: 'gestionar-agenda', component: AgendaComponent, canActivate: [ /* AuthGuard de Tatuador */ ] },
+  {
     path: 'prereserva',
     loadChildren: () => import('./aplicacion/prereserva/prereserva-routing.module.js').then(m => m.PrereservaRoutingModule)
   },

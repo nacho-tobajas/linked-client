@@ -29,6 +29,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { FooterComponent } from './shared/footer/footer.component';
 import { HeaderComponent } from './shared/header/header.component';
@@ -83,6 +84,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ListadoTatuadoresComponent } from './aplicacion/prereserva/listado-tatuadores/listado-tatuadores.component';
 import { SeleccionarHorarioComponent } from './aplicacion/prereserva/seleccionar-horario/seleccionar-horario.component';
 import { ConfirmacionReservaComponent } from './aplicacion/prereserva/confirmacion-reserva/confirmacion-reserva.component';
+import { GestionarHorarioComponent } from './aplicacion/agenda/gestionar-horario/gestionar-horario.component.js';
+import { AgendaComponent } from './aplicacion/agenda/agenda.component';
 
 
 registerLocaleData(localeEsAr); // 👈 Esto registra el locale
@@ -126,6 +129,8 @@ registerLocaleData(localeEsAr); // 👈 Esto registra el locale
         ListadoTatuadoresComponent,
         SeleccionarHorarioComponent,
         ConfirmacionReservaComponent,
+        GestionarHorarioComponent,
+        AgendaComponent,
     ],schemas: [CUSTOM_ELEMENTS_SCHEMA],
     bootstrap: [AppComponent], imports: [CommonModule,
         BrowserModule,
@@ -154,6 +159,8 @@ registerLocaleData(localeEsAr); // 👈 Esto registra el locale
         MatSidenavModule,
         MatMenuModule,
         MatProgressSpinnerModule,
+        MatSliderModule,
+        MatSlideToggleModule,
         CarouselModule,
         MatChipsModule,
         MatTooltipModule,
