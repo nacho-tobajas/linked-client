@@ -1,1 +1,23 @@
-<p>imagenes-trabajos-list works!</p>
+<div>
+  <div *ngFor="let tatuaje of tatuajes">
+    <div (click)="onGameClick(tatuaje.id)">
+      <img
+        [src]="
+          tatuaje.image_path
+            ? tatuaje.image_path
+            : 'https://picsum.photos/350/120'
+        "
+      />
+      <div>
+        <!-- Favourite -->
+        <!--         <ng-container>
+          <div (click)="toggleFavourite(juego); $event.stopPropagation()">
+            <i>
+              {{ tatuajeUsuario.isFavorite ? "star" : "star_border" }}
+            </i>
+          </div>
+        </ng-container> -->
+      </div>
+    </div>
+  </div>
+</div>
