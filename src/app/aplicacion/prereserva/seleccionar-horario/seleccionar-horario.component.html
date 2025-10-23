@@ -28,7 +28,7 @@
           </div>
         </div>
         <label class="upload-btn" *ngIf="selectedFiles.length < maxFiles">
-          <input type="file" hidden multiple accept="image/*" (change)="onFileSelected($event)">
+          <input type="file" accept=".jpg, .jpeg, .png, .webp" hidden multiple (change)="onFileSelected($event)">
           Añadir imagen
         </label>
       </div>

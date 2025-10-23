@@ -120,7 +120,7 @@
       <button mat-icon-button class="edit-icon" (click)="triggerFileInput()">
         <mat-icon>edit</mat-icon>
       </button>
-    <input type="file" hidden (change)="onFileSelected($event)" #fileInput />
+    <input type="file" accept=".jpg, .jpeg, .png, .webp" hidden (change)="onFileSelected($event)" #fileInput />
   </div>
 </div>
     <mat-card-content>
