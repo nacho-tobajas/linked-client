@@ -12,11 +12,12 @@
   <div class="days">
     <ng-container *ngFor="let week of weeks">
       <ng-container *ngFor="let day of week">
-        <div class="day" [class.other-month]="day.getMonth !== currentDate.getMonth"
+        
+        <div class="day" [class.other-month]="day.getMonth() !== currentDate.getMonth()"
           [class.selected]="isSelected(day)"
           (click)="selectDate(day)">
-          {{ day ? day.getDate() : '' }}
-        </div>
+          {{ day.getDate() }}         </div>
+
       </ng-container>
     </ng-container>
   </div>

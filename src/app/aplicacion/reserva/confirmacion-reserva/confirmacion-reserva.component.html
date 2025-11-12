@@ -1,0 +1,31 @@
+<div class="screen">
+    <button class="back-button" (click)="goBack()">
+            </button>
+    
+    <div class="content confirmation-content" *ngIf="reserva">
+      <h2 class="screen-title">Turno Solicitado</h2>       <div class="confirmation-icon">
+              </div>
+      
+      <p style="text-align: center; margin-bottom: 20px;">
+        Tu solicitud fue enviada. Recibirás una notificación cuando el tatuador la confirme.
+      </p>
+
+      <div class="confirmation-details">
+        <div class="detail-line">
+          <span class="detail-icon">👤</span>
+                    <span>{{ reserva.tatuador?.realname }} {{ reserva.tatuador?.surname }}</span>
+        </div>
+        <div class="detail-line">
+          <span class="detail-icon">📅</span>
+                    <span>{{ reserva.fecha_hora_inicio | date: 'dd/MM/yyyy' }}</span>
+        </div>
+        <div class="detail-line">
+          <span class="detail-icon">🕐</span>
+                    <span>{{ reserva.fecha_hora_inicio | date: 'HH:mm' }} hs</span>
+        </div>
+      </div>
+      <button class="btn-done" (click)="volverInicio()">
+        Listo
+      </button>
+    </div>
+  </div>

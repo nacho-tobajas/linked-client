@@ -70,7 +70,7 @@ import localeEsAr from '@angular/common/locales/es-AR';
 import { HttpErrorInterceptor } from './services/auth/http-error.interceptor';
 import { CUSTOM_DATE_FORMATS, CustomDateAdapter } from './components/custom-date-adapter/custom-date-adapter.js';
 import { CalendarioComponent } from "./components/calendario/calendario.component";
-import { PrereservaComponent } from './aplicacion/prereserva/prereserva.component';
+import { ReservaComponent } from './aplicacion/reserva/reserva.component';
 import { CaptchaComponent } from './components/captcha/captcha.component';
 import { RECAPTCHA_V3_SITE_KEY, RecaptchaFormsModule, RecaptchaModule, RecaptchaV3Module } from 'ng-recaptcha-angular19';
 import { NgxCaptchaModule } from 'ngx-captcha';
@@ -81,10 +81,10 @@ import { EspecialidadUpdateComponent } from './aplicacion/gestion-sistema/especi
 import { EspecialidadDeleteComponent } from './aplicacion/gestion-sistema/especialidades/especialidad-delete/especialidad-delete.component';
 import { TatuadorComponent } from './pages/personal-details/tatuador/tatuador.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { ListadoTatuadoresComponent } from './aplicacion/prereserva/listado-tatuadores/listado-tatuadores.component';
-import { SeleccionarHorarioComponent } from './aplicacion/prereserva/seleccionar-horario/seleccionar-horario.component';
-import { ConfirmacionReservaComponent } from './aplicacion/prereserva/confirmacion-reserva/confirmacion-reserva.component';
-import { GestionarHorarioComponent } from './aplicacion/agenda/gestionar-horario/gestionar-horario.component.js';
+import { ListadoTatuadoresComponent } from './aplicacion/reserva/listado-tatuadores/listado-tatuadores.component';
+import { SeleccionarHorarioComponent } from './aplicacion/reserva/seleccionar-horario/seleccionar-horario.component';
+import { ConfirmacionReservaComponent } from './aplicacion/reserva/confirmacion-reserva/confirmacion-reserva.component';
+import { GestionarHorarioComponent } from './aplicacion/agenda/gestionar-horario/gestionar-horario.component';
 import { AgendaComponent } from './aplicacion/agenda/agenda.component';
 
 
@@ -118,7 +118,7 @@ registerLocaleData(localeEsAr); // 👈 Esto registra el locale
         DropdownSelectComponent,
         ResetPassComponent,
         ForgotPassComponent,
-        PrereservaComponent,
+        ReservaComponent,
         CaptchaComponent,
         EspecialidadesComponent,
         EspecialidadCreateComponent,
@@ -177,6 +177,7 @@ registerLocaleData(localeEsAr); // 👈 Esto registra el locale
         RegisterService,
         SweItemMenuService,
         { provide: DateAdapter, useClass: CustomDateAdapter },
+        { provide: LOCALE_ID, useValue: 'es' },
         { provide: MAT_DATE_FORMATS, useValue: CUSTOM_DATE_FORMATS },
         { provide: RECAPTCHA_V3_SITE_KEY, useValue: '6LfpC-ErAAAAAJxd1G8rldVAIzoe7ZdQY3By5j-o' },
         {

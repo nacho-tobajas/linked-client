@@ -14,39 +14,52 @@ export class CalendarioComponent implements OnInit{
   selectedDate: Date | null = null;
   confirmedDate: Date | null = null; //Confirmo la fecha
 
-  ngOnInit() {
-    this.generateCalendar(this.currentDate);
+ngOnInit() {
+    this.generateCalendar(this.currentDate.getFullYear(), this.currentDate.getMonth());
   }
 
-  generateCalendar(date: Date) {
+  generateCalendar(year: number, month: number) {
     this.weeks = [];
-    const firstDay= new Date(date.getFullYear(), date.getMonth(), 1);
-    const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-    let currentWeek: any[] = [];
-    let currentDay = new Date(firstDay);
+    
+    // 1. Obtener el primer día del mes
+    const firstDayOfMonth = new Date(year, month, 1);
+    
+    // 2. Averiguar qué día de la semana es (0=Dom, 1=Lun, 2=Mar...)
+    const firstDayOfWeek = firstDayOfMonth.getDay(); 
 
-    //Ajusto lunes como primer dia
-    while (currentDay.getDay() !== 1) {
-      currentDay.setDate(currentDay.getDate() - 1);
-    }
-    while (currentDay <= lastDay || currentDay.getDay() !== 1) {
-      currentWeek.push(new Date(currentDay));
-      if (currentDay.getDay() === 0) { // Domingo
-        this.weeks.push(currentWeek);
-        currentWeek = [];
+    // 3. Calcular cuántos días "rebobinar" para empezar en Lunes
+    // Si el día es Lunes (1), restamos 0 días.
+    // Si el día es Martes (2), restamos 1 día.
+    // Si el día es Domingo (0), restamos 6 días.
+    const adjustment = (firstDayOfWeek === 0) ? 6 : firstDayOfWeek - 1;
+
+    // 4. Encontrar la fecha del primer Lunes del calendario
+    const startDate = new Date(firstDayOfMonth);
+    startDate.setDate(firstDayOfMonth.getDate() - adjustment);
+
+    let currentDay = new Date(startDate);
+
+    // 5. Generar 6 semanas (42 días)
+    for (let i = 0; i < 6; i++) {
+      const week: Date[] = [];
+      for (let j = 0; j < 7; j++) {
+        week.push(new Date(currentDay));
+        currentDay.setDate(currentDay.getDate() + 1);
       }
-      currentDay.setDate(currentDay.getDate() + 1);
+      this.weeks.push(week);
     }
   }
 
   prevMonth() {
-    this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, 1);
-    this.generateCalendar(this.currentDate);
+    // 6. Corregir la navegación de meses
+    this.currentDate.setMonth(this.currentDate.getMonth() - 1);
+    this.generateCalendar(this.currentDate.getFullYear(), this.currentDate.getMonth());
   }
 
   nextMonth() {
-    this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 1);
-    this.generateCalendar(this.currentDate);
+    // 7. Corregir la navegación de meses
+    this.currentDate.setMonth(this.currentDate.getMonth() + 1);
+    this.generateCalendar(this.currentDate.getFullYear(), this.currentDate.getMonth());
   }
 
   selectDate(day: Date | null): void {
@@ -55,14 +68,16 @@ export class CalendarioComponent implements OnInit{
       this.dateSelected.emit(day);
     }
   }
-  isSelected(day: Date){
-    return this.selectedDate?.toDateString() === day.toDateString();
+
+  isSelected(day: Date): boolean {
+    // Comprobación segura
+    return !!this.selectedDate && this.selectedDate.toDateString() === day.toDateString();
   }
 
-  confirmDate(){
-    if(this.selectedDate){
+  confirmDate() {
+    if (this.selectedDate) {
       this.confirmedDate = this.selectedDate;
-      console.log(this.confirmedDate); //Para ver la fecha
+      console.log(this.confirmedDate);
     }
   }
 

@@ -1,23 +1,17 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-interface prereserva {
-  id: number;
-  nombre: string;
-  fecha: string;
-  imagen: string;
-  estado: string;
-}
+
 @Component({
-  selector: 'app-prereserva',
-  templateUrl: './prereserva.component.html',
-  styleUrl: './prereserva.component.scss',
+  selector: 'app-reserva',
+  templateUrl: './reserva.component.html',
+  styleUrl: './reserva.component.scss',
   standalone: false
 })
-export class PrereservaComponent{
+export class ReservaComponent{
   constructor( private router: Router){}
 
-  iniciarPrereserva(): void {
-    this.router.navigate(['/prereserva/listado']);
+  iniciarReserva(): void {
+    this.router.navigate(['/reserva/listado']);
   }
 
   irAMisReservas(): void {

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Prereserva } from '../prereserva/prereserva.model';
+import { Reserva } from '../reserva/reserva.model';
 import { Location } from '@angular/common';
 
 @Component({
@@ -11,22 +11,22 @@ import { Location } from '@angular/common';
 export class MisReservasComponent {
   constructor(private location: Location){}
 
-  prereservas: Prereserva[] = [ 
+  reservas: Reserva[] = [ 
     { id: 1, nombre: 'Reserva Ejemplo', fecha: '20/10/2025', imagen: '', estado: 'Pendiente' } 
   ];
-  selectedprereserva: Prereserva | null = null;
+  selectedReserva: Reserva | null = null;
   cancelada = false;
   imagenPrevia: string | null = null;
   imagenSubida: boolean = false;
 
-  goToPreReserva(prereserva: Prereserva): void {
-    this.selectedprereserva = prereserva;
+  goToPreReserva(reserva: Reserva): void {
+    this.selectedReserva = reserva;
   }
 
   cancelarReserva(): void {
-    if (!this.selectedprereserva) return; 
+    if (!this.selectedReserva) return; 
 
-    this.selectedprereserva.estado = 'Cancelada';
+    this.selectedReserva.estado = 'Cancelada';
     // (Aquí iría la llamada al servicio para cancelar)
     this.cancelada = true;
     setTimeout(() => {

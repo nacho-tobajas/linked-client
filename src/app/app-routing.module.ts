@@ -36,8 +36,8 @@ const routes: Routes = [
   { path: 'especialidades', component: EspecialidadesComponent, canActivate: [adminModGuard] },
   { path: 'gestionar-agenda', component: AgendaComponent, canActivate: [ /* AuthGuard de Tatuador */ ] },
   {
-    path: 'prereserva',
-    loadChildren: () => import('./aplicacion/prereserva/prereserva-routing.module.js').then(m => m.PrereservaRoutingModule)
+    path: 'reserva',
+    loadChildren: () => import('./aplicacion/reserva/reserva-routing.module.js').then(m => m.ReservaRoutingModule)
   },
   {
     path: 'mis-reservas',

@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AgendaService, HorarioHabitual, HorarioHabitualInput } from '../agenda.service';
+import { AgendaService } from '../agenda.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialogRef } from '@angular/material/dialog';
+import { HorarioHabitual, HorarioHabitualInput } from 'src/app/models/horarios-tatuador/horario-habitual';
 
 @Component({
   selector: 'app-gestionar-horario',
