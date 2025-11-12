@@ -60,7 +60,7 @@ export class ListadoTatuadoresComponent {
   
     confirmarSeleccion(): void {
       if (this.selectedTatuadorId) {
-        this.router.navigate(['/prereserva/horarios', this.selectedTatuadorId]);
+        this.router.navigate(['/reserva/horarios', this.selectedTatuadorId]);
       }
     }
 

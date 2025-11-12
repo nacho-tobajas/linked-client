@@ -13,7 +13,7 @@ export class HomeComponent {
 
   iniciarPrereserva(): void {
 
-  this.router.navigate(['/prereserva/listado']);
+  this.router.navigate(['/reserva/listado']);
   }
 
   goToMisReservas(): void {

@@ -56,12 +56,12 @@ export class SeleccionarHorarioComponent {
         this.selectedTatuador = tatuadores.find(t => t.idUser === this.tatuadorId) || null;
         if (!this.selectedTatuador) {
           console.error('Tatuador no encontrado');
-          this.router.navigate(['/prereserva/listado']);
+          this.router.navigate(['/reserva/listado']);
         }
       });
     } else {
       console.error('No se proporcionó ID de tatuador');
-      this.router.navigate(['/prereserva/listado']);
+      this.router.navigate(['/reserva/listado']);
     }
   }
 
