@@ -1,6 +1,6 @@
 import { User } from '../user.model';
 
-export interface Turno {
+export interface TurnoSesion {
   id: number;
   fecha_hora_inicio: Date | string; 
   fecha_hora_fin: Date | string;

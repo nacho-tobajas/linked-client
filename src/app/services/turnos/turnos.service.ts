@@ -10,6 +10,12 @@ export interface SolicitarTurnoDto {
   descripcion_cliente: string;
 }
 
+// Interfaz para la respuesta de 'getMisTurnos' (viene del repo TurnoTatuador)
+export interface TurnoTatuadorResponse {
+  tatuador: any; // Info del tatuador
+  turnoSesion: any; // Info del TurnoSesion (el turno en sí)
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -32,6 +38,15 @@ private apiUrl = `${environment.urlApi}turnos`;
     return this.http.post(`${this.apiUrl}/solicitar`, formData);
   }
 
+  getMisTurnos(): Observable<TurnoTatuadorResponse[]> {
+    return this.http.get<TurnoTatuadorResponse[]>(`${this.apiUrl}/mis-turnos`);
+  }
+
+  gestionarTurno(idTurno: number, nuevoEstado: string): Observable<any> {
+    const body = { estado: nuevoEstado };
+    return this.http.patch(`${this.apiUrl}/gestionar/${idTurno}`, body);
+  }
+
   
-  // métodos para GET /mis-turnos del cliente y tatuador
+  // métodos para GET /mis-turnos del cliente
 }

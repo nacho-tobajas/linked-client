@@ -1,11 +1,13 @@
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GestionarHorarioComponent } from './gestionar-horario/gestionar-horario.component';
 import { AgendaService } from './agenda.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { Turno } from 'src/app/models/turno/turno.model';
+import { TurnoSesion } from 'src/app/models/turno/turno-sesion.model';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { TurnosService, TurnoTatuadorResponse } from 'src/app/services/turnos/turnos.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-agenda',
@@ -13,10 +15,10 @@ import { MatSort } from '@angular/material/sort';
   templateUrl: './agenda.component.html',
   styleUrl: './agenda.component.scss'
 })
-export class AgendaComponent {
+export class AgendaComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = ['fecha', 'hora', 'cliente', 'estado', 'acciones'];
-  dataSource = new MatTableDataSource<Turno>([]); 
+  dataSource = new MatTableDataSource<TurnoSesion>([]); 
 
   @ViewChild(MatPaginator) paginator!: MatPaginator; 
   @ViewChild(MatSort) sort!: MatSort; 
@@ -24,30 +26,37 @@ export class AgendaComponent {
   isLoadingTurnos = false;
   errorTurnos: string | null = null;
 
-constructor(private dialog: MatDialog, private agendaService: AgendaService) { } 
+constructor(
+    private dialog: MatDialog, 
+    private turnosService: TurnosService,
+    private snackBar: MatSnackBar
+  ) { }
 
   ngOnInit(): void {
     this.loadTurnos(); 
   }
 
   abrirConfiguracionHorario(): void {
+    // ... (tu código de abrir diálogo)
     const dialogRef = this.dialog.open(GestionarHorarioComponent, {
-      width: '85%', 
-      maxWidth: '800px', 
-      disableClose: true,
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('El diálogo de horario se cerró');
-      // 'result' podría traer info si el modal devuelve algo al cerrarse
-      // Aquí podrías, por ejemplo, refrescar algo si fuera necesario
+      width: '85%', maxWidth: '800px', disableClose: true,
     });
   }
 
   ngAfterViewInit(): void {
-    // Conecta paginador y ordenador al dataSource DESPUÉS de que se rendericen
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    
+    // Configura el Sort para que acceda a los datos anidados
+    this.dataSource.sortingDataAccessor = (item: TurnoSesion, headerId: string) => {
+      switch (headerId) {
+        case 'fecha': return item.fecha_hora_inicio;
+        case 'hora': return item.fecha_hora_inicio;
+        case 'cliente': return item.cliente?.realname || '';
+        case 'estado': return item.estado || '';
+        default: return (item as any)[headerId];
+      }
+    };
   }
 
   //Logica de turnos
@@ -56,11 +65,9 @@ constructor(private dialog: MatDialog, private agendaService: AgendaService) { }
     this.isLoadingTurnos = true;
     this.errorTurnos = null;
 
-    // TODO: Implementar getMisTurnos() en AgendaService o TurnoService
-    /*
-    this.agendaService.getMisTurnos().subscribe({
-      next: (turnos) => {
-        this.dataSource.data = turnos;
+    this.turnosService.getMisTurnos().subscribe({
+      next: (turnosTatuador: TurnoTatuadorResponse[]) => {
+        this.dataSource.data = turnosTatuador.map(tt => tt.turnoSesion);
         this.isLoadingTurnos = false;
       },
       error: (err) => {
@@ -69,58 +76,70 @@ constructor(private dialog: MatDialog, private agendaService: AgendaService) { }
         this.isLoadingTurnos = false;
       }
     });
-    */
-
-    // --- DATOS DE EJEMPLO (Borrar cuando tengas el backend) ---
-    const ejemploTurnos: Turno[] = [
-      { id: 1, fecha_hora_inicio: new Date(2025, 9, 28, 10, 0), fecha_hora_fin: new Date(2025, 9, 28, 11, 0), id_cliente: 10, cliente: { realname: 'Cliente', surname: 'Uno' }, estado: 'Pendiente', descripcion_cliente:'Leon en antebrazo' },
-      { id: 2, fecha_hora_inicio: new Date(2025, 9, 29, 14, 0), fecha_hora_fin: new Date(2025, 9, 29, 15, 0), id_cliente: 11, cliente: { realname: 'Cliente', surname: 'Dos' }, estado: 'Confirmada', descripcion_cliente:'Frase lettering' },
-      { id: 3, fecha_hora_inicio: new Date(2025, 10, 1, 11, 0), fecha_hora_fin: new Date(2025, 10, 1, 12, 0), id_cliente: 12, cliente: { realname: 'Cliente', surname: 'Tres' }, estado: 'Pendiente' }
-    ];
-    this.dataSource.data = ejemploTurnos;
-    this.isLoadingTurnos = false;
-    // --- FIN DATOS DE EJEMPLO ---
   }
 
-  // Filtro para la tabla (opcional)
+  // Filtro para la tabla 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+    
+    // Configura el filtro para buscar en datos anidados
+    this.dataSource.filterPredicate = (data: TurnoSesion, filter: string) => {
+      const dataStr = 
+        (data.cliente?.realname || '') + 
+        (data.cliente?.surname || '') + 
+        data.estado +
+        new Date(data.fecha_hora_inicio!).toLocaleDateString('es-AR'); // "dd/MM/yyyy"
+      return dataStr.toLowerCase().includes(filter);
+    };
 
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
   }
 
-  // --- Acciones de la tabla (Placeholders) ---
+  // --- Acciones de la tabla (CONECTADAS) ---
 
-  verDetalleTurno(turno: Turno): void {
+  verDetalleTurno(turno: TurnoSesion): void {
     console.log("Ver detalle:", turno);
-    // TODO: Abrir un diálogo/modal con toda la info del turno, descripción, imágenes, mensajes
+    // TODO: Abrir un diálogo/modal con toda la info
     // const dialogRef = this.dialog.open(DetalleTurnoDialogComponent, { data: turno });
   }
 
-  aceptarTurno(turno: Turno): void {
-    console.log("Aceptar:", turno);
-    // TODO: Llamar al servicio backend para cambiar estado a 'Confirmada'
-    // this.agendaService.cambiarEstadoTurno(turno.id, 'Confirmada').subscribe(() => this.loadTurnos());
+  aceptarTurno(turno: TurnoSesion): void {
+    this.gestionarTurno(turno.id!, 'Confirmada');
   }
 
-  rechazarTurno(turno: Turno): void {
-    console.log("Rechazar:", turno);
-    // TODO: Abrir diálogo para poner motivo y llamar al servicio backend para cambiar estado a 'Rechazada'
-    // const dialogRef = this.dialog.open(RechazarTurnoDialogComponent, { data: turno });
-    // dialogRef.afterClosed().subscribe(motivo => {
-    //   if (motivo) {
-    //      this.agendaService.cambiarEstadoTurno(turno.id, 'Rechazada', motivo).subscribe(() => this.loadTurnos());
-    //   }
-    // });
+  rechazarTurno(turno: TurnoSesion): void {
+    // TODO: Pedir un motivo
+    // Por ahora, lo rechazamos directamente
+    this.gestionarTurno(turno.id!, 'Rechazada');
   }
 
-  completarTurno(turno: Turno): void {
-    console.log("Completar:", turno);
-    // TODO: Llamar al servicio backend para cambiar estado a 'Completada'
-    // this.agendaService.cambiarEstadoTurno(turno.id, 'Completada').subscribe(() => this.loadTurnos());
+  completarTurno(turno: TurnoSesion): void {
+    this.gestionarTurno(turno.id!, 'Completada');
   }
 
+  //Función helper para llamar al servicio de gestión y actualizar la UI
+
+  private gestionarTurno(id: number, nuevoEstado: string): void {
+    this.turnosService.gestionarTurno(id, nuevoEstado).subscribe({
+      next: (turnoActualizado) => {
+        this.snackBar.open(`Turno ${nuevoEstado.toLowerCase()} correctamente.`, 'OK', { duration: 3000 });
+        // Actualizamos la fila en la tabla SIN recargar todo
+        const index = this.dataSource.data.findIndex(t => t.id === id);
+        if (index > -1) {
+          this.dataSource.data[index] = turnoActualizado;
+          this.dataSource._updateChangeSubscription(); // Forzar refresco de la tabla
+        } else {
+          this.loadTurnos(); // Fallback por si no lo encuentra
+        }
+      },
+      error: (err) => {
+        console.error(err);
+        this.snackBar.open(`Error: ${err.error?.message || 'No se pudo actualizar el turno.'}`, 'Cerrar', { duration: 5000 });
+      }
+    });
+  }
+  
 }
