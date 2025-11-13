@@ -16,6 +16,7 @@ import { ReservaStateService } from 'src/app/services/reserva/reserva-state.serv
 export class SeleccionarHorarioComponent {
 
   minDate: Date;
+  isSaving = false;
 
   constructor(private router: Router,
               private route: ActivatedRoute,
@@ -102,7 +103,7 @@ export class SeleccionarHorarioComponent {
     return !!(this.selectedDate && this.selectedTime && this.descripcionCliente.trim() !== '' && this.selectedFiles.length > 0);
   }
   
-removeImage(index: number): void {
+  removeImage(index: number): void {
     // Elimina el archivo de la lista que se subirá al servidor
     this.selectedFiles.splice(index, 1);
     // Elimina la URL de la lista que se usa para la vista previa
@@ -147,6 +148,7 @@ removeImage(index: number): void {
       alert("Por favor, completa la fecha, hora, descripción y sube al menos una imagen.");
       return;
     }
+    this.isSaving = true;
 
     // Calcular Fechas ISO para el DTO
     const [hInicio, mInicio] = this.selectedTime.split(':');
@@ -158,34 +160,35 @@ removeImage(index: number): void {
     fecha_hora_fin.setMinutes(fecha_hora_fin.getMinutes() + 60);
 
     // Crear el DTO
-    const solicitud: SolicitarTurnoDto = {
+    const solicitudDto: SolicitarTurnoDto = {
       tatuadorId: this.tatuadorId,
       fecha_hora_inicio: fecha_hora_inicio.toISOString(),
       fecha_hora_fin: fecha_hora_fin.toISOString(),
       descripcion_cliente: this.descripcionCliente
     };
 
-    this.turnosService.solicitarTurno(solicitud).subscribe({
+    console.log('Enviando al servicio:', this.selectedFiles);
+
+    this.turnosService.solicitarTurno(solicitudDto, this.selectedFiles).subscribe({
       next: (turnoCreado) => {
         console.log('Turno creado:', turnoCreado);
         
         const datosParaConfirmar = {
             tatuador: this.selectedTatuador,
-            fecha_hora_inicio: fecha_hora_inicio.toISOString(), // Le pasamos la fecha/hora
-            // (puedes añadir más datos si los necesitas mostrar)
+            fecha_hora_inicio: fecha_hora_inicio.toISOString(), 
+            // Añadir datos
         };
         
         // Guardamos en el servicio de estado
         this.reservaStateService.setDatos(datosParaConfirmar);
-        
-        // TODO: Subir las imágenes (this.selectedFiles) asociadas al 'turnoCreado.id'
-        
-        // Navegamos a la pantalla de confirmación
-        this.router.navigate(['/prereserva/confirmacion']);
+                
+
+        this.router.navigate(['/reserva/confirmacion']);
       },
       error: (err) => {
         console.error(err);
         alert(`Error: ${err.error?.message || 'No se pudo procesar la solicitud.'}`);
+        this.isSaving = false;
       }
     });
   }

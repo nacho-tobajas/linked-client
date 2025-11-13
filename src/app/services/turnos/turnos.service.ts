@@ -18,10 +18,20 @@ private apiUrl = `${environment.urlApi}turnos`;
 
   constructor(private http: HttpClient) { }
 
-  solicitarTurno(datos: SolicitarTurnoDto): Observable<any> {
-    return this.http.post(`${this.apiUrl}/solicitar`, datos);
+  solicitarTurno(datos: SolicitarTurnoDto, files: File[]): Observable<any> {
+    const formData = new FormData();
+    formData.append('tatuadorId', datos.tatuadorId.toString());
+    formData.append('fecha_hora_inicio', datos.fecha_hora_inicio);
+    formData.append('fecha_hora_fin', datos.fecha_hora_fin);
+    formData.append('descripcion_cliente', datos.descripcion_cliente);
+
+    files.forEach(file => {
+      formData.append('imagenes', file, file.name);
+    });
+    
+    return this.http.post(`${this.apiUrl}/solicitar`, formData);
   }
 
-  // (Aquí agregarías después el método para subir las imágenes)
-  // (Y los métodos para GET /mis-turnos del cliente y tatuador)
+  
+  // métodos para GET /mis-turnos del cliente y tatuador
 }
