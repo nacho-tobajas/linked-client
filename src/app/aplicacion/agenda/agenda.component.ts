@@ -8,6 +8,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { TurnosService, TurnoTatuadorResponse } from 'src/app/services/turnos/turnos.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AgendaDetalleComponent } from './agenda-detalle/agenda-detalle.component.js';
 
 @Component({
   selector: 'app-agenda',
@@ -98,12 +99,27 @@ constructor(
     }
   }
 
-  // --- Acciones de la tabla (CONECTADAS) ---
 
   verDetalleTurno(turno: TurnoSesion): void {
-    console.log("Ver detalle:", turno);
-    // TODO: Abrir un diálogo/modal con toda la info
-    // const dialogRef = this.dialog.open(DetalleTurnoDialogComponent, { data: turno });
+    console.log(turno);
+    const dialogRef = this.dialog.open(AgendaDetalleComponent, {
+      width: '600px',
+      data: { turno: turno }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('Acción recibida:', result.action, 'Mensaje:', result.message);
+
+        if (result.action === 'confirmar') {
+           this.gestionarTurno(result.turnoId, 'Confirmada'); 
+        } else if (result.action === 'rechazar') {
+           this.gestionarTurno(result.turnoId, 'Rechazada');
+        } else if (result.action === 'completar') {
+           this.gestionarTurno(result.turnoId, 'Completada');
+        }
+      }
+    });
   }
 
   aceptarTurno(turno: TurnoSesion): void {
@@ -120,13 +136,10 @@ constructor(
     this.gestionarTurno(turno.id!, 'Completada');
   }
 
-  //Función helper para llamar al servicio de gestión y actualizar la UI
-
   private gestionarTurno(id: number, nuevoEstado: string): void {
     this.turnosService.gestionarTurno(id, nuevoEstado).subscribe({
       next: (turnoActualizado) => {
         this.snackBar.open(`Turno ${nuevoEstado.toLowerCase()} correctamente.`, 'OK', { duration: 3000 });
-        // Actualizamos la fila en la tabla SIN recargar todo
         const index = this.dataSource.data.findIndex(t => t.id === id);
         if (index > -1) {
           this.dataSource.data[index] = turnoActualizado;

@@ -1,0 +1,84 @@
+<div class="detail-container">
+  
+  <div class="dialog-header">
+    <div class="cliente-info">
+      <img [src]="environmentImg + data.turno.cliente?.profile_photo || '../../../assets/images/default-profile.jpg'" 
+           class="avatar-cliente" alt="Avatar">
+      <div>
+        <h2>{{ data.turno.cliente?.realname }} {{ data.turno.cliente?.surname }}</h2>
+        <p class="subtitle">{{ data.turno.cliente?.username }}</p>
+      </div>
+    </div>
+    
+    <div class="estado-badge" [ngClass]="'status-' + data.turno.estado.toLowerCase()">
+      {{ data.turno.estado }}
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <mat-dialog-content class="content-scroll">
+    
+    <div class="info-grid">
+      <div class="info-item">
+        <mat-icon>calendar_today</mat-icon>
+        <span>{{ data.turno.fecha_hora_inicio | date:'EEEE dd MMMM yyyy' }}</span>
+      </div>
+      <div class="info-item">
+        <mat-icon>schedule</mat-icon>
+        <span>{{ data.turno.fecha_hora_inicio | date:'HH:mm' }} - {{ data.turno.fecha_hora_fin | date:'HH:mm' }}</span>
+      </div>
+      <div class="info-item">
+        <mat-icon>email</mat-icon>
+        <span>{{ data.turno.cliente?.email }}</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>La Idea del Cliente</h3>
+      <p class="descripcion-text">
+        {{ data.turno.descripcion_cliente || 'Sin descripción.' }}
+      </p>
+    </div>
+
+    <div class="section" *ngIf="data.turno.imagenes && data.turno.imagenes.length > 0">
+      <h3>Referencias Visuales</h3>
+      <div class="galeria">
+        <div class="img-wrapper" *ngFor="let img of data.turno.imagenes">
+          <img [src]="environmentImg + img.image_path" alt="Referencia" (click)="openImageUrl(img.image_path)">
+        </div>
+      </div>
+    </div>
+
+    <div class="section response-area" *ngIf="data.turno.estado === 'Pendiente' || data.turno.estado === 'Confirmada'">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Escribir mensaje/motivo al cliente (Opcional)</mat-label>
+        <textarea matInput [(ngModel)]="mensajeRespuesta" rows="3" placeholder="Ej: 'Te espero 15 min antes', 'No hago ese estilo', etc."></textarea>
+      </mat-form-field>
+    </div>
+
+  </mat-dialog-content>
+
+  <mat-divider></mat-divider>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="cerrar(null)">Cerrar</button>
+
+    <ng-container *ngIf="data.turno.estado === 'Pendiente'">
+      <button mat-stroked-button color="warn" (click)="cerrar('rechazar')">
+        <mat-icon>block</mat-icon> Rechazar
+      </button>
+      <button mat-raised-button color="primary" (click)="cerrar('confirmar')">
+        <mat-icon>check</mat-icon> Confirmar Turno
+      </button>
+    </ng-container>
+
+    <ng-container *ngIf="data.turno.estado === 'Confirmada'">
+      <button mat-stroked-button color="warn" (click)="cerrar('rechazar')">Cancelarlo</button>
+      <button mat-raised-button color="accent" (click)="cerrar('completar')">
+        <mat-icon>done_all</mat-icon> Marcar Completado
+      </button>
+    </ng-container>
+
+  </mat-dialog-actions>
+</div>

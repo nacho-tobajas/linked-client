@@ -36,10 +36,17 @@ export class ListadoTatuadoresComponent {
   
     // --- Lógica: Paso 1 (Listado) ---
     cargarTatuadores(): void {
+      
       this.errorCarga = null;
       this.tatuadorService.getTatuadores().subscribe({
-        next: (data) => {
-          this.tatuadores = data;
+        next: (data: Tatuador[]) => { 
+        const tatuadoresLimpios = data.map(tatuador => {
+
+          tatuador.especialidades = tatuador.especialidades || []; 
+          return tatuador;
+        });
+
+        this.tatuadores = tatuadoresLimpios;
         },
         error: (err) => {
           console.error('Error al cargar tatuadores:', err);
