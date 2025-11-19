@@ -17,47 +17,84 @@
 
   <mat-divider></mat-divider>
 
-  <mat-dialog-content class="content-scroll">
+  <mat-tab-group dynamicHeight class="dialog-tabs full-height-tabs">
     
-    <div class="info-grid">
-      <div class="info-item">
-        <mat-icon>calendar_today</mat-icon>
-        <span>{{ data.turno.fecha_hora_inicio | date:'EEEE dd MMMM yyyy' }}</span>
-      </div>
-      <div class="info-item">
-        <mat-icon>schedule</mat-icon>
-        <span>{{ data.turno.fecha_hora_inicio | date:'HH:mm' }} - {{ data.turno.fecha_hora_fin | date:'HH:mm' }}</span>
-      </div>
-      <div class="info-item">
-        <mat-icon>email</mat-icon>
-        <span>{{ data.turno.cliente?.email }}</span>
-      </div>
-    </div>
+    <mat-tab label="Detalles">
+      <mat-dialog-content class="content-scroll">
+          
+          <div class="info-grid">
+             <div class="info-item">
+                <mat-icon>calendar_today</mat-icon>
+                <span>{{ data.turno.fecha_hora_inicio | date:'EEEE dd MMMM yyyy' }}</span>
+             </div>
+             <div class="info-item">
+                <mat-icon>schedule</mat-icon>
+                <span>{{ data.turno.fecha_hora_inicio | date:'HH:mm' }} - {{ data.turno.fecha_hora_fin | date:'HH:mm' }}</span>
+             </div>
+             <div class="info-item">
+                <mat-icon>email</mat-icon>
+                <span>{{ data.turno.cliente?.email }}</span>
+             </div>
+          </div>
 
-    <div class="section">
-      <h3>La Idea del Cliente</h3>
-      <p class="descripcion-text">
-        {{ data.turno.descripcion_cliente || 'Sin descripción.' }}
-      </p>
-    </div>
+          <div class="section">
+            <h3>La Idea del Cliente</h3>
+            <p class="descripcion-text">
+              {{ data.turno.descripcion_cliente || 'Sin descripción.' }}
+            </p>
+          </div>
 
-    <div class="section" *ngIf="data.turno.imagenes && data.turno.imagenes.length > 0">
-      <h3>Referencias Visuales</h3>
-      <div class="galeria">
-        <div class="img-wrapper" *ngFor="let img of data.turno.imagenes">
-          <img [src]="environmentImg + img.image_path" alt="Referencia" (click)="openImageUrl(img.image_path)">
+          <div class="section" *ngIf="data.turno.imagenes && data.turno.imagenes.length > 0">
+            <h3>Referencias Visuales</h3>
+            <div class="galeria">
+               <div class="img-wrapper" *ngFor="let img of data.turno.imagenes">
+                 <img [src]="environmentImg + img.image_path" alt="Referencia" (click)="openImageUrl(img.image_path)">
+               </div>
+            </div>
+          </div>
+
+      </mat-dialog-content>
+    </mat-tab>
+    
+    <mat-tab label="Mensajes">
+      <div class="chat-layout">
+        
+        <div class="messages-list" #messagesContainer>
+          
+          <div class="message-bubble" 
+               *ngFor="let msg of mensajes"
+               [class.own-message]="msg.usuarioEnvia.id === currentUserId">
+            
+            <div class="msg-header">
+              <strong>{{ msg.usuarioEnvia?.realname }}</strong>
+              <small>{{ msg.timestamp | date:'short' }}</small>
+            </div>
+            <div class="msg-body">
+              {{ msg.mensaje }}
+            </div>
+          </div>
+          
+          <div *ngIf="mensajes?.length === 0" class="no-messages">
+            No hay mensajes para este turno.
+          </div>
         </div>
+
+        <div class="chat-input-area" *ngIf="data.turno.estado !== 'Completada' && data.turno.estado !== 'Cancelada'">
+            <mat-form-field appearance="outline" class="full-width no-bottom-padding">
+              <mat-label>Escribir respuesta...</mat-label>
+              <textarea matInput [(ngModel)]="nuevoMensajeText" rows="1" 
+                        style="resize:none"
+                        (keyup.enter)="enviarMensaje()"></textarea>
+              <button mat-icon-button matSuffix [disabled]="!nuevoMensajeText.trim()" (click)="enviarMensaje()">
+                <mat-icon>send</mat-icon>
+              </button>
+            </mat-form-field>
+        </div>
+
       </div>
-    </div>
+    </mat-tab>
 
-    <div class="section response-area" *ngIf="data.turno.estado === 'Pendiente' || data.turno.estado === 'Confirmada'">
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Escribir mensaje/motivo al cliente (Opcional)</mat-label>
-        <textarea matInput [(ngModel)]="mensajeRespuesta" rows="3" placeholder="Ej: 'Te espero 15 min antes', 'No hago ese estilo', etc."></textarea>
-      </mat-form-field>
-    </div>
-
-  </mat-dialog-content>
+  </mat-tab-group>
 
   <mat-divider></mat-divider>
 
@@ -79,6 +116,6 @@
         <mat-icon>done_all</mat-icon> Marcar Completado
       </button>
     </ng-container>
-
   </mat-dialog-actions>
+  
 </div>

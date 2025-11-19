@@ -8,7 +8,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { TurnosService, TurnoTatuadorResponse } from 'src/app/services/turnos/turnos.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AgendaDetalleComponent } from './agenda-detalle/agenda-detalle.component.js';
+import { AgendaDetalleComponent } from './agenda-detalle/agenda-detalle.component';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-agenda',
@@ -16,46 +17,171 @@ import { AgendaDetalleComponent } from './agenda-detalle/agenda-detalle.componen
   templateUrl: './agenda.component.html',
   styleUrl: './agenda.component.scss'
 })
-export class AgendaComponent implements OnInit, AfterViewInit {
+export class AgendaComponent implements OnInit {
 
   displayedColumns: string[] = ['fecha', 'hora', 'cliente', 'estado', 'acciones'];
   dataSource = new MatTableDataSource<TurnoSesion>([]); 
+  
+  filteredTurnos: TurnoSesion[] = [];
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator; 
-  @ViewChild(MatSort) sort!: MatSort; 
+  // Filtros
+  filterEstado: string = '';
+  filterUsername: string = '';
+  filterFechaDesde: Date | null = null;
+  filterFechaHasta: Date | null = null;
+  today = new Date();
+
+  @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
+    if (mp) {
+       this.dataSource.paginator = mp;
+    }
+  }
+
+  @ViewChild(MatSort) set matSort(ms: MatSort) {
+    if (ms) {
+       this.dataSource.sort = ms;
+       this.configurarOrdenamiento(); // Llamamos a la configuración aquí
+    }
+  }
 
   isLoadingTurnos = false;
   errorTurnos: string | null = null;
 
-constructor(
+  constructor(
     private dialog: MatDialog, 
     private turnosService: TurnosService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private breakpointObserver: BreakpointObserver
   ) { }
 
-  ngOnInit(): void {
-    this.loadTurnos(); 
+  configurarFiltro() {
+    this.dataSource.filterPredicate = (data: TurnoSesion, filter: string) => {
+      
+      // Parseamos el string del filtro de vuelta a un objeto
+      const searchTerms = JSON.parse(filter);
+
+      // A. Filtro por Estado
+      const coincideEstado = !searchTerms.estado || 
+        data.estado?.toLowerCase() === searchTerms.estado.toLowerCase();
+
+      // B. Filtro por Cliente (Username, Nombre o Apellido)
+      const nombreCliente = (
+          (data.cliente?.username || '') + ' ' + 
+          (data.cliente?.realname || '') + ' ' + 
+          (data.cliente?.surname || '')
+      ).toLowerCase();
+      
+      const coincideNombre = !searchTerms.username || 
+        nombreCliente.includes(searchTerms.username.toLowerCase());
+
+      // C. Filtro por Fecha
+      const fechaTurno = new Date(data.fecha_hora_inicio);
+      fechaTurno.setHours(0, 0, 0, 0); // Ignorar hora para comparar días
+
+      let coincideFecha = true;
+      if (searchTerms.fechaDesde) {
+          const desde = new Date(searchTerms.fechaDesde);
+          desde.setHours(0, 0, 0, 0);
+          coincideFecha = coincideFecha && (fechaTurno >= desde);
+      }
+      if (searchTerms.fechaHasta) {
+          const hasta = new Date(searchTerms.fechaHasta);
+          hasta.setHours(0, 0, 0, 0);
+          coincideFecha = coincideFecha && (fechaTurno <= hasta);
+      }
+
+      return coincideEstado && coincideNombre && coincideFecha;
+    };
   }
 
+  aplicarFiltro(): void {
+      if (this.filterFechaDesde && this.filterFechaHasta && this.filterFechaDesde > this.filterFechaHasta) {
+        alert('La fecha "desde" no puede ser mayor que la fecha "hasta".');
+        return;
+      }
+  
+      // Creamos el objeto de filtro
+      const filterValues = {
+        estado: this.filterEstado,
+        username: this.filterUsername,
+        fechaDesde: this.filterFechaDesde,
+        fechaHasta: this.filterFechaHasta
+      };
+  
+      // Se lo pasamos al dataSource como string (esto dispara el filterPredicate)
+      this.dataSource.filter = JSON.stringify(filterValues);
+      
+      if (this.dataSource.paginator) {
+        this.dataSource.paginator.firstPage();
+      }
+  }
+  
+  resetFiltro(): void {
+      this.filterEstado = '';
+      this.filterUsername = '';
+      this.filterFechaDesde = null;
+      this.filterFechaHasta = null;
+      this.dataSource.filter = ''; // Resetea el filtro
+  }
+
+  // Validadores para los Datepickers (Min/Max)
+  filterDesde = (d: Date | null): boolean => {
+    if (!d) return false;
+    return !this.filterFechaHasta || d <= this.filterFechaHasta;
+  };
+
+  filterHasta = (d: Date | null): boolean => {
+    if (!d) return false;
+    return !this.filterFechaDesde || d >= this.filterFechaDesde;
+  };
+
+  onDateInput(event: any) {
+    // Tu lógica para formatear input manual de fecha
+    let value: string = event.target.value.replace(/\D/g, '');
+    if (value.length >= 2) value = value.slice(0, 2) + '/' + value.slice(2);
+    if (value.length >= 5) value = value.slice(0, 5) + '/' + value.slice(5, 9);
+    event.target.value = value;
+  }
+
+  ngOnInit(): void {
+    this.loadTurnos();
+    this.setupResponsiveColumns();
+    this.configurarFiltro(); 
+  }
+
+  private setupResponsiveColumns(): void {
+    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
+      if (result.matches) {
+        // pantalla pequeña: oculto la columna 'cliente' (alguna otra??)
+        this.displayedColumns = ['fecha', 'hora', 'estado', 'acciones'];
+      } else {
+        // pantalla grande: muestro todas
+        this.displayedColumns = ['fecha', 'hora', 'cliente', 'estado', 'acciones'];
+      }
+    });
+  }  
+
   abrirConfiguracionHorario(): void {
-    // ... (tu código de abrir diálogo)
     const dialogRef = this.dialog.open(GestionarHorarioComponent, {
       width: '85%', maxWidth: '800px', disableClose: true,
     });
   }
 
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    
-    // Configura el Sort para que acceda a los datos anidados
-    this.dataSource.sortingDataAccessor = (item: TurnoSesion, headerId: string) => {
-      switch (headerId) {
-        case 'fecha': return item.fecha_hora_inicio;
-        case 'hora': return item.fecha_hora_inicio;
-        case 'cliente': return item.cliente?.realname || '';
-        case 'estado': return item.estado || '';
-        default: return (item as any)[headerId];
+
+
+  configurarOrdenamiento() {
+    this.dataSource.sortingDataAccessor = (item: any, property: string) => {
+      switch (property) {
+        case 'fecha': 
+        case 'hora': 
+          // Convertir a timestamp para ordenar números correctamente
+          return new Date(item.fecha_hora_inicio).getTime();
+        case 'cliente': 
+          return (item.cliente?.realname || '').toLowerCase();
+        case 'estado': 
+          return (item.estado || '').toLowerCase();
+        default: 
+          return item[property];
       }
     };
   }
@@ -70,6 +196,7 @@ constructor(
       next: (turnosTatuador: TurnoTatuadorResponse[]) => {
         this.dataSource.data = turnosTatuador.map(tt => tt.turnoSesion);
         this.isLoadingTurnos = false;
+        console.log(this.dataSource.data)
       },
       error: (err) => {
         console.error("Error al cargar turnos:", err);

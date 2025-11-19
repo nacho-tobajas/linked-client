@@ -1,137 +1,331 @@
+/* =========================================
+   1. CONTENEDOR PRINCIPAL (LAYOUT MODAL)
+   ========================================= */
 .detail-container {
-  max-width: 600px;
-  min-width: 400px;
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  /* Altura fija: 80% de la ventana */
+  max-height: 800px;
+  min-width: 500px;
+  /* Ancho mínimo cómodo */
+  overflow: hidden;
+  /* Previene scroll en el contenedor padre */
+  background-color: #fff;
 }
 
+/* =========================================
+   2. ENCABEZADO (HEADER)
+   ========================================= */
 .dialog-header {
+  flex: 0 0 auto;
+  /* Altura fija basada en contenido */
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 16px 24px;
+  background: #fff;
+  z-index: 10;
 
   .cliente-info {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 16px;
 
     .avatar-cliente {
-      width: 50px;
-      height: 50px;
+      width: 56px;
+      height: 56px;
       border-radius: 50%;
       object-fit: cover;
+      border: 2px solid #eee;
     }
 
     h2 {
       margin: 0;
       font-size: 1.2rem;
+      font-weight: 500;
+      color: #333;
     }
 
     .subtitle {
-      margin: 0;
+      margin: 2px 0 0 0;
       color: #777;
       font-size: 0.9rem;
     }
   }
 
+  /* Chips de Estado */
   .estado-badge {
-    padding: 4px 12px;
-    border-radius: 16px;
-    font-weight: bold;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-weight: 600;
     font-size: 0.8rem;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
 
     &.status-pendiente {
-      background-color: #fff3cd;
-      color: #856404;
+      background-color: #fff8e1;
+      color: #f57f17;
+      border: 1px solid #ffe0b2;
     }
 
     &.status-confirmada {
-      background-color: #d4edda;
-      color: #155724;
+      background-color: #e8f5e9;
+      color: #2e7d32;
+      border: 1px solid #c8e6c9;
     }
 
     &.status-rechazada,
     &.status-cancelada {
-      background-color: #f8d7da;
-      color: #721c24;
+      background-color: #ffebee;
+      color: #c62828;
+      border: 1px solid #ffcdd2;
     }
 
     &.status-completada {
-      background-color: #d1ecf1;
-      color: #0c5460;
+      background-color: #e0f7fa;
+      color: #006064;
+      border: 1px solid #b2ebf2;
     }
   }
 }
 
+/* =========================================
+   3. PESTAÑAS (TABS) - EL TRUCO DE ALTURA
+   ========================================= */
+.full-height-tabs {
+  flex: 1;
+  /* Ocupa todo el espacio vertical restante */
+  overflow: hidden;
+  /* Necesario para que el scroll interno funcione */
+
+  /* Forzamos al wrapper interno de Material a ocupar el 100% */
+  ::ng-deep .mat-mdc-tab-body-wrapper {
+    height: 100%;
+  }
+}
+
+/* =========================================
+   4. PESTAÑA 1: DETALLES
+   ========================================= */
 .content-scroll {
-  max-height: 70vh; // Scroll si hay muchas fotos
-  padding: 20px 24px;
+  height: 100%;
+  /* Llena la pestaña */
+  overflow-y: auto;
+  /* Scroll vertical nativo */
+  padding: 24px;
+  /* Padding interno */
+  box-sizing: border-box;
 }
 
 .info-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-bottom: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+  background: #f9fafb;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #eee;
 
   .info-item {
     display: flex;
     align-items: center;
-    gap: 8px;
-    color: #555;
+    gap: 10px;
+    color: #444;
+    font-size: 0.95rem;
 
     mat-icon {
-      color: #3f51b5;
+      color: #666;
+      font-size: 22px;
+      width: 22px;
+      height: 22px;
     }
   }
 }
 
 .section {
-  margin-top: 24px;
+  margin-top: 28px;
 
   h3 {
     font-size: 1rem;
-    color: #333;
-    margin-bottom: 8px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 4px;
+    color: #222;
+    margin-bottom: 12px;
+    font-weight: 600;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 6px;
+    display: inline-block;
   }
 
   .descripcion-text {
-    background: #f9f9f9;
-    padding: 12px;
-    border-radius: 4px;
+    background: #fff;
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
     border-left: 4px solid #3f51b5;
+    /* Acento visual */
+    color: #444;
+    line-height: 1.6;
   }
 }
 
 .galeria {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   overflow-x: auto;
-  padding-bottom: 10px;
+  /* Scroll horizontal */
+  padding: 8px 4px 16px 4px;
+  /* Espacio para sombra */
 
   .img-wrapper {
-    flex: 0 0 100px;
-    height: 100px;
+    flex: 0 0 120px;
+    height: 120px;
     border-radius: 8px;
     overflow: hidden;
     cursor: pointer;
     border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
 
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: transform 0.2s;
+    }
 
-      &:hover {
-        transform: scale(1.1);
-      }
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     }
   }
 }
 
-.full-width {
-  width: 100%;
+/* =========================================
+   5. PESTAÑA 2: CHAT / MENSAJES
+   ========================================= */
+.chat-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #eef2f5;
+  /* Fondo gris azulado suave */
+  position: relative;
+}
+
+/* Lista de mensajes (Scrollable) */
+.messages-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Burbujas */
+.message-bubble {
+  max-width: 75%;
+  padding: 12px 16px;
+  border-radius: 16px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  position: relative;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+  .msg-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    margin-bottom: 6px;
+    opacity: 0.8;
+    font-weight: 600;
+  }
+
+  /* Mensajes del OTRO (Cliente) -> Izquierda */
+  &:not(.own-message) {
+    background: #fff;
+    color: #333;
+    align-self: flex-start;
+    border-bottom-left-radius: 2px;
+
+    .msg-header strong {
+      color: #d32f2f;
+    }
+
+    /* Color nombre cliente */
+  }
+
+  /* Mensajes PROPIOS (Tatuador) -> Derecha */
+  &.own-message {
+    background: #3f51b5;
+    /* Color primario */
+    color: #fff;
+    align-self: flex-end;
+    border-bottom-right-radius: 2px;
+
+    .msg-header strong {
+      display: none;
+    }
+
+    /* Ocultar mi nombre */
+    .msg-header small {
+      color: #e0e0e0;
+    }
+
+    /* Hora más clara */
+  }
+}
+
+.no-messages {
+  text-align: center;
+  margin-top: 60px;
+  color: #90a4ae;
+  font-style: italic;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+
+  &::before {
+    content: 'chat_bubble_outline';
+    font-family: 'Material Icons';
+    font-size: 48px;
+    opacity: 0.5;
+  }
+}
+
+/* Input Fijo Abajo */
+.chat-input-area {
+  flex: 0 0 auto;
+  padding: 12px 16px;
+  background: #fff;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+
+  .full-width {
+    width: 100%;
+  }
+
+  /* Hack para quitar el espacio extra inferior de Material Form Field */
+  ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
+
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    background-color: #f5f5f5;
+    /* Input más claro */
+    border-radius: 24px;
+    padding-left: 12px;
+  }
+}
+
+/* =========================================
+   6. PIE DE DIÁLOGO (ACCIONES)
+   ========================================= */
+mat-dialog-actions {
+  padding: 16px 24px;
+  margin: 0;
+  background: #fff;
+  border-top: 1px solid #eee;
 }

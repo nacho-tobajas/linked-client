@@ -47,6 +47,25 @@ private apiUrl = `${environment.urlApi}turnos`;
     return this.http.patch(`${this.apiUrl}/gestionar/${idTurno}`, body);
   }
 
+  /**
+   * Obtiene la lista completa de mensajes para un turno específico.
+   * @param turnoId El ID del turno.
+   */
+  getMensajesTurno(turnoId: number): Observable<any[]> {
+    // GET /api/turnos/:id/mensajes
+    return this.http.get<any[]>(`${this.apiUrl}/${turnoId}/mensajes`);
+  }
+
+  /**
+   * Envía un nuevo mensaje asociado a un turno.
+   * @param turnoId El ID del turno.
+   * @param mensaje El texto del mensaje.
+   */
+  enviarMensaje(turnoId: number, mensaje: string): Observable<any> {
+    const payload = { mensaje: mensaje };
+    // POST /api/turnos/:id/mensajes con el body { mensaje: 'texto' }
+    return this.http.post<any>(`${this.apiUrl}/${turnoId}/mensajes`, payload);
+  }
   
   // métodos para GET /mis-turnos del cliente
 }

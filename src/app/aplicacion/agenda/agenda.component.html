@@ -1,23 +1,91 @@
+<div>
 <div class="gestionar-agenda-container">
   <div class="header-agenda">
-    <h2>Agenda</h2>
-<button mat-raised-button class="create-button"
-        aria-label="Configurar horario habitual"
-        (click)="abrirConfiguracionHorario()">
-  <mat-icon>settings</mat-icon>
-  Gestionar Horarios
-</button>
+    <h2>Agenda de Turnos</h2>
+    <button mat-raised-button class="create-button" aria-label="Configurar horario habitual" (click)="abrirConfiguracionHorario()">
+      <mat-icon>settings</mat-icon>
+      Gestionar Horarios
+    </button>
   </div>
 
   <mat-divider></mat-divider>
 
-<section class="turnos-section">
-    <h3>Próximos Turnos / Pendientes</h3>
+  <section class="turnos-section">
 
-    <mat-form-field appearance="outline" class="filter-field">
-      <mat-label>Buscar turno...</mat-label>
-      <input matInput (keyup)="applyFilter($event)" placeholder="Ej: Cliente Uno, Pendiente" #input>
-    </mat-form-field>
+    <div class="row filtroCrud">
+      <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon style="margin-right: 10px;">filter_list</mat-icon> FILTROS
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <form (ngSubmit)="aplicarFiltro()">
+
+            <div class="row mb-3">
+              
+              <mat-form-field appearance="outline" class="col-12 col-md-6">
+                <mat-label>Estado del Turno</mat-label>
+                <mat-select [(ngModel)]="filterEstado" name="estado">
+                  <mat-option value="">Todos</mat-option>
+                  <mat-option value="Pendiente">Pendiente</mat-option>
+                  <mat-option value="Confirmada">Confirmada</mat-option>
+                  <mat-option value="Completada">Completada</mat-option>
+                  <mat-option value="Rechazada">Rechazada</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="col-12 col-md-6">
+                <mat-label>Cliente</mat-label>
+                <input matInput [(ngModel)]="filterUsername" name="username" placeholder="Nombre o usuario">
+              </mat-form-field>
+            </div>
+
+            <div class="row mb-3">
+              <h4 class="col-12 mb-2 text-muted" style="font-size: 0.9rem;">Fecha del Turno</h4>
+
+              <mat-form-field appearance="outline" class="col-6">
+                <mat-label>Desde</mat-label>
+                <input matInput [matDatepicker]="pickerDesde" 
+                       [(ngModel)]="filterFechaDesde" 
+                       name="fechaDesde"
+                       [matDatepickerFilter]="filterDesde"
+                       (dateChange)="aplicarFiltro()" 
+                       placeholder="dd/mm/yyyy" />
+                <mat-datepicker-toggle matIconSuffix [for]="pickerDesde"></mat-datepicker-toggle>
+                <mat-datepicker #pickerDesde></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="col-6">
+                <mat-label>Hasta</mat-label>
+                <input matInput [matDatepicker]="pickerHasta" 
+                       [(ngModel)]="filterFechaHasta" 
+                       name="fechaHasta"
+                       [matDatepickerFilter]="filterHasta"
+                       (dateChange)="aplicarFiltro()" 
+                       placeholder="dd/mm/yyyy" />
+                <mat-datepicker-toggle matIconSuffix [for]="pickerHasta"></mat-datepicker-toggle>
+                <mat-datepicker #pickerHasta></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <div class="row justify-content-end mb-2">
+              <div class="col-12 col-md-4 d-flex justify-content-end gap-2">
+                <button mat-button type="button" color="warn" (click)="resetFiltro()">
+                  Limpiar Filtros
+                </button>
+                <button mat-raised-button color="primary" type="submit">
+                  <mat-icon>search</mat-icon> Buscar
+                </button>
+              </div>
+            </div>
+
+          </form>
+
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
 
     <div *ngIf="isLoadingTurnos" class="loading-spinner">
       <mat-spinner diameter="40"></mat-spinner> Cargando turnos...
@@ -28,13 +96,13 @@
        <button mat-button color="primary" (click)="loadTurnos()">Reintentar</button>
     </div>
 
-    <div class="tabla-container mat-elevation-z4" *ngIf="!isLoadingTurnos && !errorTurnos">
+    <div class="tabla-crud normal-table row" *ngIf="!isLoadingTurnos && !errorTurnos">
 
-      <table mat-table [dataSource]="dataSource" matSort class="tabla-turnos">
+      <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
         <ng-container matColumnDef="fecha">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
-          <td mat-cell *matCellDef="let turno"> {{turno.fecha_hora_inicio | date:'dd/MM/yyyy'}} </td>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> Fecha </th>
+          <td mat-cell *matCellDef="let turno" style="width: 10%; text-align: center;"> {{turno.fecha_hora_inicio | date:'dd/MM/yyyy'}} </td>
         </ng-container>
 
         <ng-container matColumnDef="hora">
@@ -45,7 +113,7 @@
         <ng-container matColumnDef="cliente">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Cliente </th>
           <td mat-cell *matCellDef="let turno">
-             {{ turno.cliente?.creationuser || 'N/A' }} {{ turno.cliente?.surname || '' }}
+             {{ turno.cliente?.username }}
              </td>
         </ng-container>
 
@@ -59,8 +127,8 @@
         </ng-container>
 
         <ng-container matColumnDef="acciones">
-          <th mat-header-cell *matHeaderCellDef> Acciones </th>
-          <td mat-cell *matCellDef="let turno">
+          <th mat-header-cell *matHeaderCellDef style="width: 10%;"> Acciones </th>
+          <td mat-cell *matCellDef="let turno" style="width: 20%; text-align: center;">
             <button mat-icon-button matTooltip="Ver Detalles" (click)="verDetalleTurno(turno)">
               <mat-icon>visibility</mat-icon>
             </button>
@@ -75,7 +143,7 @@
             </ng-container>
 
             <ng-container *ngIf="turno.estado === 'Confirmada'">
-               <button mat-icon-button color="accent" matTooltip="Marcar como Completado" (click)="completarTurno(turno)">
+               <button mat-icon-button color="secondary" matTooltip="Marcar como Completado" (click)="completarTurno(turno)">
                  <mat-icon>task_alt</mat-icon>
                </button>
                </ng-container>
@@ -90,7 +158,8 @@
 
         <tr class="mat-row" *matNoDataRow>
             <td class="mat-cell" [attr.colspan]="displayedColumns.length" style="text-align: center; padding: 20px; color: grey;">
-              No se encontraron turnos que coincidan con "{{input.value}}"
+              <span *ngIf="dataSource.data.length > 0">No se encontraron turnos con esos filtros.</span>
+              <span *ngIf="dataSource.data.length === 0">No tienes turnos registrados aún.</span>
             </td>
         </tr>
       </table>
@@ -104,7 +173,7 @@
      </div>
 
   </section>
-  <mat-divider></mat-divider>
 
 
+</div>
 </div>

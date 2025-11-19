@@ -30,6 +30,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import {MatTabsModule} from '@angular/material/tabs';
 
 import { FooterComponent } from './shared/footer/footer.component';
 import { HeaderComponent } from './shared/header/header.component';
@@ -173,7 +174,8 @@ registerLocaleData(localeEsAr); // 👈 Esto registra el locale
         RecaptchaModule,
         RecaptchaFormsModule,
         RecaptchaV3Module,
-        NgxCaptchaModule],
+        NgxCaptchaModule,
+        MatTabsModule,],
     providers: [
         RegisterService,
         RegisterService,
