@@ -7,9 +7,11 @@
   <div class="row filtroCrud">
     <mat-accordion>
       <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title> FILTROS </mat-panel-title>
-        </mat-expansion-panel-header>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon style="margin-right: 10px;">filter_list</mat-icon> FILTROS
+            </mat-panel-title>
+          </mat-expansion-panel-header>
 
         <form #filterForm="ngForm" (ngSubmit)="aplicarFiltro()">
 
@@ -68,13 +70,15 @@
           </div>
 
           <div class="row justify-content-end mb-2">
-            <div col-12 col-md-3 d-flex justify-content-between>
-              <button class="col-1" mat-button type="button" (click)="resetFiltro()"
-                style="margin-right: 1%;">Limpiar</button>
-              <button class="col-1 normal-button" mat-raised-button (click)="aplicarFiltro()">Buscar</button>
+            <div col-12 col-md-3 d-flex justify-content-between class="botones-filtro">
+                <button style="margin-right: 2%" mat-button class="col-1" type="button" color="warn" (click)="resetFiltro()">
+                  Limpiar Filtros
+                </button>
+                  <button mat-raised-button class="normal-button" type="submit">
+                  <mat-icon>search</mat-icon> Buscar
+                </button>
             </div>
           </div>
-
         </form>
 
       </mat-expansion-panel>

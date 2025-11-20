@@ -261,7 +261,9 @@ mat-divider {
 }
 
 .filtroCrud {
-  padding: 0 4.5%;
+  padding-left: 10%;
+  padding-right: 10%;
+
   margin-bottom: 4vh;
 
   @include respond-to(md) {
@@ -356,6 +358,15 @@ mat-divider {
   color: white;
   text-transform: uppercase;
   font-style: normal;
+}
+
+.filtro-crud {
+  padding-left: 10%;
+  padding-right: 10%;
+}
+
+mat-accordion {
+  padding: 0 !important;
 }
 
 .tabla-crud {
