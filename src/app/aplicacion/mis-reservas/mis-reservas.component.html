@@ -1,19 +1,80 @@
-  <div class="screen">
-    <button class="back-button" (click)="goBack()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <polyline points="15 18 9 12 15 6"></polyline>
-      </svg>
+<div class="screen-container">
+  
+  <div class="header-reservas">
+    <button mat-icon-button (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
     </button>
-    <div class="content">
-      <h2 class="screen-title">Mis Reservas</h2>
-      <div class="tatuadores-list">
-        <div class="tatuador-item" *ngFor="let prereserva of prereservas" (click)="goToPreReserva(prereserva)">
-          <div class="tatuador-info">
-            <h3>{{ prereserva.nombre }}</h3>
-            <p>{{ prereserva.estado }}</p>
-            <p>{{ prereserva.fecha }}</p>
-          </div>
-        </div>
-      </div>
-    </div>
+    <h2>Mis Reservas de tatuaje</h2>
   </div>
+
+  <mat-divider></mat-divider>
+
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Cargando tus reservas...</p>
+  </div>
+
+  <div *ngIf="errorCarga" class="error-container">
+    <p>{{ errorCarga }}</p>
+    <button mat-button color="primary" (click)="cargarMisReservas()">Reintentar</button>
+  </div>
+
+  <div class="reservas-content" *ngIf="!isLoading && !errorCarga">
+
+    <div class="reservas-grid" *ngIf="turnos.length > 0; else emptyState">
+      
+      <mat-card class="reserva-card" *ngFor="let turno of turnos">
+        
+        <div class="card-header-visual" [ngClass]="'border-' + turno.estado.toLowerCase()">
+            <div class="fecha-box">
+                <span class="dia">{{ turno.fecha_hora_inicio | date:'dd' }}</span>
+                <span class="mes">{{ turno.fecha_hora_inicio | date:'MMM' | uppercase }}</span>
+            </div>
+            <div class="hora-box">
+                <mat-icon>schedule</mat-icon>
+                <span>{{ turno.fecha_hora_inicio | date:'HH:mm' }}</span>
+            </div>
+            <span class="estado-chip" [ngClass]="'bg-' + turno.estado.toLowerCase()">
+                {{ turno.estado }}
+            </span>
+        </div>
+
+        <mat-card-content class="card-body">
+            <div class="tatuador-info" *ngIf="turno.tatuadoresAsignados && turno.tatuadoresAsignados.length > 0">
+                <img [src]="environmentImg + turno.tatuadoresAsignados[0].tatuador.profile_photo || '../../../assets/images/default-profile.jpg'" 
+                     class="avatar-small">
+                <div>
+                    <small>Artista</small>
+                    <h4>{{ turno.tatuadoresAsignados[0].tatuador.realname }}</h4>
+                </div>
+            </div>
+
+            <p class="descripcion-corta">
+                {{ turno.descripcion_cliente | slice:0:80 }}...
+            </p>
+        </mat-card-content>
+
+        <mat-divider></mat-divider>
+
+        <mat-card-actions align="end">
+            <button mat-button color="primary" (click)="abrirDetalle(turno)">
+                VER DETALLES / CHAT
+            </button>
+        </mat-card-actions>
+
+      </mat-card>
+    </div>
+
+    <ng-template #emptyState>
+      <div class="empty-state">
+        <mat-icon class="empty-icon">calendar_today</mat-icon>
+        <h3>No tienes reservas activas</h3>
+        <p>Busca un artista y agenda tu próximo tatuaje.</p>
+        <button mat-raised-button color="primary" routerLink="/tatuadores">
+            Ver Tatuadores
+        </button>
+      </div>
+    </ng-template>
+
+  </div>
+</div>

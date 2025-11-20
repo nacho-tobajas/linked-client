@@ -1,5 +1,8 @@
 import { User } from '../user.model';
 
+export interface TurnoTatuador { //Tabla intermedia (mas de un tatuador)
+    tatuador: User; 
+}
 export interface ImagenRef {
   id: number;
   image_path: string;
@@ -13,4 +16,5 @@ export interface TurnoSesion {
   descripcion_cliente?: string;
   estado: string; 
   imagenes?: ImagenRef[];
+  tatuadoresAsignados?: TurnoTatuador[];
 }

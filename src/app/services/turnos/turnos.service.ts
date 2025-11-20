@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { TurnoSesion } from 'src/app/models/turno/turno-sesion.model';
 import { environment } from 'src/environments/environment';
 
 export interface SolicitarTurnoDto {
@@ -10,10 +11,9 @@ export interface SolicitarTurnoDto {
   descripcion_cliente: string;
 }
 
-// Interfaz para la respuesta de 'getMisTurnos' (viene del repo TurnoTatuador)
 export interface TurnoTatuadorResponse {
-  tatuador: any; // Info del tatuador
-  turnoSesion: any; // Info del TurnoSesion (el turno en sí)
+  tatuador: any; 
+  turnoSesion: any; 
 }
 
 @Injectable({
@@ -47,25 +47,18 @@ private apiUrl = `${environment.urlApi}turnos`;
     return this.http.patch(`${this.apiUrl}/gestionar/${idTurno}`, body);
   }
 
-  /**
-   * Obtiene la lista completa de mensajes para un turno específico.
-   * @param turnoId El ID del turno.
-   */
   getMensajesTurno(turnoId: number): Observable<any[]> {
-    // GET /api/turnos/:id/mensajes
     return this.http.get<any[]>(`${this.apiUrl}/${turnoId}/mensajes`);
   }
 
-  /**
-   * Envía un nuevo mensaje asociado a un turno.
-   * @param turnoId El ID del turno.
-   * @param mensaje El texto del mensaje.
-   */
   enviarMensaje(turnoId: number, mensaje: string): Observable<any> {
     const payload = { mensaje: mensaje };
-    // POST /api/turnos/:id/mensajes con el body { mensaje: 'texto' }
     return this.http.post<any>(`${this.apiUrl}/${turnoId}/mensajes`, payload);
   }
+
+  getMisTurnosCliente(): Observable<TurnoSesion[]> {
+    return this.http.get<TurnoSesion[]>(`${this.apiUrl}/mis-reservas-cliente`);
+  }
   
-  // métodos para GET /mis-turnos del cliente
+
 }

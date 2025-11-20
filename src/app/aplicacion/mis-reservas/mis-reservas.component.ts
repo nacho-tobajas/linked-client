@@ -1,6 +1,11 @@
 import { Component } from '@angular/core';
 import { Reserva } from '../reserva/reserva.model';
 import { Location } from '@angular/common';
+import { environment } from 'src/environments/environment';
+import { TurnoSesion } from 'src/app/models/turno/turno-sesion.model';
+import { AgendaDetalleComponent } from '../agenda/agenda-detalle/agenda-detalle.component';
+import { TurnosService } from 'src/app/services/turnos/turnos.service';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-mis-reservas',
@@ -9,44 +14,47 @@ import { Location } from '@angular/common';
   styleUrl: './mis-reservas.component.scss'
 })
 export class MisReservasComponent {
-  constructor(private location: Location){}
+environmentImg = environment.urlImg;
+  turnos: TurnoSesion[] = [];
+  isLoading = false;
+  errorCarga: string | null = null;
 
-  reservas: Reserva[] = [ 
-    { id: 1, nombre: 'Reserva Ejemplo', fecha: '20/10/2025', imagen: '', estado: 'Pendiente' } 
-  ];
-  selectedReserva: Reserva | null = null;
-  cancelada = false;
-  imagenPrevia: string | null = null;
-  imagenSubida: boolean = false;
+  constructor(
+    private location: Location,
+    private turnosService: TurnosService,
+    private dialog: MatDialog
+  ) {}
 
-  goToPreReserva(reserva: Reserva): void {
-    this.selectedReserva = reserva;
+  ngOnInit(): void {
+    this.cargarMisReservas();
   }
 
-  cancelarReserva(): void {
-    if (!this.selectedReserva) return; 
+  cargarMisReservas(): void {
+    this.isLoading = true;
+    this.errorCarga = null;
 
-    this.selectedReserva.estado = 'Cancelada';
-    // (Aquí iría la llamada al servicio para cancelar)
-    this.cancelada = true;
-    setTimeout(() => {
-      this.cancelada = false;
-    }, 3000);
+    this.turnosService.getMisTurnosCliente().subscribe({
+      next: (data) => {
+        this.turnos = data;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.errorCarga = 'No se pudieron cargar tus reservas.';
+        this.isLoading = false;
+      }
+    });
   }
-  
-  onImagenSeleccionada(event: Event): void {
-    // Lógica para subir imagen en la pantalla de "prereserva" individual
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const archivo = input.files[0];
-      const lector = new FileReader();
-      lector.onload = (e: any) => {
-        this.imagenPrevia = e.target.result;
-        this.imagenSubida = true;
-        setTimeout(() => (this.imagenSubida = false), 3000);
-      };
-      lector.readAsDataURL(archivo);
-    }
+
+  abrirDetalle(turno: TurnoSesion): void {
+    const dialogRef = this.dialog.open(AgendaDetalleComponent, {
+      width: '600px',
+      data: { turno: turno }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+       this.cargarMisReservas(); 
+    });
   }
   
   goBack(): void {
