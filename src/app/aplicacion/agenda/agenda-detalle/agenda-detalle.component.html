@@ -19,6 +19,7 @@
 
   <mat-tab-group dynamicHeight class="dialog-tabs full-height-tabs">
     
+    <!-- Tab de detalles del turno -->
     <mat-tab label="Detalles">
       <mat-dialog-content class="content-scroll">
           
@@ -56,6 +57,7 @@
       </mat-dialog-content>
     </mat-tab>
     
+    <!-- Tab de mensajeria -->
     <mat-tab label="Mensajes">
       <div class="chat-layout">
         
@@ -74,7 +76,7 @@
             </div>
           </div>
           
-          <div *ngIf="mensajes?.length === 0" class="no-messages">
+          <div *ngIf="mensajes.length === 0" class="no-messages">
             No hay mensajes para este turno.
           </div>
         </div>
