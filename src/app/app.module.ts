@@ -89,6 +89,8 @@ import { GestionarHorarioComponent } from './aplicacion/agenda/gestionar-horario
 import { AgendaComponent } from './aplicacion/agenda/agenda.component';
 import { AgendaDetalleComponent } from './aplicacion/agenda/agenda-detalle/agenda-detalle.component';
 import { MisReservasComponent } from './aplicacion/mis-reservas/mis-reservas.component';
+import { PortfolioComponent } from './aplicacion/trabajos/portfolio/portfolio/portfolio.component';
+import { SubirTrabajoComponent } from './aplicacion/trabajos/subir-trabajo/subir-trabajo/subir-trabajo.component';
 
 
 registerLocaleData(localeEsAr); // 👈 Esto registra el locale
@@ -136,6 +138,8 @@ registerLocaleData(localeEsAr); // 👈 Esto registra el locale
         AgendaComponent,
         AgendaDetalleComponent,
         MisReservasComponent,
+        PortfolioComponent,
+        SubirTrabajoComponent
     ],schemas: [CUSTOM_ELEMENTS_SCHEMA],
     bootstrap: [AppComponent], imports: [CommonModule,
         BrowserModule,

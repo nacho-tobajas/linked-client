@@ -1,196 +1,49 @@
-<div class="row">
-  <button class="option-card">
-    <mat-icon 
-    matTooltip="Crear reserva de sesion"
-    aria-label="Crear reserva de sesion"
-    routerLink="/reserva/listado">
-      <span class="material-symbols-outlined"> assignment_add </span>
-    </mat-icon>
-  </button>
+<div class="home-container">
+  
+  <div class="welcome-section">
+    <h1>Bienvenido</h1>
+    <p>Encuentra tu próximo tatuaje</p>
+  </div>
 
-  <button class="option-card">
-    <mat-icon 
-          matTooltip="Mis reservas"
-          aria-label="Mis reservas"
-          (click)="goToMisReservas()">
-      <span class="material-symbols-outlined"> assignment </span>
-    </mat-icon>
-  </button>
+  <div class="quick-actions">
+    
+    <button class="option-card" routerLink="/reserva/listado" matTooltip="Nueva Reserva">
+      <div class="icon-circle">
+        <mat-icon>add_circle_outline</mat-icon>
+      </div>
+      <span>Reservar</span>
+    </button>
 
-  <button class="option-card">
-    <mat-icon aria-label="Mis reservas">
-      <span class="material-symbols-outlined"> star </span>
-    </mat-icon>
-  </button>
+    <button class="option-card" routerLink="/mis-reservas" matTooltip="Ver mis turnos">
+      <div class="icon-circle">
+        <mat-icon>calendar_today</mat-icon>
+      </div>
+      <span>Mis Turnos</span>
+    </button>
 
-  <button class="option-card">
-    <mat-icon aria-label="Mis reservas">
-      <span class="material-symbols-outlined"> history </span>
-    </mat-icon>
-  </button>
+    <button class="option-card" routerLink="/mis-favoritos" matTooltip="Mis trabajos guardados">
+      <div class="icon-circle">
+        <mat-icon>favorite</mat-icon>
+      </div>
+      <span>Favoritos</span>
+    </button>
+
+    <button class="option-card" matTooltip="Historial de tatuajes">
+      <div class="icon-circle">
+        <mat-icon>history</mat-icon>
+      </div>
+      <span>Historial</span>
+    </button>
+
+  </div>
+
+  <mat-divider class="section-divider"></mat-divider>
+
+  <div class="feed-section">
+    <h3>Inspiración Reciente</h3>
+    <div class="feed-placeholder">
+        <p>Próximamente: Trabajos destacados de nuestros artistas.</p>
+    </div>
+  </div>
+
 </div>
-
-
-<!-- <div class="mobile-container">
-
-    <div class="screen" [class.active]="step === 'listado'">
-        <button class="back-button" (click)="goBack()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-        </button>
-
-        <div class="content">
-            <h2 class="screen-title">LISTADO</h2>
-
-            <div class="tatuadores-list">
-                <div class="tatuador-item" *ngFor="let tatuador of tatuadores" (click)="selectTatuador(tatuador)">
-                    <img [src]="tatuador.imagen" [alt]="tatuador.nombre" class="tatuador-avatar">
-                    <div class="tatuador-info">
-                        <h3>{{ tatuador.nombre }}</h3>
-                        <p>{{ tatuador.especialidad }}</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="screen" [class.active]="step === 'horarios'">
-        <button class="back-button" (click)="goBack()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-        </button>
-
-        <div class="content" *ngIf="selectedTatuador">
-            <h2 class="screen-title">Fecha</h2>
-
-            <app-calendario (dateSelected)="onDateSelected($event)"></app-calendario>
-
-            <h2 class="screen-title" style="margin-top: 2rem;">Horario</h2>
-
-            <div class="horarios-section">
-                <button *ngFor="let horario of horarios" class="horario-btn" [class.selected]="isTimeSelected(horario)"
-                    [disabled]="!selectedDate" (click)="selectTime(horario)">
-                    {{ horario }}
-                </button>
-            </div>
-
-            <button class="btn-confirm" [disabled]="!canConfirm()" (click)="confirmarReserva()">
-                Confirmar
-            </button>
-        </div>
-    </div>
-
-    <div class="screen" [class.active]="step === 'confirmacion'">
-        <button class="back-button" (click)="goBack()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-        </button>
-
-        <div class="content confirmation-content">
-            <h2 class="screen-title">Turno confirmado</h2>
-
-            <div class="confirmation-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                </svg>
-            </div>
-
-            <div class="confirmation-details">
-                <div class="detail-line">
-                    <span class="detail-icon">👤</span>
-                    <span>{{ selectedTatuador?.nombre }}</span>
-                </div>
-                <div class="detail-line">
-                    <span class="detail-icon">📅</span>
-                    <span>{{ selectedDate }}</span>
-                </div>
-                <div class="detail-line">
-                    <span class="detail-icon">🕐</span>
-                    <span>{{ selectedTime }}</span>
-                </div>
-            </div>
-
-            <button class="btn-done" (click)="volverInicio()">
-                Listo
-            </button>
-        </div>
-    </div>
-
-    <div class="screen" [class.active]="step === 'misreservas'">
-        <button class="back-button" (click)="goBack()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-        </button>
-
-        <div class="content confirmation-content">
-
-            <div class="content">
-                <h2 class="screen-title">Mis Reservas</h2>
-
-                <div class="tatuadores-list">
-                    <div class="tatuador-item" *ngFor="let prereserva of prereservas"
-                        (click)="goToPreReserva(prereserva)">
-                        <div class="tatuador-info">
-                            <h3>{{ prereserva.nombre }}</h3>
-                            <p>{{ prereserva.estado }}</p>
-                            <p>{{ prereserva.fecha }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="screen" [class.active]="step === 'prereserva'">
-        <button class="back-button" (click)="goBack()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-        </button>
-
-        <div class="content confirmation-content">
-            <div class="content">
-                <h2 class="screen-title">Reserva</h2>
-
-                <div class="tatuadores-list">
-                    <div class="tatuador-item">
-                        <div class="tatuador-info">
-                            <h3>{{ selectedprereserva?.nombre }}</h3>
-                            <p>Estado: {{ selectedprereserva?.estado }}</p>
-                            <p>Fecha: {{ selectedprereserva?.fecha }}</p>
-                            <div class="upload-section" style="margin-top: 1.5rem; text-align: center;">
-                                <label class="upload-btn">
-                                    <input type="file" hidden accept="image/*" (change)="onImagenSeleccionada($event)">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        style="width: 24px; height: 24px; vertical-align: middle; margin-right: 6px;">
-                                        <path d="M12 5v14M5 12h14"></path>
-                                    </svg>
-                                    Subir imagen
-                                </label>
-
-                                <div *ngIf="imagenSubida" class="mensaje-exito" style="margin-top: 0.5rem;">
-                                    📸 Imagen subida correctamente
-                                </div>
-
-                                <div *ngIf="imagenPrevia" style="margin-top: 1rem;">
-                                    <img [src]="imagenPrevia" alt="Vista previa"
-                                        style="max-width: 100%; border-radius: 8px;">
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                    <button class="btn-cancelar" (click)="cancelarReserva()">Cancelar reserva</button>
-
-                    <div *ngIf="cancelada" class="mensaje-exito">
-                        ✅ Reserva cancelada exitosamente
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->

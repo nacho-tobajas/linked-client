@@ -1,0 +1,109 @@
+.galeria-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); // Grid responsivo tipo Instagram
+  gap: 4px; // Espacio pequeño entre fotos
+}
+
+.trabajo-card {
+  position: relative;
+  aspect-ratio: 1 / 1; // Cuadrados perfectos
+  overflow: hidden;
+  background: #f0f0f0;
+  cursor: pointer;
+
+  &:hover .overlay {
+    opacity: 1;
+  }
+}
+
+.trabajo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+/* Efecto Zoom al hover */
+.trabajo-card:hover .trabajo-img {
+  transform: scale(1.05);
+}
+
+.overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 10px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.7)); // Sombra negra abajo
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  opacity: 0; // Invisible por defecto
+  transition: opacity 0.2s;
+
+  /* En móviles, mostrar siempre */
+  @media (max-width: 600px) {
+    opacity: 1;
+  }
+}
+
+.btn-like {
+  color: white;
+
+  &.liked {
+    color: #ff4081; // Color Rosa/Rojo de like
+    animation: heartBeat 0.3s; // Efecto latido
+  }
+}
+
+.desc {
+  font-size: 0.8rem;
+  margin: 0 0 8px 8px;
+  text-shadow: 1px 1px 2px black;
+}
+
+@keyframes heartBeat {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.3);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  color: #777;
+}
+
+.multiple-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: white;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  /* Para que no interfiera con clicks */
+}
+
+.actions-container {
+  display: flex;
+  align-items: center;
+}
+
+.likes-count {
+  color: white;
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin-left: -4px;
+  /* Pegarlo un poco al corazón */
+  text-shadow: 1px 1px 2px black;
+}

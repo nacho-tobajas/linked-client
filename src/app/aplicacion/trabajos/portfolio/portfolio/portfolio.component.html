@@ -1,0 +1,30 @@
+<div class="galeria-grid">
+  <div class="trabajo-card" *ngFor="let trabajo of trabajos">
+    
+    <img *ngIf="trabajo.fotos && trabajo.fotos.length > 0" 
+         [src]="environmentImg + trabajo.fotos[0].image_path" 
+         class="trabajo-img">
+
+    <mat-icon class="multiple-icon" *ngIf="trabajo.fotos.length > 1">filter_none</mat-icon>
+    
+    <div class="overlay">
+      <div class="actions-container">
+          <button mat-icon-button 
+                  class="btn-like"
+                  [class.liked]="misLikes.has(trabajo.id)"
+                  (click)="toggleLike(trabajo)">
+            <mat-icon>{{ misLikes.has(trabajo.id) ? 'favorite' : 'favorite_border' }}</mat-icon>
+          </button>
+
+          <span class="likes-count">
+            {{ trabajo.favoritos?.length || 0 }}
+          </span>
+      </div>
+
+      <p class="desc" *ngIf="trabajo.descripcion">
+        {{ trabajo.descripcion | slice:0:50 }}...
+      </p>
+    </div>
+
+  </div>
+</div>

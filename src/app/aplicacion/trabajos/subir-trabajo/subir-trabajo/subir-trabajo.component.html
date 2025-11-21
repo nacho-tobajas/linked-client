@@ -1,0 +1,39 @@
+<h2 mat-dialog-title>Subir Nuevo Trabajo</h2>
+
+<mat-dialog-content>
+  <div class="upload-container">
+    
+    <div class="previews-grid" *ngIf="previewUrls.length > 0">
+      <div class="preview-item" *ngFor="let url of previewUrls; let i = index">
+        <img [src]="url" alt="Preview">
+        <button class="btn-remove" (click)="removeImage(i)">×</button>
+      </div>
+      
+      <div class="add-more-box" *ngIf="previewUrls.length < maxFiles" (click)="fileInput.click()">
+        <mat-icon>add</mat-icon>
+      </div>
+    </div>
+
+    <div class="placeholder" *ngIf="previewUrls.length === 0" (click)="fileInput.click()">
+      <mat-icon>cloud_upload</mat-icon>
+      <p>Haz clic para seleccionar fotos (Máx {{maxFiles}})</p>
+    </div>
+
+    <input #fileInput type="file" hidden multiple accept="image/*" (change)="onFileSelected($event)">
+
+    <mat-form-field appearance="outline" class="full-width mt-3">
+      <mat-label>Descripción (Opcional)</mat-label>
+      <textarea matInput [(ngModel)]="descripcion" rows="3" placeholder="Ej: Manga estilo japonés..."></textarea>
+    </mat-form-field>
+
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-raised-button color="primary" 
+          [disabled]="selectedFiles.length === 0 || isUploading" 
+          (click)="subir()">
+    {{ isUploading ? 'Subiendo...' : 'Publicar' }}
+  </button>
+</mat-dialog-actions>

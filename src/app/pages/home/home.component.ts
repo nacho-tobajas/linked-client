@@ -11,16 +11,19 @@ import { Router } from '@angular/router';
 export class HomeComponent {
   constructor(private router: Router) { }
 
-  iniciarPrereserva(): void {
+  /*iniciarPrereserva(): void {
 
   this.router.navigate(['/reserva/listado']);
   }
 
   goToMisReservas(): void {
-    console.log("entro")
   this.router.navigate(['/mis-reservas']);
   }
 
+  goToPortfolio():void{
+  this.router.navigate(['/mis-reservas']);    
+  }
+*/
 }
 
 
