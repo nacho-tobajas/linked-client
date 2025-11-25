@@ -1,26 +1,47 @@
 <div class="home-container">
   
   <div class="welcome-section">
-    <h1>Bienvenido a Linked</h1> <p *ngIf="!userLoginOn">Explora el arte de nuestros tatuadores y agenda tu turno.</p>
-    <p *ngIf="userLoginOn">¿Qué quieres hacer hoy?</p>
+    <h1>Bienvenido a Linked</h1> 
+    <p *ngIf="!userLoginOn">Explora el arte de nuestros tatuadores y agenda tu turno.</p>
+    <p *ngIf="userRol === 'Cliente'">Encuentra tu próximo tatuaje.</p>
+    <p *ngIf="userRol === 'Tatuador'">Gestiona tu arte y tu agenda.</p>
   </div>
 
   <div class="quick-actions" *ngIf="userLoginOn">
     
-    <button class="option-card" routerLink="/reserva/listado" matTooltip="Nueva Reserva">
-      <div class="icon-circle"><mat-icon>add_circle_outline</mat-icon></div>
-      <span>Reservar</span>
-    </button>
+<ng-container *ngIf="userRol === 'Cliente'">
+        <button class="option-card" routerLink="/reserva/listado" matTooltip="Nueva Reserva">
+          <div class="icon-circle"><mat-icon>add_circle_outline</mat-icon></div>
+          <span>Reservar</span>
+        </button>
 
-    <button class="option-card" routerLink="/mis-reservas" matTooltip="Ver mis turnos">
-      <div class="icon-circle"><mat-icon>calendar_today</mat-icon></div>
-      <span>Mis Turnos</span>
-    </button>
+        <button class="option-card" routerLink="/mis-reservas" matTooltip="Ver mis turnos">
+          <div class="icon-circle"><mat-icon>calendar_today</mat-icon></div>
+          <span>Mis Turnos</span>
+        </button>
 
-    <button class="option-card" routerLink="/mis-favoritos">
-      <div class="icon-circle"><mat-icon>favorite</mat-icon></div>
-      <span>Favoritos</span>
-    </button>
+        <button class="option-card" routerLink="/mis-favoritos">
+          <div class="icon-circle"><mat-icon>favorite</mat-icon></div>
+          <span>Favoritos</span>
+        </button>
+    </ng-container>
+
+    <ng-container *ngIf="userRol === 'Tatuador'">
+        
+        <button class="option-card" routerLink="/agenda"> <div class="icon-circle"><mat-icon>event_note</mat-icon></div>
+          <span>Mi Agenda</span>
+        </button>
+
+        <button class="option-card" (click)="abrirSubirTrabajo()">
+          <div class="icon-circle"><mat-icon>add_a_photo</mat-icon></div>
+          <span>Subir Foto</span>
+        </button>
+
+        <button class="option-card" routerLink="/perfil"> <div class="icon-circle"><mat-icon>person</mat-icon></div>
+          <span>Mi Perfil</span>
+        </button>
+
+    </ng-container>
 
   </div>
 

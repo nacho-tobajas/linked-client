@@ -3,8 +3,8 @@
   border-radius: 12px;
   overflow: hidden;
   width: 100%;
-  max-width: 450px; // Ancho máximo ideal para un feed
-  margin: 0 auto; // Centrado si está solo
+  max-width: 450px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
 }
@@ -57,7 +57,7 @@
 .image-container {
   position: relative;
   width: 100%;
-  // aspect-ratio: 4/5; // Formato vertical moderno (opcional)
+  // aspect-ratio: 4/5; // Formato vertical moderno 
   background-color: #f0f0f0;
   min-height: 200px;
 
@@ -107,19 +107,16 @@
     }
   }
 
-  /* Corazón de Like */
   button.mat-mdc-icon-button {
     color: #333;
 
     &.liked {
-      color: #e91e63; // Color Rosa/Rojo
+      color: #e91e63;
       animation: heartBeat 0.3s ease-in-out;
 
       mat-icon {
         font-variation-settings: 'FILL' 1;
       }
-
-      // Si usas Material Symbols
     }
   }
 

@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { SubirTrabajoComponent } from 'src/app/aplicacion/trabajos/subir-trabajo/subir-trabajo/subir-trabajo.component';
 import { Trabajo } from 'src/app/models/trabajos/trabajos.model';
 import { LoginService } from 'src/app/services/auth/login.service';
 import { TrabajosService } from 'src/app/services/trabajos/trabajos.service';
@@ -13,20 +15,25 @@ import { TrabajosService } from 'src/app/services/trabajos/trabajos.service';
 
 export class HomeComponent {
 
-userLoginOn: boolean = false; // Estado de login
+  userLoginOn: boolean = false; // Estado de login
+  userRol: string | null = null;
   feed: Trabajo[] = [];
   misLikes: Set<number> = new Set();
 
   constructor(
     private router: Router,
     private loginService: LoginService,
-    private trabajosService: TrabajosService
+    private trabajosService: TrabajosService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
     console.log("entra")
     this.loginService.userLoginOn.subscribe(logged => {
       this.userLoginOn = logged;
+    this.loginService.userRol.subscribe(rol => {
+        this.userRol = rol;
+    });
       
       if (logged) {
         this.cargarMisLikes();
@@ -67,6 +74,20 @@ userLoginOn: boolean = false; // Estado de login
         this.misLikes.add(trabajoId);
         this.trabajosService.darLike(trabajoId).subscribe();
     }
+  }
+
+  abrirSubirTrabajo() {
+    const dialogRef = this.dialog.open(SubirTrabajoComponent, {
+      width: '600px',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        // Si subió foto, recargamos el feed para que vea su propio post arriba
+        this.cargarFeed();
+      }
+    });
   }
 }
 

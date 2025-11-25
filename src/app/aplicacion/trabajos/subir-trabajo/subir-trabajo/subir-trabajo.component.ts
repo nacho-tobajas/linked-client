@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { TrabajosService } from 'src/app/services/trabajos/trabajos.service.js';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TrabajosService } from 'src/app/services/trabajos/trabajos.service';
 
 @Component({
   selector: 'app-subir-trabajo',
@@ -17,7 +18,8 @@ export class SubirTrabajoComponent {
 
   constructor(
     private dialogRef: MatDialogRef<SubirTrabajoComponent>,
-    private trabajosService: TrabajosService
+    private trabajosService: TrabajosService,
+    private snackBar: MatSnackBar
   ) {}
 
 onFileSelected(event: any): void {
@@ -33,6 +35,11 @@ onFileSelected(event: any): void {
       // Procesar cada archivo
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
+
+        if (!file.type.startsWith('image/')) {
+           continue; 
+        }
+
         this.selectedFiles.push(file);
 
         // Generar preview
@@ -53,7 +60,6 @@ onFileSelected(event: any): void {
   }
 
   subir(): void {
-    // 👇 CAMBIO: Validar array vacío
     if (this.selectedFiles.length === 0) return;
 
     this.isUploading = true;
@@ -61,13 +67,19 @@ onFileSelected(event: any): void {
     // 👇 CAMBIO: Pasar el array 'this.selectedFiles'
     this.trabajosService.subirTrabajo(this.descripcion, this.selectedFiles).subscribe({
       next: (res) => {
+        this.snackBar.open('¡Trabajo publicado con éxito!', 'Genial', { duration: 3000 });
         this.dialogRef.close(true); 
       },
       error: (err) => {
         console.error(err);
-        alert('Error al subir las imágenes');
+        this.snackBar.open('Error al subir las imágenes. Intenta de nuevo.', 'Cerrar', { duration: 5000 });
         this.isUploading = false;
       }
     });
   }
+
+  onCancel(): void {
+    this.dialogRef.close(false);
+  }
+
 }
