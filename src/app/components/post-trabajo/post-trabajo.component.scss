@@ -1,0 +1,158 @@
+.post-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 450px; // Ancho máximo ideal para un feed
+  margin: 0 auto; // Centrado si está solo
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- HEADER --- */
+.post-header {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #fafafa;
+  }
+
+  .avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+    border: 1px solid #eee;
+  }
+
+  .meta {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    .author {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #333;
+    }
+
+    .username {
+      font-size: 0.75rem;
+      color: #777;
+    }
+  }
+
+  .date {
+    font-size: 0.75rem;
+    color: #999;
+  }
+}
+
+/* --- IMAGEN --- */
+.image-container {
+  position: relative;
+  width: 100%;
+  // aspect-ratio: 4/5; // Formato vertical moderno (opcional)
+  background-color: #f0f0f0;
+  min-height: 200px;
+
+  .post-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .album-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: white;
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
+  }
+
+  .no-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    color: #ccc;
+
+    mat-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+    }
+  }
+}
+
+/* --- FOOTER --- */
+.post-footer {
+  padding: 8px 12px 16px 12px;
+
+  .actions-bar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+
+    .left-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+
+  /* Corazón de Like */
+  button.mat-mdc-icon-button {
+    color: #333;
+
+    &.liked {
+      color: #e91e63; // Color Rosa/Rojo
+      animation: heartBeat 0.3s ease-in-out;
+
+      mat-icon {
+        font-variation-settings: 'FILL' 1;
+      }
+
+      // Si usas Material Symbols
+    }
+  }
+
+  .likes-count {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #333;
+  }
+
+  .description {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: #444;
+
+    .username-inline {
+      font-weight: 600;
+      margin-right: 6px;
+      color: #222;
+    }
+  }
+}
+
+/* Animación de latido */
+@keyframes heartBeat {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.25);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}

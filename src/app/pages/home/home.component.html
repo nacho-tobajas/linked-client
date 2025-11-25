@@ -1,38 +1,25 @@
 <div class="home-container">
   
   <div class="welcome-section">
-    <h1>Bienvenido</h1>
-    <p>Encuentra tu próximo tatuaje</p>
+    <h1>Bienvenido a Linked</h1> <p *ngIf="!userLoginOn">Explora el arte de nuestros tatuadores y agenda tu turno.</p>
+    <p *ngIf="userLoginOn">¿Qué quieres hacer hoy?</p>
   </div>
 
-  <div class="quick-actions">
+  <div class="quick-actions" *ngIf="userLoginOn">
     
     <button class="option-card" routerLink="/reserva/listado" matTooltip="Nueva Reserva">
-      <div class="icon-circle">
-        <mat-icon>add_circle_outline</mat-icon>
-      </div>
+      <div class="icon-circle"><mat-icon>add_circle_outline</mat-icon></div>
       <span>Reservar</span>
     </button>
 
     <button class="option-card" routerLink="/mis-reservas" matTooltip="Ver mis turnos">
-      <div class="icon-circle">
-        <mat-icon>calendar_today</mat-icon>
-      </div>
+      <div class="icon-circle"><mat-icon>calendar_today</mat-icon></div>
       <span>Mis Turnos</span>
     </button>
 
-    <button class="option-card" routerLink="/mis-favoritos" matTooltip="Mis trabajos guardados">
-      <div class="icon-circle">
-        <mat-icon>favorite</mat-icon>
-      </div>
+    <button class="option-card" routerLink="/mis-favoritos">
+      <div class="icon-circle"><mat-icon>favorite</mat-icon></div>
       <span>Favoritos</span>
-    </button>
-
-    <button class="option-card" matTooltip="Historial de tatuajes">
-      <div class="icon-circle">
-        <mat-icon>history</mat-icon>
-      </div>
-      <span>Historial</span>
     </button>
 
   </div>
@@ -40,9 +27,20 @@
   <mat-divider class="section-divider"></mat-divider>
 
   <div class="feed-section">
-    <h3>Inspiración Reciente</h3>
-    <div class="feed-placeholder">
-        <p>Próximamente: Trabajos destacados de nuestros artistas.</p>
+    <h3>Últimos Trabajos</h3>
+    
+    <div class="posts-grid">
+        <app-post-trabajo 
+            *ngFor="let trabajo of feed"
+            [trabajo]="trabajo"
+            [isLiked]="misLikes.has(trabajo.id)"
+            [showArtistInfo]="true"
+            (toggleLike)="onToggleLike($event)">
+        </app-post-trabajo>
+    </div>
+
+    <div *ngIf="feed.length === 0" class="empty-feed">
+        <p>Aún no hay publicaciones para mostrar.</p>
     </div>
   </div>
 

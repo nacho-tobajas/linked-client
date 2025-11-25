@@ -1,0 +1,56 @@
+<div class="post-card mat-elevation-z2">
+  
+  <div class="post-header" *ngIf="showArtistInfo" (click)="irAlPerfil()">
+    
+    <img [src]="environmentImg + trabajo.tatuador?.profile_photo || 'assets/images/default-profile.jpg'" 
+         class="avatar" 
+         alt="Avatar">
+    
+    <div class="meta">
+      <span class="author">{{ trabajo.tatuador?.realname }} {{ trabajo.tatuador?.surname }}</span>
+      <span class="username">{{ trabajo.tatuador?.username }}</span>
+    </div>
+
+    <span class="date">{{ trabajo.creationtimestamp | date:'d MMM' }}</span>
+  </div>
+
+  <div class="image-container">
+    
+    <mat-icon class="album-icon" *ngIf="trabajo.fotos && trabajo.fotos.length > 1">filter_none</mat-icon>
+    
+    <img *ngIf="trabajo.fotos && trabajo.fotos.length > 0"
+         [src]="environmentImg + trabajo.fotos[0].image_path" 
+         class="post-image" 
+         alt="Trabajo de tatuaje">
+         
+    <div *ngIf="!trabajo.fotos || trabajo.fotos.length === 0" class="no-image">
+        <mat-icon>image_not_supported</mat-icon>
+    </div>
+  </div>
+
+  <div class="post-footer">
+    
+    <div class="actions-bar">
+      <div class="left-actions">
+        <button mat-icon-button (click)="onLikeClick($event)" [class.liked]="isLiked">
+          <mat-icon>{{ isLiked ? 'favorite' : 'favorite_border' }}</mat-icon>
+        </button>
+        
+        <span class="likes-count" *ngIf="trabajo.favoritos && trabajo.favoritos.length > 0">
+            {{ trabajo.favoritos!.length }} Me gusta
+        </span>
+        <span class="likes-count" *ngIf="!trabajo.favoritos || trabajo.favoritos.length === 0">
+            Sé el primero
+        </span>
+      </div>
+    </div>
+    
+    <div class="description" *ngIf="trabajo.descripcion">
+      <span class="username-inline" *ngIf="showArtistInfo">
+        {{ trabajo.tatuador?.username }}
+      </span>
+      <span class="text">{{ trabajo.descripcion }}</span>
+    </div>
+
+  </div>
+</div>

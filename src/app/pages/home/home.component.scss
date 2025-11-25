@@ -93,3 +93,21 @@
     border: 2px dashed #eee;
   }
 }
+
+.posts-grid {
+  display: grid;
+  // Crea columnas automáticas de mínimo 300px (diseño responsivo)
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  justify-items: center; // Centra las tarjetas en su celda
+}
+
+.empty-feed {
+  text-align: center;
+  padding: 40px;
+  color: #777;
+}
+
+.mt-3 {
+  margin-top: 1rem;
+}

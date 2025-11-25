@@ -12,6 +12,10 @@ private apiUrl = `${environment.urlApi}trabajos`;
 
   constructor(private http: HttpClient) {}
 
+    getFeed(): Observable<Trabajo[]> {
+    return this.http.get<Trabajo[]>(`${this.apiUrl}/feed`);
+  }
+
   // Subir Foto 
   subirTrabajo(descripcion: string, files: File[]): Observable<Trabajo> {
     const formData = new FormData();
