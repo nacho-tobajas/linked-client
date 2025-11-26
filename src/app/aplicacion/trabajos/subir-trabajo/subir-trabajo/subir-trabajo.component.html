@@ -9,7 +9,8 @@
       
       <div class="preview-item" *ngFor="let url of previewUrls; let i = index">
         <img [src]="url" alt="Preview">
-        <button class="btn-remove" mat-icon-button color="warn" (click)="removeImage(i)" matTooltip="Quitar foto">
+        
+        <button type="button" class="btn-remove-custom" (click)="removeImage(i)" matTooltip="Quitar">
           <mat-icon>close</mat-icon>
         </button>
       </div>
@@ -18,9 +19,7 @@
            *ngIf="previewUrls.length < maxFiles" 
            (click)="fileInput.click()"
            matRipple>
-        <mat-icon>add_photo_alternate</mat-icon>
-        <span>Agregar</span>
-      </div>
+        <mat-icon>add</mat-icon> </div>
 
     </div>
 
@@ -29,8 +28,8 @@
          (click)="fileInput.click()"
          matRipple>
       <mat-icon>cloud_upload</mat-icon>
-      <h3>Haz clic para seleccionar fotos</h3>
-      <p>Soporta JPG, PNG, WEBP</p>
+      <h3>Toca para subir fotos</h3>
+      <p>JPG, PNG, WEBP</p>
     </div>
 
     <input #fileInput type="file" hidden multiple accept="image/*" (change)="onFileSelected($event)">
@@ -40,29 +39,41 @@
       <textarea matInput 
                 [(ngModel)]="descripcion" 
                 rows="3" 
-                placeholder="Ej: Manga estilo japonés realizado en 3 sesiones..."
-                [disabled]="isUploading"></textarea>
+                placeholder="Ej: Manga estilo japonés..."
+                [disabled]="isUploading"
+                maxlength="500"></textarea>
       <mat-hint align="end">{{descripcion.length}} / 500</mat-hint>
     </mat-form-field>
 
   </div>
 </mat-dialog-content>
 
-<mat-dialog-actions align="end">
-  <button mat-button (click)="onCancel()" [disabled]="isUploading">Cancelar</button>
-  
-  <button mat-raised-button color="primary" 
-          [disabled]="selectedFiles.length === 0 || isUploading" 
-          (click)="subir()">
-    
-    <ng-container *ngIf="!isUploading">
-        <mat-icon>publish</mat-icon> Publicar
-    </ng-container>
-    
-    <ng-container *ngIf="isUploading">
-        <mat-spinner diameter="20" style="display:inline-block; margin-right: 5px"></mat-spinner> 
-        Subiendo...
-    </ng-container>
+<mat-dialog-actions class="action-buttons" align="end">
 
-  </button>
+    <button mat-stroked-button color="warn" type="button" 
+    (click)="onCancel()" [disabled]="isUploading">
+      Cancelar
+    </button>
+
+    <button
+      mat-raised-button
+      class="create-button"
+      type="submit"
+      [disabled]="selectedFiles.length === 0 || isUploading" 
+      (click)="subir()"
+    >
+      <ng-container *ngIf="!isUploading">
+         <span class="btn-content">
+            <mat-icon>publish</mat-icon>
+            <span>Publicar</span>
+         </span>
+      </ng-container>
+      
+      <ng-container *ngIf="isUploading">
+         <span class="btn-content">
+            <mat-spinner diameter="20"></mat-spinner> 
+            <span>Subiendo...</span>
+         </span>
+      </ng-container>
+    </button>
 </mat-dialog-actions>

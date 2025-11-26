@@ -1,66 +1,82 @@
 .upload-container {
   padding-top: 10px;
-  min-width: 300px;
-  max-width: 500px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .hint-text {
-  color: #777;
+  color: #666;
   font-size: 0.9rem;
-  margin-bottom: 15px;
+  margin-bottom: 16px;
 }
 
-/* Grilla de Miniaturas */
+/* --- GRILLA RESPONSIVA --- */
 .previews-grid {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
-/* Item individual (Foto) */
+/* Item individual */
 .preview-item {
   position: relative;
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   border-radius: 8px;
-  overflow: hidden;
-  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #eee;
   }
 
-  /* Botón de eliminar flotante */
-  .btn-remove {
+
+  .btn-remove-custom {
     position: absolute;
-    top: 2px;
-    right: 2px;
+    top: -6px;
+    right: -6px;
+
     width: 24px;
     height: 24px;
-    line-height: 24px;
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(2px);
+    border-radius: 50%;
+
+    background-color: #f44336;
+    color: white;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    cursor: pointer;
+    z-index: 10;
+
+    transition: transform 0.2s;
 
     mat-icon {
-      font-size: 16px;
-      width: 16px;
-      height: 16px;
-      line-height: 16px;
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+      font-weight: bold;
     }
 
     &:hover {
-      background: white;
+      transform: scale(1.1);
+      background-color: #d32f2f;
     }
   }
 }
 
-/* Botón cuadrado pequeño "+" */
+/* Botón Agregar */
 .add-more-box {
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   border: 2px dashed #ccc;
   border-radius: 8px;
   display: flex;
@@ -72,15 +88,6 @@
   background-color: #fafafa;
   transition: all 0.2s;
 
-  mat-icon {
-    font-size: 24px;
-  }
-
-  span {
-    font-size: 0.75rem;
-    margin-top: 4px;
-  }
-
   &:hover {
     border-color: #3f51b5;
     color: #3f51b5;
@@ -88,17 +95,21 @@
   }
 }
 
-/* Placeholder grande inicial */
+/* Placeholder Grande */
 .placeholder {
   border: 2px dashed #ccc;
   padding: 40px 20px;
-  text-align: center;
   border-radius: 12px;
   cursor: pointer;
   color: #777;
   margin-bottom: 20px;
   background-color: #fafafa;
-  transition: all 0.2s;
+  transition: background-color 0.2s;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
   mat-icon {
     font-size: 48px;
@@ -110,24 +121,20 @@
 
   h3 {
     margin: 0;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 500;
-    color: #555;
+    color: #444;
   }
 
   p {
-    margin: 5px 0 0;
-    font-size: 0.85rem;
-    color: #999;
+    margin: 4px 0 0;
+    font-size: 0.8rem;
+    color: #888;
   }
 
   &:hover {
     background-color: #f0f0f0;
-    border-color: #3f51b5;
-
-    mat-icon {
-      color: #3f51b5;
-    }
+    border-color: #999;
   }
 }
 
@@ -137,4 +144,37 @@
 
 .mt-3 {
   margin-top: 1rem;
+}
+
+
+// Botones footer
+.create-button {
+  padding: 0 24px;
+}
+
+.btn-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  mat-icon {
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+    margin: 0;
+  }
+}
+
+
+@media (max-width: 400px) {
+  .previews-grid {
+    justify-content: flex-start;
+  }
+
+  .preview-item,
+  .add-more-box {
+    width: 70px;
+    height: 70px;
+  }
 }
