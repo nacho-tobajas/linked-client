@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { SubirTrabajoComponent } from 'src/app/aplicacion/trabajos/subir-trabajo/subir-trabajo/subir-trabajo.component';
 import { Trabajo } from 'src/app/models/trabajos/trabajos.model';
@@ -24,7 +25,8 @@ export class HomeComponent {
     private router: Router,
     private loginService: LoginService,
     private trabajosService: TrabajosService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar,
   ) { }
 
   ngOnInit(): void {
@@ -62,17 +64,39 @@ export class HomeComponent {
 
   onToggleLike(trabajoId: number) {
     if (!this.userLoginOn) {
-        alert("Debes iniciar sesión para dar Me Gusta.");
+        this.snackBar.open("Debes iniciar sesión para dar Me Gusta.", 'Cerrar', { duration: 3000 });
         this.router.navigate(['/login']); 
         return;
     }
+    const trabajo = this.feed.find(t => t.id === trabajoId);
+    if (!trabajo) return;
 
-    if (this.misLikes.has(trabajoId)) {
+    if (!trabajo.favoritos) trabajo.favoritos = [];
+
+    const yaTieneLike = this.misLikes.has(trabajoId);
+
+    if (yaTieneLike) {
         this.misLikes.delete(trabajoId);
-        this.trabajosService.quitarLike(trabajoId).subscribe();
+        trabajo.favoritos.pop(); 
+
+        this.trabajosService.quitarLike(trabajoId).subscribe({
+            error: () => {
+                this.misLikes.add(trabajoId);
+                trabajo.favoritos?.push({}); 
+                console.error("Error al quitar like");
+            }
+        });
+
     } else {
         this.misLikes.add(trabajoId);
-        this.trabajosService.darLike(trabajoId).subscribe();
+        trabajo.favoritos.push({});
+        this.trabajosService.darLike(trabajoId).subscribe({
+            error: () => {
+                this.misLikes.delete(trabajoId);
+                trabajo.favoritos?.pop();
+                console.error("Error al dar like");
+            }
+        });
     }
   }
 

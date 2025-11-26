@@ -94,12 +94,17 @@
   }
 }
 
-.posts-grid {
+.gallery-grid {
   display: grid;
-  // Crea columnas automáticas de mínimo 300px (diseño responsivo)
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-  justify-items: center; // Centra las tarjetas en su celda
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  padding-bottom: 40px;
+}
+
+@media (max-width: 500px) {
+  .gallery-grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
 }
 
 .empty-feed {

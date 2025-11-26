@@ -17,18 +17,31 @@ export class PostTrabajoComponent {
   @Output() toggleLike = new EventEmitter<number>(); 
 
   environmentImg = environment.urlImg;
+  currentImageIndex: number = 0;
 
   constructor(private router: Router) {}
 
-  onLikeClick(event: MouseEvent) {
+  nextImage(event: MouseEvent) {
+    event.stopPropagation(); 
+    if (!this.trabajo.fotos) return;
+    this.currentImageIndex = (this.currentImageIndex + 1) % this.trabajo.fotos.length;
+  }
+
+  prevImage(event: MouseEvent) {
+    event.stopPropagation();
+    if (!this.trabajo.fotos) return;
+    this.currentImageIndex = (this.currentImageIndex - 1 + this.trabajo.fotos.length) % this.trabajo.fotos.length;
+  }
+
+  onLike(event: MouseEvent) {
     event.stopPropagation(); 
     this.toggleLike.emit(this.trabajo.id);
   }
 
 
-  irAlPerfil() {
+  irAlPerfil(event?: MouseEvent) {
+    if (event) event.stopPropagation();
     if (this.trabajo.tatuador) {
-
       this.router.navigate(['/perfil-publico', this.trabajo.tatuador.id]);
     }
   }

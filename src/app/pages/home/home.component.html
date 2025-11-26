@@ -48,17 +48,16 @@
   <mat-divider class="section-divider"></mat-divider>
 
   <div class="feed-section">
-    <h3>Últimos Trabajos</h3>
-    
-    <div class="posts-grid">
-        <app-post-trabajo 
-            *ngFor="let trabajo of feed"
-            [trabajo]="trabajo"
-            [isLiked]="misLikes.has(trabajo.id)"
-            [showArtistInfo]="true"
-            (toggleLike)="onToggleLike($event)">
-        </app-post-trabajo>
-    </div>
+      <!-- Componente con publicaciones (post-trabajo) -->
+      <div class="gallery-grid">
+          <app-post-trabajo 
+              *ngFor="let trabajo of feed"
+              [trabajo]="trabajo"
+              [isLiked]="misLikes.has(trabajo.id)"
+              [showArtistInfo]="true"
+              (toggleLike)="onToggleLike($event)">
+          </app-post-trabajo>
+      </div>
 
     <div *ngIf="feed.length === 0" class="empty-feed">
         <p>Aún no hay publicaciones para mostrar.</p>
