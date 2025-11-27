@@ -3,8 +3,6 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Tatuador } from 'src/app/models/tatuador/tatuador.model';
 import { TatuadorService } from 'src/app/services/user/tatuador.service';
-import { environment } from 'src/environments/environment';
-
 @Component({
   selector: 'app-listado-tatuadores',
   standalone: false,
@@ -12,7 +10,6 @@ import { environment } from 'src/environments/environment';
   styleUrl: './listado-tatuadores.component.scss'
 })
 export class ListadoTatuadoresComponent {
-  environmentImg = environment.urlImg;
   tatuadores: Tatuador[] = [];
   selectedTatuadorId: number | null = null;
   errorCarga: string | null = null;

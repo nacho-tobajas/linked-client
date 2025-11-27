@@ -1,8 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Trabajo } from 'src/app/models/trabajos/trabajos.model';
-import { environment } from 'src/environments/environment.js';
-
 @Component({
   selector: 'app-post-trabajo',
   standalone: false,
@@ -16,7 +14,6 @@ export class PostTrabajoComponent {
   
   @Output() toggleLike = new EventEmitter<number>(); 
 
-  environmentImg = environment.urlImg;
   currentImageIndex: number = 0;
 
   constructor(private router: Router) {}

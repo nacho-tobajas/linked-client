@@ -3,7 +3,7 @@
   <div class="media-column">
     
     <div class="image-wrapper">
-      <img [src]="environmentImg + data.trabajo.fotos[currentImageIndex].image_path" 
+      <img [src]="data.trabajo.fotos[currentImageIndex].image_path | serverUrl" 
            class="main-image" 
            alt="Detalle trabajo">
     </div>
@@ -28,7 +28,10 @@
     
     <div class="modal-header">
         <div class="author-info" (click)="irAlPerfil()">
-            <img [src]="environmentImg + data.trabajo.tatuador?.profile_photo || 'assets/default.jpg'" class="avatar">
+            <img [src]="data.trabajo.tatuador?.profile_photo | serverUrl" 
+             class="avatar" 
+             alt="Avatar">
+
             <div class="names">
                 <span class="realname">{{ data.trabajo.tatuador?.realname }}</span>
                 <span class="username">{{ data.trabajo.tatuador?.username }}</span>

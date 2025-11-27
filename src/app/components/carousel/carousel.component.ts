@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { environment } from 'src/environments/environment';
 
 @Component({
     selector: 'app-carousel',
@@ -23,7 +22,6 @@ export class CarouselComponent implements OnInit{
     if(this.autoSlide){
       this.autoSlideJuegos();
     }
-    this.environmentImg = environment.urlImg;
 
   }
 

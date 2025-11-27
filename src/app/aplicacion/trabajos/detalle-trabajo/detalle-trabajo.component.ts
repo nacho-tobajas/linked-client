@@ -4,8 +4,6 @@ import { Router } from '@angular/router';
 import { Trabajo } from 'src/app/models/trabajos/trabajos.model';
 import { LoginService } from 'src/app/services/auth/login.service';
 import { TrabajosService } from 'src/app/services/trabajos/trabajos.service';
-import { environment } from 'src/environments/environment';
-
 @Component({
   selector: 'app-detalle-trabajo',
   standalone: false,
@@ -13,7 +11,6 @@ import { environment } from 'src/environments/environment';
   styleUrl: './detalle-trabajo.component.scss'
 })
 export class DetalleTrabajoComponent implements OnInit {
-environmentImg = environment.urlImg;
   currentImageIndex = 0;
 
   isLiked = false;

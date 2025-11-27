@@ -2,7 +2,6 @@ import { Component, Input } from '@angular/core';
 import { Trabajo } from 'src/app/models/trabajos/trabajos.model';
 import { LoginService } from 'src/app/services/auth/login.service';
 import { TrabajosService } from 'src/app/services/trabajos/trabajos.service';
-import { environment } from 'src/environments/environment';
 import { DetalleTrabajoComponent } from '../../detalle-trabajo/detalle-trabajo.component';
 import { TatuadorService } from 'src/app/services/user/tatuador.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -21,7 +20,6 @@ tatuador: Tatuador | null = null;
   misLikes: Set<number> = new Set();
   
   isLoading = true;
-  environmentImg = environment.urlImg;
   userLoginOn = false;
   esCliente = false;
 

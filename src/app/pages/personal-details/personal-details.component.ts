@@ -6,7 +6,6 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { forkJoin, Subscription } from 'rxjs';
-import { environment } from 'src/environments/environment.js';
 import { Especialidad } from 'src/app/aplicacion/gestion-sistema/especialidades/especialidades.model';
 import { TatuadorService } from 'src/app/services/user/tatuador.service';
 import { TatuadorComponent } from './tatuador/tatuador.component';
@@ -28,7 +27,6 @@ export class PersonalDetailsComponent implements OnInit {
   errorMessage: string = '';
   userId: number | null = null;
   user?: User;
-  environmentImg = environment.urlImg;
   userLoginOn: boolean = false;
   editMode: boolean = false;
   userRol: string | null = null;

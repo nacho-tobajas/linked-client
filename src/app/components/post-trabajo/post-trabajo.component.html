@@ -1,7 +1,7 @@
 <div class="post-tile mat-elevation-z2">
   
 <div class="image-wrapper">
-    <img [src]="environmentImg + trabajo.fotos[currentImageIndex].image_path" 
+    <img [src]="trabajo.fotos[currentImageIndex].image_path | serverUrl" 
          class="tile-image" 
          loading="lazy"
          alt="Tatuaje">
@@ -27,7 +27,7 @@
     
     <div class="overlay-header" *ngIf="showArtistInfo"  (click)="irAlPerfil($event)">
       <div class="artist-pill">
-        <img [src]="environmentImg + trabajo.tatuador?.profile_photo || 'assets/default.jpg'" class="mini-avatar">
+        <img [src]="trabajo.tatuador?.profile_photo | serverUrl" class="mini-avatar">
         <span>{{ trabajo.tatuador?.username }}</span>
       </div>
     </div>

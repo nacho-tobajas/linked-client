@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-import { Reserva } from '../reserva/reserva.model';
 import { Location } from '@angular/common';
-import { environment } from 'src/environments/environment';
 import { TurnoSesion } from 'src/app/models/turno/turno-sesion.model';
 import { AgendaDetalleComponent } from '../agenda/agenda-detalle/agenda-detalle.component';
 import { TurnosService } from 'src/app/services/turnos/turnos.service';
@@ -14,7 +12,6 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrl: './mis-reservas.component.scss'
 })
 export class MisReservasComponent {
-environmentImg = environment.urlImg;
   turnos: TurnoSesion[] = [];
   isLoading = false;
   errorCarga: string | null = null;

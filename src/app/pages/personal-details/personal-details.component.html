@@ -10,7 +10,7 @@
   <div mat-card-avatar class="profile-picture-container">
     <img
       *ngIf="user?.profile_photo; else defaultImage"
-      [src]=" environmentImg + user?.profile_photo"
+      [src]="user?.profile_photo | serverUrl"
       alt="Foto de perfil"
       class="profile-picture"
     />
@@ -75,48 +75,19 @@
     <div class="profile-picture-dual-horizontal">
   <!-- Imagen grande -->
   <div class="profile-picture-large-container">
-      <img
-        *ngIf="previewImageUrl"
-        [src]="previewImageUrl"
-        alt="Foto de perfil previsualización"
-        class="profile-picture-large"
-      />
-      <img
-        *ngIf="!previewImageUrl && user?.profile_photo"
-        [src]="environmentImg + user?.profile_photo"
-        alt="Foto de perfil actual"
-        class="profile-picture-large"
-      />
-      <ng-template #defaultImage>
-        <img
-          src="../../../assets/images/default-profile.jpg"
-          alt="Sin imagen"
-          class="profile-picture-large"
-        />
-      </ng-template>
+    <img
+    [src]="previewImageUrl || (user?.profile_photo | serverUrl)"
+    alt="Foto de perfil"
+    class="profile-picture-large"
+    />
     </div>
 
     <div class="profile-picture-small-container">
       <img
-        *ngIf="previewImageUrl"
-        [src]="previewImageUrl"
+        [src]="previewImageUrl || (user?.profile_photo | serverUrl)"
         alt="Foto de perfil previsualización pequeña"
         class="profile-picture-small"
       />
-      <img
-        *ngIf="!previewImageUrl && user?.profile_photo"
-        [src]="environmentImg + user?.profile_photo"
-        alt="Foto de perfil actual pequeña"
-        class="profile-picture-small"
-      />
-      <ng-template #defaultSmall>
-        <img
-          src="../../../assets/images/default-profile.jpg"
-          alt="Sin imagen"
-          class="profile-picture-small"
-        />
-      </ng-template>
-
       <button mat-icon-button class="edit-icon" (click)="triggerFileInput()">
         <mat-icon>edit</mat-icon>
       </button>

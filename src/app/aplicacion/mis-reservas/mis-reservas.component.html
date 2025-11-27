@@ -41,7 +41,7 @@
 
         <mat-card-content class="card-body">
             <div class="tatuador-info" *ngIf="turno.tatuadoresAsignados && turno.tatuadoresAsignados.length > 0">
-                <img [src]="environmentImg + turno.tatuadoresAsignados[0].tatuador.profile_photo || '../../../assets/images/default-profile.jpg'" 
+                <img [src]="turno.tatuadoresAsignados[0].tatuador.profile_photo | serverUrl" 
                      class="avatar-small">
                 <div>
                     <small>Artista</small>

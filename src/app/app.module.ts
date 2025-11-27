@@ -93,6 +93,7 @@ import { PortfolioComponent } from './aplicacion/trabajos/portfolio/portfolio/po
 import { SubirTrabajoComponent } from './aplicacion/trabajos/subir-trabajo/subir-trabajo/subir-trabajo.component';
 import { PostTrabajoComponent } from './components/post-trabajo/post-trabajo.component';
 import { DetalleTrabajoComponent } from './aplicacion/trabajos/detalle-trabajo/detalle-trabajo.component';
+import { ServerUrlPipe } from './pipes/server-url.pipe';
 
 
 registerLocaleData(localeEsAr); // 👈 Esto registra el locale
@@ -144,7 +145,12 @@ registerLocaleData(localeEsAr); // 👈 Esto registra el locale
         SubirTrabajoComponent,
         PostTrabajoComponent,
         DetalleTrabajoComponent,
-    ],schemas: [CUSTOM_ELEMENTS_SCHEMA],
+        ServerUrlPipe
+    ],
+    exports: [
+    ServerUrlPipe
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     bootstrap: [AppComponent], imports: [CommonModule,
         BrowserModule,
         FormsModule,

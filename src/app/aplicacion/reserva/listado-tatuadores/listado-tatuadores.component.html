@@ -31,7 +31,7 @@
             (click)="seleccionarTatuador(tatuador)"
             [class.selected]="tatuador.idUser === selectedTatuadorId"> 
             
-            <img [src]="environmentImg + tatuador?.profile_photo || '../../../assets/images/default-profile.jpg'" 
+            <img [src]="tatuador?.profile_photo | serverUrl" 
                  [alt]="tatuador.realname" 
                  class="tatuador-avatar">
             

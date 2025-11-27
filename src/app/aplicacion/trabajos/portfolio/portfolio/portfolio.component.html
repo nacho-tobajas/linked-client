@@ -3,7 +3,7 @@
   <div class="profile-header mat-elevation-z1">
     
     <div class="avatar-container">
-      <img [src]="environmentImg + tatuador.profile_photo || 'assets/images/default-profile.jpg'" 
+      <img [src]="tatuador.profile_photo | serverUrl" 
            class="profile-avatar" 
            alt="Foto de perfil">
     </div>
@@ -42,7 +42,7 @@
     <div class="trabajo-card" *ngFor="let trabajo of trabajos" (click)="abrirDetalle(trabajo)">
       
       <img *ngIf="trabajo.fotos && trabajo.fotos.length > 0" 
-           [src]="environmentImg + trabajo.fotos[0].image_path" 
+           [src]="trabajo.fotos[0].image_path | serverUrl" 
            class="trabajo-img">
 
       <mat-icon class="multiple-icon" *ngIf="trabajo.fotos.length > 1">filter_none</mat-icon>
