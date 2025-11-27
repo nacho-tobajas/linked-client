@@ -3,6 +3,11 @@ import { Trabajo } from 'src/app/models/trabajos/trabajos.model';
 import { LoginService } from 'src/app/services/auth/login.service';
 import { TrabajosService } from 'src/app/services/trabajos/trabajos.service';
 import { environment } from 'src/environments/environment';
+import { DetalleTrabajoComponent } from '../../detalle-trabajo/detalle-trabajo.component';
+import { TatuadorService } from 'src/app/services/user/tatuador.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { Tatuador } from 'src/app/models/tatuador/tatuador.model';
 
 @Component({
   selector: 'app-portfolio',
@@ -11,73 +16,109 @@ import { environment } from 'src/environments/environment';
   styleUrl: './portfolio.component.scss'
 })
 export class PortfolioComponent {
-@Input() tatuadorId!: number; // Recibe el ID del perfil que estamos viendo
-  
+tatuador: Tatuador | null = null;
   trabajos: Trabajo[] = [];
-  misLikes: Set<number> = new Set(); // Usamos un Set para búsqueda rápida (O(1))
-  environmentImg = environment.urlImg;
+  misLikes: Set<number> = new Set();
   
-  esCliente = false; // Solo los clientes pueden dar like
+  isLoading = true;
+  environmentImg = environment.urlImg;
+  userLoginOn = false;
+  esCliente = false;
 
   constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private tatuadorService: TatuadorService,
     private trabajosService: TrabajosService,
-    private loginService: LoginService // Asumo que tienes un servicio de auth
+    private loginService: LoginService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
-    this.checkRol();
-    this.cargarTrabajos();
-  }
+    // 1. Obtener ID de la URL
+    const id = this.route.snapshot.paramMap.get('id');
+    if (!id) {
+      this.router.navigate(['/']);
+      return;
+    }
 
-  checkRol() {
-    // Lógica para saber si el usuario logueado es Cliente
-    // (Ajusta según tu LoginService)
+    const tatuadorId = Number(id);
+
+    // 2. Cargar Datos
+    this.cargarPerfil(tatuadorId);
+    this.cargarTrabajos(tatuadorId);
+    
+    // 3. Verificar Login para los Likes
+    this.loginService.userLoginOn.subscribe(logged => {
+      this.userLoginOn = logged;
+      if (logged) this.cargarMisLikes();
+    });
+    
     this.loginService.userRol.subscribe(rol => {
         this.esCliente = rol === 'Cliente';
-        if (this.esCliente) {
-            this.cargarMisLikes();
-        }
     });
   }
 
-  cargarTrabajos() {
-    this.trabajosService.getTrabajosPorTatuador(this.tatuadorId).subscribe(data => {
-      this.trabajos = data;
+  cargarPerfil(id: number) {
+    // Asumo que tienes un método getById, sino usas el getTatuadores().find...
+    // Idealmente: this.tatuadorService.getById(id)...
+    this.tatuadorService.getTatuadores().subscribe(tatuadores => {
+        this.tatuador = tatuadores.find(t => t.idUser === id) || null;
+    });
+  }
+
+  cargarTrabajos(id: number) {
+    this.trabajosService.getTrabajosPorTatuador(id).subscribe({
+      next: (data) => {
+        this.trabajos = data;
+        this.isLoading = false;
+      },
+      error: () => this.isLoading = false
     });
   }
 
   cargarMisLikes() {
-    this.trabajosService.getMisLikesIds().subscribe(ids => {
-      this.misLikes = new Set(ids);
+    this.trabajosService.getMisLikesIds().subscribe(ids => this.misLikes = new Set(ids));
+  }
+
+  // --- Acciones ---
+
+  irAReservar() {
+    if (this.tatuador) {
+        this.router.navigate(['/reserva/horarios', this.tatuador.idUser]);
+    }
+  }
+
+  abrirDetalle(trabajo: Trabajo) {
+     const dialogRef = this.dialog.open(DetalleTrabajoComponent, {
+      width: '900px',
+      maxWidth: '100vw',
+      maxHeight: '90vh',
+      panelClass: 'custom-modal-panel',
+      data: { 
+          trabajo: trabajo,
+          isLiked: this.misLikes.has(trabajo.id)
+      }
     });
   }
 
   toggleLike(trabajo: Trabajo) {
-    if (!this.esCliente) return; // Tatuadores no se dan like a sí mismos
-
+    if (!this.userLoginOn || !this.esCliente) return;
+    
     const yaTieneLike = this.misLikes.has(trabajo.id);
-
     if (!trabajo.favoritos) trabajo.favoritos = [];
-    // 1. UI Optimista (Cambiamos el corazón inmediatamente)
+
     if (yaTieneLike) {
-        this.misLikes.delete(trabajo.id); // Apagar corazón
+        this.misLikes.delete(trabajo.id);
         trabajo.favoritos.pop();
         this.trabajosService.quitarLike(trabajo.id).subscribe({
-            error: () => {
-                // Si falla, revertimos
-                this.misLikes.add(trabajo.id);
-                trabajo.favoritos?.push({}); 
-            }
+            error: () => { this.misLikes.add(trabajo.id); trabajo.favoritos?.push({}); }
         });
     } else {
-        this.misLikes.add(trabajo.id); // Encender corazón
-        trabajo.favoritos.push({ id: 0 });
+        this.misLikes.add(trabajo.id);
+        trabajo.favoritos.push({});
         this.trabajosService.darLike(trabajo.id).subscribe({
-            error: () => {
-                // Si falla, revertimos
-                this.misLikes.delete(trabajo.id);
-                trabajo.favoritos?.pop();
-            }
+            error: () => { this.misLikes.delete(trabajo.id); trabajo.favoritos?.pop(); }
         });
     }
   }

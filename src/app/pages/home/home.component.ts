@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { DetalleTrabajoComponent } from 'src/app/aplicacion/trabajos/detalle-trabajo/detalle-trabajo.component';
 import { SubirTrabajoComponent } from 'src/app/aplicacion/trabajos/subir-trabajo/subir-trabajo/subir-trabajo.component';
 import { Trabajo } from 'src/app/models/trabajos/trabajos.model';
 import { LoginService } from 'src/app/services/auth/login.service';
@@ -45,6 +46,23 @@ export class HomeComponent {
     });
 
     this.cargarFeed();
+  }
+
+  abrirDetalle(trabajo: Trabajo) {
+    const dialogRef = this.dialog.open(DetalleTrabajoComponent, {
+      panelClass: 'custom-modal-panel', 
+      maxWidth: '100vw', 
+      maxHeight: '90vh',      
+      data: { 
+          trabajo: trabajo,
+          isLiked: this.misLikes.has(trabajo.id)
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+       // Opcional: Recargar likes o feed al volver si hubo cambios drásticos
+       // this.cargarMisLikes(); 
+    });
   }
 
   cargarFeed() {

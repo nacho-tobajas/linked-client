@@ -55,7 +55,8 @@
               [trabajo]="trabajo"
               [isLiked]="misLikes.has(trabajo.id)"
               [showArtistInfo]="true"
-              (toggleLike)="onToggleLike($event)">
+              (toggleLike)="onToggleLike($event)"
+              (click)="abrirDetalle(trabajo)">
           </app-post-trabajo>
       </div>
 

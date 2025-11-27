@@ -20,6 +20,7 @@ import { adminModGuard } from './guards/admin-mod.guard';
 import { EspecialidadesComponent } from './aplicacion/gestion-sistema/especialidades/especialidades.component';
 import { MisReservasComponent } from './aplicacion/mis-reservas/mis-reservas.component';
 import { AgendaComponent } from './aplicacion/agenda/agenda.component';
+import { PortfolioComponent } from './aplicacion/trabajos/portfolio/portfolio/portfolio.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/inicio', pathMatch: 'full' },
@@ -43,6 +44,7 @@ const routes: Routes = [
     path: 'mis-reservas',
     component: MisReservasComponent
   },
+  { path: 'perfil-publico/:id', component: PortfolioComponent },
   { path: '**', redirectTo: '/inicio', pathMatch: 'full' }, //redireccionar a inicio si no hay match
   // Carga diferida (lazy loading) para el flujo de prereserva
 

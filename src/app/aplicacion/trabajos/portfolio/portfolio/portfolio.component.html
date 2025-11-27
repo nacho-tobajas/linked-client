@@ -1,30 +1,76 @@
-<div class="galeria-grid">
-  <div class="trabajo-card" *ngFor="let trabajo of trabajos">
+<div class="portfolio-container" *ngIf="tatuador">
+  
+  <div class="profile-header mat-elevation-z1">
     
-    <img *ngIf="trabajo.fotos && trabajo.fotos.length > 0" 
-         [src]="environmentImg + trabajo.fotos[0].image_path" 
-         class="trabajo-img">
-
-    <mat-icon class="multiple-icon" *ngIf="trabajo.fotos.length > 1">filter_none</mat-icon>
-    
-    <div class="overlay">
-      <div class="actions-container">
-          <button mat-icon-button 
-                  class="btn-like"
-                  [class.liked]="misLikes.has(trabajo.id)"
-                  (click)="toggleLike(trabajo)">
-            <mat-icon>{{ misLikes.has(trabajo.id) ? 'favorite' : 'favorite_border' }}</mat-icon>
-          </button>
-
-          <span class="likes-count">
-            {{ trabajo.favoritos?.length || 0 }}
-          </span>
-      </div>
-
-      <p class="desc" *ngIf="trabajo.descripcion">
-        {{ trabajo.descripcion | slice:0:50 }}...
-      </p>
+    <div class="avatar-container">
+      <img [src]="environmentImg + tatuador.profile_photo || 'assets/images/default-profile.jpg'" 
+           class="profile-avatar" 
+           alt="Foto de perfil">
     </div>
 
+    <div class="profile-info">
+      <h1 class="artist-name">{{ tatuador.realname }} {{ tatuador.surname }}</h1>
+      <p class="username">{{ tatuador.username }}</p>
+      
+      <div class="stats-row">
+        <span class="stat-item" *ngIf="tatuador.estudio">
+            <mat-icon>storefront</mat-icon> {{ tatuador.estudio }}
+        </span>
+        <span class="stat-item" *ngIf="tatuador.antiguedad">
+            <mat-icon>history_edu</mat-icon> {{ tatuador.antiguedad }} años exp.
+        </span>
+      </div>
+
+      <div class="tags-row" *ngIf="tatuador.especialidades && tatuador.especialidades.length > 0">
+         <span class="tag" *ngFor="let esp of tatuador.especialidades">{{ esp.nombre }}</span>
+      </div>
+
+      <div class="actions-row" *ngIf="userLoginOn && esCliente">
+         <button mat-flat-button color="primary" class="btn-reservar" (click)="irAReservar()">
+            Reservar Turno
+         </button>
+      </div>
+    </div>
   </div>
+
+  <div class="gallery-title">
+      <h3>Portfolio</h3>
+      <span class="count">{{ trabajos.length }} publicaciones</span>
+  </div>
+
+  <div class="galeria-grid" *ngIf="!isLoading && trabajos.length > 0">
+    <div class="trabajo-card" *ngFor="let trabajo of trabajos" (click)="abrirDetalle(trabajo)">
+      
+      <img *ngIf="trabajo.fotos && trabajo.fotos.length > 0" 
+           [src]="environmentImg + trabajo.fotos[0].image_path" 
+           class="trabajo-img">
+
+      <mat-icon class="multiple-icon" *ngIf="trabajo.fotos.length > 1">filter_none</mat-icon>
+      
+      <div class="overlay">
+        <div class="actions-container">
+            <button mat-icon-button 
+                    class="btn-like"
+                    [class.liked]="misLikes.has(trabajo.id)"
+                    (click)="$event.stopPropagation(); toggleLike(trabajo)"> <mat-icon>{{ misLikes.has(trabajo.id) ? 'favorite' : 'favorite_border' }}</mat-icon>
+            </button>
+
+            <span class="likes-count">
+              {{ trabajo.favoritos?.length || 0 }}
+            </span>
+        </div>
+
+        <p class="desc" *ngIf="trabajo.descripcion">
+          {{ trabajo.descripcion | slice:0:50 }}...
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && trabajos.length === 0" class="empty-state">
+      <mat-icon>image_not_supported</mat-icon>
+      <p>Este artista aún no ha subido trabajos.</p>
+  </div>
+
 </div>

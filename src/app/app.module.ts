@@ -92,6 +92,7 @@ import { MisReservasComponent } from './aplicacion/mis-reservas/mis-reservas.com
 import { PortfolioComponent } from './aplicacion/trabajos/portfolio/portfolio/portfolio.component';
 import { SubirTrabajoComponent } from './aplicacion/trabajos/subir-trabajo/subir-trabajo/subir-trabajo.component';
 import { PostTrabajoComponent } from './components/post-trabajo/post-trabajo.component';
+import { DetalleTrabajoComponent } from './aplicacion/trabajos/detalle-trabajo/detalle-trabajo.component';
 
 
 registerLocaleData(localeEsAr); // 👈 Esto registra el locale
@@ -141,7 +142,8 @@ registerLocaleData(localeEsAr); // 👈 Esto registra el locale
         MisReservasComponent,
         PortfolioComponent,
         SubirTrabajoComponent,
-        PostTrabajoComponent
+        PostTrabajoComponent,
+        DetalleTrabajoComponent,
     ],schemas: [CUSTOM_ELEMENTS_SCHEMA],
     bootstrap: [AppComponent], imports: [CommonModule,
         BrowserModule,
