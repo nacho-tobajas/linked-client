@@ -1,3 +1,5 @@
+@import '../../../assets/styles/variables';
+
 .home-container {
   padding: 20px;
   max-width: 1000px;
@@ -62,7 +64,7 @@
     margin-bottom: 8px;
 
     mat-icon {
-      color: #3f51b5;
+      color: $main-color;
       font-size: 24px;
     }
   }

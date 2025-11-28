@@ -10,7 +10,9 @@ import { TatuadorService } from 'src/app/services/user/tatuador.service';
   styleUrl: './listado-tatuadores.component.scss'
 })
 export class ListadoTatuadoresComponent {
+  tatuadoresOriginal: Tatuador[] = [];
   tatuadores: Tatuador[] = [];
+
   selectedTatuadorId: number | null = null;
   errorCarga: string | null = null;
 
@@ -31,7 +33,6 @@ export class ListadoTatuadoresComponent {
       return this.tatuadores.find(t => t.idUser === this.selectedTatuadorId) || null;
     }
   
-    // --- Lógica: Paso 1 (Listado) ---
     cargarTatuadores(): void {
       
       this.errorCarga = null;
@@ -39,10 +40,11 @@ export class ListadoTatuadoresComponent {
         next: (data: Tatuador[]) => { 
         const tatuadoresLimpios = data.map(tatuador => {
 
-          tatuador.especialidades = tatuador.especialidades || []; 
+          tatuador.especialidades = tatuador.especialidades || [];
           return tatuador;
         });
 
+        this.tatuadoresOriginal = tatuadoresLimpios;
         this.tatuadores = tatuadoresLimpios;
         },
         error: (err) => {
@@ -51,15 +53,38 @@ export class ListadoTatuadoresComponent {
         }
       });
     }
+
+    filtrar(event: Event): void {
+    const valor = (event.target as HTMLInputElement).value.toLowerCase().trim();
+
+    // Si el input está vacío, restauramos la lista completa
+    if (!valor) {
+        this.tatuadores = [...this.tatuadoresOriginal];
+        return;
+    }
+
+    // Filtramos buscando en Nombre, Apellido, Usuario O Especialidades
+    this.tatuadores = this.tatuadoresOriginal.filter(t => {
+        const nombreCompleto = `${t.realname} ${t.surname}`.toLowerCase();
+        const usuario = t.username?.toLowerCase() || '';
+        
+        // Convertimos las especialidades a un solo string para buscar fácil
+        const especialidadesStr = t.especialidades?.map(e => e.nombre).join(' ').toLowerCase() || '';
+
+        return nombreCompleto.includes(valor) || 
+               usuario.includes(valor) ||
+               especialidadesStr.includes(valor);
+    });
+  }
+    
   
     seleccionarTatuador(tatuador: Tatuador): void {
       this.selectedTatuadorId = tatuador.idUser;
     }
   
     verTrabajos(idTatuador: number, event: MouseEvent): void {
-      event.stopPropagation(); // Evita que se dispare seleccionarTatuador()
-      console.log("Navegando al portafolio de:", idTatuador);
-      // this.router.navigate(['/portafolio', idTatuador]);
+      event.stopPropagation();
+      this.router.navigate(['/perfil-publico', idTatuador]);
     }
   
     confirmarSeleccion(): void {

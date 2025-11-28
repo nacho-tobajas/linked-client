@@ -1,25 +1,20 @@
-/* =========================================
-   1. CONTENEDOR PRINCIPAL (LAYOUT MODAL)
-   ========================================= */
+@import '../../../../assets/styles/variables';
+
+// CONTENEDOR PRINCIPAL (LAYOUT MODAL)
 .detail-container {
   display: flex;
   flex-direction: column;
   height: 80vh;
-  /* Altura fija: 80% de la ventana */
   max-height: 800px;
   min-width: 500px;
-  /* Ancho mínimo cómodo */
   overflow: hidden;
-  /* Previene scroll en el contenedor padre */
   background-color: #fff;
 }
 
-/* =========================================
-   2. ENCABEZADO (HEADER)
-   ========================================= */
+// HEADER
+
 .dialog-header {
   flex: 0 0 auto;
-  /* Altura fija basada en contenido */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -54,7 +49,7 @@
     }
   }
 
-  /* Chips de Estado */
+  // Chips de Estado 
   .estado-badge {
     padding: 6px 16px;
     border-radius: 20px;
@@ -90,31 +85,24 @@
   }
 }
 
-/* =========================================
-   3. PESTAÑAS (TABS) - EL TRUCO DE ALTURA
-   ========================================= */
+// PESTAÑAS 
+
 .full-height-tabs {
   flex: 1;
-  /* Ocupa todo el espacio vertical restante */
   overflow: hidden;
-  /* Necesario para que el scroll interno funcione */
 
-  /* Forzamos al wrapper interno de Material a ocupar el 100% */
   ::ng-deep .mat-mdc-tab-body-wrapper {
     height: 100%;
   }
 }
 
-/* =========================================
-   4. PESTAÑA 1: DETALLES
-   ========================================= */
+
+//PESTAÑA 1: DETALLES
+
 .content-scroll {
   height: 100%;
-  /* Llena la pestaña */
   overflow-y: auto;
-  /* Scroll vertical nativo */
   padding: 24px;
-  /* Padding interno */
   box-sizing: border-box;
 }
 
@@ -162,8 +150,7 @@
     padding: 16px;
     border-radius: 8px;
     border: 1px solid #e0e0e0;
-    border-left: 4px solid #3f51b5;
-    /* Acento visual */
+    border-left: 4px solid $main-color;
     color: #444;
     line-height: 1.6;
   }
@@ -173,9 +160,7 @@
   display: flex;
   gap: 12px;
   overflow-x: auto;
-  /* Scroll horizontal */
   padding: 8px 4px 16px 4px;
-  /* Espacio para sombra */
 
   .img-wrapper {
     flex: 0 0 120px;
@@ -200,19 +185,16 @@
   }
 }
 
-/* =========================================
-   5. PESTAÑA 2: CHAT / MENSAJES
-   ========================================= */
+// PESTAÑA 2: CHAT / MENSAJES
+
 .chat-layout {
   display: flex;
   flex-direction: column;
   height: 100%;
   background-color: #eef2f5;
-  /* Fondo gris azulado suave */
   position: relative;
 }
 
-/* Lista de mensajes (Scrollable) */
 .messages-list {
   flex: 1;
   overflow-y: auto;
@@ -222,7 +204,6 @@
   gap: 12px;
 }
 
-/* Burbujas */
 .message-bubble {
   max-width: 75%;
   padding: 12px 16px;
@@ -252,13 +233,11 @@
       color: #d32f2f;
     }
 
-    /* Color nombre cliente */
   }
 
   /* Mensajes PROPIOS (Tatuador) -> Derecha */
   &.own-message {
-    background: #3f51b5;
-    /* Color primario */
+    background: $main-color;
     color: #fff;
     align-self: flex-end;
     border-bottom-right-radius: 2px;
@@ -267,12 +246,10 @@
       display: none;
     }
 
-    /* Ocultar mi nombre */
     .msg-header small {
       color: #e0e0e0;
     }
 
-    /* Hora más clara */
   }
 }
 
@@ -307,22 +284,18 @@
     width: 100%;
   }
 
-  /* Hack para quitar el espacio extra inferior de Material Form Field */
   ::ng-deep .mat-mdc-form-field-subscript-wrapper {
     display: none;
   }
 
   ::ng-deep .mat-mdc-text-field-wrapper {
     background-color: #f5f5f5;
-    /* Input más claro */
     border-radius: 24px;
     padding-left: 12px;
   }
 }
 
-/* =========================================
-   6. PIE DE DIÁLOGO (ACCIONES)
-   ========================================= */
+//  PIE DE DIÁLOGO (ACCIONES)
 mat-dialog-actions {
   padding: 16px 24px;
   margin: 0;

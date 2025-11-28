@@ -1,88 +1,87 @@
-<div class="screen">
-  <button class="back-button" (click)="goBack()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <polyline points="15 18 9 12 15 6"></polyline>
-    </svg>
-  </button>
-
-  <div class="content">
-    <h2 class="screen-title">LISTADO DE TATUADORES</h2>
-
-    <div class="search-box" style="margin-bottom: 2rem;">
-      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8"></circle>
-        <path d="m21 21-4.35-4.35"></path>
-      </svg>
-      <input type="text" placeholder="Filtrar tatuador..." class="search-input">
+<div class="screen-container">
+  
+  <div class="page-header">
+    <button mat-icon-button (click)="goBack()" class="btn-back">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    
+    <div class="title-container">
+      <h1>Encuentra tu Artista</h1>
+      <p>Explora los mejores tatuadores y reserva tu turno</p>
     </div>
+  </div>
 
-    <div *ngIf="errorCarga" style="text-align: center; padding: 2rem; color: red;">
-      <p>{{ errorCarga }}</p>
-      <button (click)="cargarTatuadores()">Reintentar</button>
-    </div>
+  <div class="search-container">
+    <div class="search-box">
+      <mat-icon class="search-icon">search</mat-icon>
+      <input type="text" 
+           placeholder="Buscar por nombre, usuario o especialidad..." 
+           class="search-input"
+           (input)="filtrar($event)">    
+          </div>
+  </div>
 
-    <div *ngIf="!errorCarga">
-      <div *ngIf="tatuadores.length > 0; else noHayTatuadores">
-        <div class="tatuadores-list">
-          
-          <div 
-            class="tatuador-item" 
-            *ngFor="let tatuador of tatuadores"
-            (click)="seleccionarTatuador(tatuador)"
-            [class.selected]="tatuador.idUser === selectedTatuadorId"> 
-            
+  <div *ngIf="errorCarga" class="error-state">
+    <p>{{ errorCarga }}</p>
+    <button mat-button color="warn" (click)="cargarTatuadores()">Reintentar</button>
+  </div>
+
+  <div *ngIf="!errorCarga">
+    <div *ngIf="tatuadores.length > 0; else noHayTatuadores" class="tatuadores-grid">
+      
+      <div class="tatuador-card" 
+           *ngFor="let tatuador of tatuadores"
+           (click)="seleccionarTatuador(tatuador)"
+           [class.selected]="tatuador.idUser === selectedTatuadorId">
+        
+        <div class="card-top">
             <img [src]="tatuador?.profile_photo | serverUrl" 
                  [alt]="tatuador.realname" 
-                 class="tatuador-avatar">
-            
-            <div class="tatuador-info">
-              <h3>{{ tatuador.realname }} {{ tatuador.surname }}</h3>
-              
-              <div class="tatuador-meta">
-                <span>
-                  <mat-icon>storefront</mat-icon> 
-                  {{ tatuador.estudio || 'Estudio Propio' }}
-                </span>
-                <span>
-                  <mat-icon>calendar_today</mat-icon> 
-                  {{ tatuador.antiguedad || '1' }} años
-                </span>
-              </div>
-
-              <div class="chip-container">
-                <mat-chip-list>
-                  <mat-chip *ngFor="let esp of tatuador.especialidades.slice(0, 4)">
-                    {{ esp.nombre }}
-                  </mat-chip>
-                </mat-chip-list>
-                
-                <mat-chip class="chip-ellipsis" *ngIf="tatuador.especialidades.length > 4">
-                  ...
-                </mat-chip>
-              </div>
-              
-              <button 
-                class="btn-ver-trabajos" 
-                (click)="verTrabajos(tatuador.idUser, $event)">
-                Ver Trabajos
-              </button>
-            </div>
-            </div>
+                 class="avatar">
         </div>
-
-        <button 
-          class="create-button" 
-          [disabled]="!selectedTatuadorId" 
-          (click)="confirmarSeleccion()">
-          Confirmar
-        </button>
         
-      </div>
-      <ng-template #noHayTatuadores>
-        <div style="text-align: center; padding: 2rem; color: #888;">
-          <p>No hay tatuadores disponibles en este momento.</p>
+        <div class="card-content">
+          <h3>{{ tatuador.realname }} {{ tatuador.surname }}</h3>
+          <p class="username">{{ tatuador.username }}</p>
+          
+          <div class="meta-info">
+            <span class="meta-item" *ngIf="tatuador.estudio">
+              <mat-icon>storefront</mat-icon> {{ tatuador.estudio }}
+            </span>
+            <span class="meta-item">
+              <mat-icon>history_edu</mat-icon> {{ tatuador.antiguedad || '1' }} años
+            </span>
+          </div>
+
+          <div class="chips-wrapper" *ngIf="tatuador.especialidades && tatuador.especialidades.length > 0">
+            <span class="chip" *ngFor="let esp of tatuador.especialidades.slice(0, 3)">
+                {{ esp.nombre }}
+            </span>
+            <span class="chip-more" *ngIf="tatuador.especialidades.length > 3">
+                +{{ tatuador.especialidades.length - 3 }}
+            </span>
+          </div>
         </div>
-      </ng-template>
+
+        <div class="card-actions">
+            <button class="btn-secondary" (click)="verTrabajos(tatuador.idUser, $event)">
+                Ver Portfolio
+            </button>
+            <button class="btn-primary" 
+                    *ngIf="tatuador.idUser === selectedTatuadorId" 
+                    (click)="confirmarSeleccion()">
+                Reservar Aquí
+            </button>
+        </div>
+
+      </div>
     </div>
+
+    <ng-template #noHayTatuadores>
+      <div class="empty-state">
+        <mat-icon>face</mat-icon>
+        <p>No encontramos tatuadores disponibles.</p>
+      </div>
+    </ng-template>
   </div>
 </div>

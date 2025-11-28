@@ -9,18 +9,10 @@
       <!-- Avatar -->
   <div mat-card-avatar class="profile-picture-container">
     <img
-      *ngIf="user?.profile_photo; else defaultImage"
-      [src]="user?.profile_photo | serverUrl"
-      alt="Foto de perfil"
-      class="profile-picture"
+    [src]="previewImageUrl || (user?.profile_photo | serverUrl)"
+    alt="Foto de perfil"
+    class="profile-picture"
     />
-    <ng-template #defaultImage>
-      <img
-        src="../../../assets/images/default-profile.jpg"
-        alt="Sin imagen"
-        class="profile-picture"
-      />
-    </ng-template>
   </div>
 
   <!-- Texto alineado -->

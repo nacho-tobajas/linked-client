@@ -1,3 +1,5 @@
+@import '../../../../../assets/styles/variables';
+
 .upload-container {
   padding-top: 10px;
   width: 100%;
@@ -89,8 +91,8 @@
   transition: all 0.2s;
 
   &:hover {
-    border-color: #3f51b5;
-    color: #3f51b5;
+    border-color: $main-color;
+    color: $main-color;
     background-color: #e8eaf6;
   }
 }

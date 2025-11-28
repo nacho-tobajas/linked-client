@@ -96,7 +96,7 @@ export class PersonalDetailsComponent implements OnInit {
   }
 
   private loadEspecialidades(): void {
-if (!this.userId || !this.user) {
+  if (!this.userId || !this.user) {
     console.warn("Intentando cargar especialidades sin userId o sin objeto user inicializado.");
     return;
   }
