@@ -1,95 +1,152 @@
 @import "src/assets/styles/_variables.scss";
 
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 5vh;
+    min-height: 100vh;
+    background-color: #f5f7fa;
+    box-sizing: border-box;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 40px;
+}
+
 .register-card {
-    max-width: 400px;
-    margin: 2em auto;
-    padding: 2em;
-    border-radius: 8px;
+    width: 100%;
+    max-width: 500px;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    background: #fff;
 
-    .register-card-header {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 1.5em;
-    }
+    .card-header {
+        text-align: center;
+        margin-bottom: 0.7rem;
 
-    .register-card-title {
-        color: $main-color;
-        font-size: 1.8em;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-        gap: 0.4em;
+        .icon-circle {
+            width: 60px;
+            height: 60px;
+            background-color: rgba($main-color, 0.1);
+            color: $main-color;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem auto;
+
+            mat-icon {
+                font-size: 30px;
+                width: 30px;
+                height: 30px;
+            }
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #333;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 0.95rem;
+            margin: 0;
+        }
     }
 
     .full-width {
         width: 100%;
-        margin-bottom: 1.4em;
     }
 
-    .register-card-actions {
-        display: flex;
-        justify-content: center;
-        padding-top: 1.5em;
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
     }
 
-    .register-button {
-        width: 100%;
-        padding: 0.8em;
-        background-color: $main-color;
-        color: white;
-        transition: background-color 0.3s ease;
+    // Ajuste de iconos dentro de inputs
+    ::ng-deep .mat-mdc-form-field-icon-prefix {
+        padding-right: 8px;
+        color: #999;
+    }
 
-        &:hover:not(:disabled) {
-            background-color: lighten($main-color, 10%);
+    .custom-accordion {
+        margin-top: 1rem;
+
+        mat-expansion-panel {
+            box-shadow: none;
+            border: 1px solid #eee;
+            border-radius: 8px !important;
         }
+
+        .panel-icon {
+            margin-right: 10px;
+            color: #777;
+        }
+
+        .mt-2 {
+            margin-top: 1rem;
+        }
+    }
+
+    .btn-submit {
+        width: 100%;
+        padding: 0.8rem;
+        font-size: 1rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba($main-color, 0.3);
+        margin-top: 1rem;
 
         &:disabled {
-            background-color: #bdbdbd !important; // gris claro
-            color: #666 !important; // texto gris oscuro
-            cursor: not-allowed;
-            box-shadow: none; // quita el efecto de sombra de Angular Material
+            box-shadow: none;
         }
     }
 
-    .already-account-text {
+    .card-footer {
         text-align: center;
-        margin-top: 1.5em;
-        font-size: 0.9em;
+        border-top: 1px solid #eee;
+        padding-top: 1.5rem;
+        margin-top: 1.5rem;
+        font-size: 0.9rem;
+        color: #666;
 
-        .login-link {
+        .link-action {
             color: $main-color;
+            font-weight: 600;
+            text-decoration: none;
+            margin-left: 5px;
             cursor: pointer;
-            text-decoration: underline;
-            margin-left: 0.3em;
-        }
-    }
 
-    .p2 {
-        margin-top: 1.3em;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
     }
 }
+
 
 @media (max-width: 600px) {
-    .register-card {
-        width: 100%;
-        border-radius: 12px;
-        padding: 1.5em;
+    .register-container {
+        padding-top: 20px;
+        padding-left: 10px;
+        padding-right: 10px;
+        background-color: #fff;
     }
 
-    .register-card-title {
-        font-size: 1.6em;
-    }
-}
-
-@media (min-width: 600px) and (max-width: 992px) {
     .register-card {
-        max-width: 500px;
-    }
-}
+        box-shadow: none;
+        padding: 1rem 0;
+        max-width: 100%;
 
-@media (min-width: 992px) {
-    .register-card {
-        max-width: 600px;
+        .form-grid {
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
     }
 }
 
@@ -98,26 +155,29 @@ input[type="password"]::-ms-clear {
     display: none;
 }
 
-input[type="password"]::-webkit-contacts-auto-fill-button,
-input[type="password"]::-webkit-credentials-auto-fill-button {
-    display: none !important;
-}
-
-input[type="password"]::-webkit-textfield-decoration-container {
-    display: none;
-}
-
-.password-field {
-    margin-bottom: 1.5em;
-}
-
-@media (max-width: 768px) {
-    .password-field1 {
-        margin-bottom: 6vh;
-    }
+mat-form-field {
+    width: 100%;
+    margin-bottom: 1.5rem;
 }
 
 mat-error {
-    min-height: 1.2em;
-    display: block;
+    font-size: 0.75rem;
+    margin-top: 1px;
+    letter-spacing: 0.3px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+
+    mat-form-field {
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .form-grid {
+        gap: 1.5rem;
+    }
 }

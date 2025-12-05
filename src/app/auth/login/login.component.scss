@@ -1,92 +1,159 @@
-@import "src/assets/styles/_variables.scss";
+@import "src/assets/styles/_variables.scss"; // Asegúrate de tener tus colores aquí
 
-.row {
-  margin-bottom: 1.3em;
+// Contenedor principal para centrar todo en pantalla
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  /* Alinea el contenido arriba */
+  padding-top: 10vh;
+  min-height: 100vh;
+  background-color: #f5f7fa; // Un gris muy suave de fondo
+  padding: 20px;
 }
 
-
 .login-card {
-  max-width: 400px;
-  margin: 2em auto;
-  padding: 2em;
-  border-radius: 12px;
+  width: 100%;
+  max-width: 420px; // Un ancho estándar cómodo
+  padding: 2.5rem 2rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); // Sombra suave y difusa
   background: #fff;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  text-align: center; // Centra textos por defecto
 
-  .login-card-header {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 1.5em;
+  // --- Header ---
+  .card-header {
+    margin-bottom: 2rem;
+
+    .icon-circle {
+      width: 60px;
+      height: 60px;
+      background-color: rgba($main-color, 0.1); // Color primario suave
+      color: $main-color;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem auto;
+
+      mat-icon {
+        font-size: 30px;
+        width: 30px;
+        height: 30px;
+      }
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #333;
+      margin: 0 0 0.5rem 0;
+    }
+
+    .subtitle {
+      color: #666;
+      font-size: 0.95rem;
+      margin: 0;
+    }
   }
 
-  .login-card-title {
-    color: $main-color;
-    font-size: 1.8em;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
-  }
-
-  .login-icon {
-    color: $main-color;
+  // --- Campos del Formulario ---
+  .form-group {
+    margin-bottom: 1rem;
+    text-align: left; // Los inputs se ven mejor alineados a la izquierda
   }
 
   .full-width {
     width: 100%;
-    margin-bottom: 1.2em;
   }
 
-  .login-card-actions {
+  // Ajuste de iconos dentro de los inputs
+  ::ng-deep .mat-form-field-prefix .mat-icon {
+    margin-right: 8px;
+    color: #999;
+  }
+
+  // --- Links y Acciones ---
+  .forgot-password {
+    text-align: right;
+    margin-bottom: 1.5rem;
+    margin-top: -0.5rem;
+
+    a {
+      font-size: 0.85rem;
+      color: $main-color;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+
+      &:hover {
+        color: darken($main-color, 15%);
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .captcha-container {
     display: flex;
     justify-content: center;
-    padding-top: 1.5em;
+    margin-bottom: 1.5rem;
+    transform: scale(0.9); // Ajuste visual si el captcha es muy ancho
+    transform-origin: center;
   }
 
-  .link-register-forgotpassword {
-    text-align: left;
-    font-size: 1em;
-    margin-top: -0.8em;
-    margin-bottom: 1em;
+  .btn-submit {
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba($main-color, 0.3); // Sombra de color
+    margin-bottom: 1.5rem;
+
+    &:disabled {
+      box-shadow: none;
+    }
+  }
+
+  // --- Footer ---
+  .card-footer {
+    border-top: 1px solid #eee;
+    padding-top: 1.5rem;
+    font-size: 0.9rem;
+    color: #666;
 
     a {
       color: $main-color;
-      cursor: pointer;
+      font-weight: 600;
       text-decoration: none;
-    }
+      margin-left: 5px;
 
-    a:hover {
-      text-decoration: underline;
+      &:hover {
+        text-decoration: underline;
+      }
     }
-  }
-
-  ::ng-deep mat-error {
-    margin-top: -1.2em;
   }
 }
 
-@media (max-width: 600px) {
+// Responsive para móviles
+@media (max-width: 480px) {
+  .login-container {
+    padding: 15px;
+    background-color: #fff; // En móvil a veces queda mejor todo blanco
+  }
+
   .login-card {
-    width: 100%;
-    border-radius: 12px;
-    padding: 1.5em;
-  }
-
-  .login-card-title {
-    font-size: 1.6em;
+    box-shadow: none; // Quitamos sombra para diseño "plano" en móvil
+    padding: 1rem 0;
+    max-width: 100%;
   }
 }
 
+// Fixes para navegadores específicos (quitar iconos raros en passwords)
 input[type="password"]::-ms-reveal,
-input[type="password"]::-ms-clear {
-  display: none;
-}
-
+input[type="password"]::-ms-clear,
 input[type="password"]::-webkit-contacts-auto-fill-button,
 input[type="password"]::-webkit-credentials-auto-fill-button {
   display: none !important;
-}
-
-input[type="password"]::-webkit-textfield-decoration-container {
-  display: none;
 }

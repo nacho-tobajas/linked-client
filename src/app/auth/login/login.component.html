@@ -1,67 +1,58 @@
-<form [formGroup]="loginForm" (ngSubmit)="login()">
-  <mat-card class="login-card elevation-3">
-    <mat-card-header class="login-card-header">
-      <mat-card-title class="login-card-title">
-        <mat-icon class="login-icon">login</mat-icon>
-        INICIAR SESIÓN
-      </mat-card-title>
-    </mat-card-header>
-
-    <mat-card-content>
-      <div class="row">
-        <mat-form-field appearance="outline" class="col-12">
-          <mat-label>Usuario</mat-label>
-          <mat-icon matPrefix>person</mat-icon>
-          <input matInput formControlName="username" placeholder="Ingrese su usuario" />
-          <mat-error *ngIf="username?.invalid && (username?.dirty || username?.touched)">
-            <div *ngIf="username?.hasError('required')">El usuario es requerido.</div>
-          </mat-error>
-        </mat-form-field>
+<div class="login-container">
+  <form [formGroup]="loginForm" (ngSubmit)="login()">
+    <mat-card class="login-card">
+      
+      <div class="card-header">
+        <div class="icon-circle">
+          <mat-icon>lock</mat-icon>
+        </div>
+        <h2>Bienvenido</h2>
+        <p class="subtitle">Ingrese usuario y contraseña</p>
       </div>
 
-      <div class="row">
-        <mat-form-field appearance="outline" class="col-12">
-          <mat-label>Contraseña</mat-label>
-          <mat-icon matPrefix>lock</mat-icon>
+      <mat-card-content>
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Usuario</mat-label>
+            <mat-icon matPrefix>person</mat-icon>
+            <input matInput formControlName="username" placeholder="Ej: usuario123" />
+            <mat-error *ngIf="username?.invalid">El usuario es requerido</mat-error>
+          </mat-form-field>
+        </div>
 
-          <!-- type dinámico -->
-          <input matInput [type]="hide ? 'password' : 'text'" formControlName="password"
-            placeholder="Ingrese su contraseña" />
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Contraseña</mat-label>
+            <mat-icon matPrefix>vpn_key</mat-icon>
+            <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" placeholder="******" />
+            <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Mostrar contraseña'">
+              <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            <mat-error *ngIf="passwordControl?.invalid">La contraseña es requerida</mat-error>
+          </mat-form-field>
+        </div>
 
-          <button mat-icon-button matSuffix type="button" (click)="hide = !hide"
-            [attr.aria-label]="'Mostrar/ocultar contraseña'" [attr.aria-pressed]="!hide">
+        <div class="forgot-password">
+          <a routerLink="/forgotPass">¿Olvidaste tu contraseña?</a>
+        </div>
 
-            <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
-          </button>
+        <div class="captcha-container">
+          <re-captcha siteKey="6LfpC-ErAAAAAElCUyzRD1hS7p0VBHyK9RLOHV32" (resolved)="onCaptchaResolved($event)"></re-captcha>
+        </div>
+      </mat-card-content>
 
-          <mat-error *ngIf="passwordControl?.invalid && (passwordControl?.dirty || passwordControl?.touched)">
-            <div *ngIf="passwordControl?.hasError('required')">
-              La contraseña es requerida.
-            </div>
-          </mat-error>
-        </mat-form-field>
+      <mat-card-actions>
+        <button mat-raised-button type="submit" class="btn-submit create-button" 
+                [disabled]="!captchaValid || loginForm.invalid">
+          INICIAR SESIÓN
+        </button>
+      </mat-card-actions>
+
+      <div class="card-footer">
+        <span>¿No tienes una cuenta?</span>
+        <a routerLink="/register">Regístrate aquí</a>
       </div>
 
-
-
-      <div class="link-register-forgotpassword">
-        <a routerLink="/forgotPass">¿Olvidaste tu contraseña?</a>
-      </div>
-
-      <div class="link-register-forgotpassword">
-        <a routerLink="/register">¿No tienes una cuenta? Regístrate</a>
-      </div>
-    </mat-card-content>
-
-    <re-captcha
-      siteKey="6LfpC-ErAAAAAElCUyzRD1hS7p0VBHyK9RLOHV32"
-      (resolved)="onCaptchaResolved($event)">
-    </re-captcha>
-
-    <mat-card-actions>
-      <button mat-raised-button type="submit" class="login-button" [disabled]="!captchaValid || loginForm.invalid">
-        Iniciar Sesión
-      </button>
-    </mat-card-actions>
-  </mat-card>
-</form>
+    </mat-card>
+  </form>
+</div>
