@@ -7,12 +7,16 @@ import { TatuadorService } from 'src/app/services/user/tatuador.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Tatuador } from 'src/app/models/tatuador/tatuador.model';
+import { NgIf, NgFor, SlicePipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { ServerUrlPipe } from '../../../../pipes/server-url.pipe';
 
 @Component({
-  selector: 'app-portfolio',
-  standalone: false,
-  templateUrl: './portfolio.component.html',
-  styleUrl: './portfolio.component.scss'
+    selector: 'app-portfolio',
+    templateUrl: './portfolio.component.html',
+    styleUrl: './portfolio.component.scss',
+    imports: [NgIf, MatIcon, NgFor, MatButton, MatIconButton, SlicePipe, ServerUrlPipe]
 })
 export class PortfolioComponent {
 tatuador: Tatuador | null = null;

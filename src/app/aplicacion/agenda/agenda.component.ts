@@ -2,21 +2,33 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { GestionarHorarioComponent } from './gestionar-horario/gestionar-horario.component';
 import { AgendaService } from './agenda.service';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow } from '@angular/material/table';
 import { TurnoSesion } from 'src/app/models/turno/turno-sesion.model';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { TurnosService, TurnoTatuadorResponse } from 'src/app/services/turnos/turnos.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AgendaDetalleComponent } from './agenda-detalle/agenda-detalle.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { EditarTurnoComponent } from './editar-turno/editar-turno.component';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatDivider } from '@angular/material/divider';
+import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
+import { FormsModule } from '@angular/forms';
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { MatInput } from '@angular/material/input';
+import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
+import { NgIf, NgClass, DatePipe } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'app-agenda',
-  standalone: false,
-  templateUrl: './agenda.component.html',
-  styleUrl: './agenda.component.scss'
+    selector: 'app-agenda',
+    templateUrl: './agenda.component.html',
+    styleUrl: './agenda.component.scss',
+    imports: [MatButton, MatIcon, MatDivider, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, FormsModule, MatFormField, MatLabel, MatSelect, MatOption, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgIf, MatProgressSpinner, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, NgClass, MatIconButton, MatTooltip, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow, MatPaginator, DatePipe]
 })
 export class AgendaComponent implements OnInit {
 

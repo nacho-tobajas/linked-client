@@ -3,12 +3,19 @@ import { Especialidad } from '../especialidades.model';
 import { EspecialidadesService } from '../especialidades.service';
 import { MatDialogRef } from '@angular/material/dialog';
 import { UserService } from 'src/app/services/user/user.service';
+import { MatCard, MatCardHeader, MatCardTitle, MatCardContent, MatCardActions } from '@angular/material/card';
+import { FormsModule } from '@angular/forms';
+import { MatFormField, MatLabel, MatSuffix, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { NgIf } from '@angular/common';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
-  selector: 'app-especialidad-create',
-  standalone: false,
-  templateUrl: './especialidad-create.component.html',
-  styleUrl: './especialidad-create.component.scss'
+    selector: 'app-especialidad-create',
+    templateUrl: './especialidad-create.component.html',
+    styleUrl: './especialidad-create.component.scss',
+    imports: [MatCard, MatCardHeader, MatCardTitle, MatCardContent, FormsModule, MatFormField, MatLabel, MatInput, NgIf, MatIconButton, MatSuffix, MatIcon, MatError, MatCardActions, MatButton]
 })
 export class EspecialidadCreateComponent {
 especialidad: Especialidad = {

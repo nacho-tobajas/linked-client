@@ -1,17 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { SweItemMenuService } from './sweitemmenu.service';
 import { idRolesPorItemMenu, MenuItem } from './sweitemmenu.models';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { LoginService } from 'src/app/services/auth/login.service';
 import { UserService } from 'src/app/services/user/user.service';
 import { filter, firstValueFrom, forkJoin, map, Observable, of, switchMap } from 'rxjs';
+import { MatDrawerContainer, MatDrawer, MatDrawerContent } from '@angular/material/sidenav';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatNavList, MatListItem } from '@angular/material/list';
+import { NgFor, NgStyle, NgIf } from '@angular/common';
 
 
 @Component({
     selector: 'app-sweitemmenu',
     templateUrl: './sweitemmenu.component.html',
     styleUrls: ['./sweitemmenu.component.scss'],
-    standalone: false
+    imports: [MatDrawerContainer, MatDrawer, MatIconButton, MatIcon, MatNavList, NgFor, MatListItem, NgStyle, MatButton, NgIf, MatDrawerContent, RouterOutlet]
 })
 
 export class SweItemMenuComponent implements OnInit {

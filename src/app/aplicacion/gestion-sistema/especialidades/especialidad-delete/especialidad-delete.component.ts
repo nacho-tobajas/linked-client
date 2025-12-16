@@ -2,11 +2,14 @@ import { Component, Inject} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { EspecialidadesService } from '../especialidades.service';
 import { ErrorDialogComponent } from 'src/app/components/error-dialog/error-dialog.component';
+import { MatCard, MatCardHeader, MatCardTitle, MatCardContent, MatCardActions } from '@angular/material/card';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton } from '@angular/material/button';
 @Component({
-  selector: 'app-especialidad-delete',
-  standalone: false,
-  templateUrl: './especialidad-delete.component.html',
-  styleUrl: './especialidad-delete.component.scss'
+    selector: 'app-especialidad-delete',
+    templateUrl: './especialidad-delete.component.html',
+    styleUrl: './especialidad-delete.component.scss',
+    imports: [MatCard, MatCardHeader, MatCardTitle, MatIcon, MatCardContent, MatCardActions, MatButton]
 })
 export class EspecialidadDeleteComponent {
   especialidadName: string = '';

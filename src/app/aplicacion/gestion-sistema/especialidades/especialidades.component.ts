@@ -7,15 +7,15 @@ import { EspecialidadCreateComponent } from './especialidad-create/especialidad-
 import { EspecialidadUpdateComponent } from './especialidad-update/especialidad-update.component';
 import { EspecialidadDetailComponent } from './especialidad-detail/especialidad-detail.component';
 import { EspecialidadDeleteComponent } from './especialidad-delete/especialidad-delete.component';
-import { MatTableModule } from '@angular/material/table';
-import { MatIconModule } from '@angular/material/icon';
+import { MatTableModule, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { MatIconModule, MatIcon } from '@angular/material/icon';
+import { MatIconButton } from '@angular/material/button';
 
 @Component({
-  selector: 'app-especialidades',
-
-  standalone: false,
-  templateUrl: './especialidades.component.html',
-  styleUrl: './especialidades.component.scss'
+    selector: 'app-especialidades',
+    templateUrl: './especialidades.component.html',
+    styleUrl: './especialidades.component.scss',
+    imports: [MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatIconButton, MatIcon, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow]
 })
 export class EspecialidadesComponent {
   especialidades: Especialidad[] = [];

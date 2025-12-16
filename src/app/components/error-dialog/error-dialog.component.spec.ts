@@ -16,19 +16,19 @@ describe('ErrorDialogComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ErrorDialogComponent],
-      imports: [
-        MatDialogModule,   
+    imports: [
+        MatDialogModule,
         MatButtonModule,
-        MatIconModule  
-      ],
-      providers:[
+        MatIconModule,
+        ErrorDialogComponent
+    ],
+    providers: [
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
         { provide: MatDialogRef, useValue: {} },
         { provide: MAT_DIALOG_DATA, useValue: {} }
-      ]
-    });
+    ]
+});
     fixture = TestBed.createComponent(ErrorDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

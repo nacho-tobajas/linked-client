@@ -1,13 +1,22 @@
 import { Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TrabajosService } from 'src/app/services/trabajos/trabajos.service';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { NgIf, NgFor } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField, MatLabel, MatHint } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
-  selector: 'app-subir-trabajo',
-  standalone: false,
-  templateUrl: './subir-trabajo.component.html',
-  styleUrl: './subir-trabajo.component.scss'
+    selector: 'app-subir-trabajo',
+    templateUrl: './subir-trabajo.component.html',
+    styleUrl: './subir-trabajo.component.scss',
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, NgIf, NgFor, MatTooltip, MatIcon, MatFormField, MatLabel, MatInput, FormsModule, MatHint, MatDialogActions, MatButton, MatProgressSpinner]
 })
 export class SubirTrabajoComponent {
   selectedFiles: File[] = [];

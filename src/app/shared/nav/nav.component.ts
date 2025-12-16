@@ -1,17 +1,22 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LoginService } from '../../services/auth/login.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ProximamenteService } from 'src/app/services/proximamente.service';
 import { HelpDialogComponent } from 'src/app/components/help-dialog/help-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { UserService } from 'src/app/services/user/user.service';
+import { NgIf } from '@angular/common';
+import { MatIconButton } from '@angular/material/button';
+import { MatMenuTrigger, MatMenu, MatMenuItem } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
+import { ThemeToggleComponent } from '../../components/theme-toggle/theme-toggle.component';
 
 @Component({
-  selector: 'app-nav',
-  templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.scss'],
-  standalone: false
+    selector: 'app-nav',
+    templateUrl: './nav.component.html',
+    styleUrls: ['./nav.component.scss'],
+    imports: [RouterLink, NgIf, MatIconButton, MatMenuTrigger, MatIcon, MatMenu, MatMenuItem, ThemeToggleComponent]
 })
 export class NavComponent implements OnInit, OnDestroy {
   searchTerm: string = '';

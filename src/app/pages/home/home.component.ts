@@ -1,18 +1,23 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { DetalleTrabajoComponent } from 'src/app/aplicacion/trabajos/detalle-trabajo/detalle-trabajo.component';
 import { SubirTrabajoComponent } from 'src/app/aplicacion/trabajos/subir-trabajo/subir-trabajo/subir-trabajo.component';
 import { Trabajo } from 'src/app/models/trabajos/trabajos.model';
 import { LoginService } from 'src/app/services/auth/login.service';
 import { TrabajosService } from 'src/app/services/trabajos/trabajos.service';
+import { NgIf, NgFor } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { MatDivider } from '@angular/material/divider';
+import { PostTrabajoComponent } from '../../components/post-trabajo/post-trabajo.component';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
-  standalone: false
+    selector: 'app-home',
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.scss'],
+    imports: [NgIf, RouterLink, MatTooltip, MatIcon, MatDivider, NgFor, PostTrabajoComponent]
 })
 
 export class HomeComponent {

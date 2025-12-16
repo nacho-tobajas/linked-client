@@ -1,17 +1,21 @@
 import { Component } from '@angular/core';
 import { Tatuador } from 'src/app/models/tatuador/tatuador.model';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Location } from '@angular/common';
+import { Location, NgIf, NgFor } from '@angular/common';
 import { TatuadorService } from 'src/app/services/user/tatuador.service';
 import { AgendaService } from '../../agenda/agenda.service';
 import { SolicitarTurnoDto, TurnosService } from 'src/app/services/turnos/turnos.service';
 import { ReservaStateService } from 'src/app/services/reserva/reserva-state.service';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatCalendar } from '@angular/material/datepicker';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-seleccionar-horario',
-  standalone: false,
-  templateUrl: './seleccionar-horario.component.html',
-  styleUrl: './seleccionar-horario.component.scss'
+    selector: 'app-seleccionar-horario',
+    templateUrl: './seleccionar-horario.component.html',
+    styleUrl: './seleccionar-horario.component.scss',
+    imports: [MatIconButton, MatIcon, NgIf, MatCalendar, NgFor, FormsModule]
 })
 export class SeleccionarHorarioComponent {
 

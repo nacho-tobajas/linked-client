@@ -21,15 +21,14 @@ describe('SupportTicketUpdateComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [SupportTicketUpdateComponent],
-      imports: [MatDialogModule, MatFormFieldModule, MatInputModule, NoopAnimationsModule, MatSelectModule, FormsModule, MatCardModule],
-      providers: [
+    imports: [MatDialogModule, MatFormFieldModule, MatInputModule, NoopAnimationsModule, MatSelectModule, FormsModule, MatCardModule, SupportTicketUpdateComponent],
+    providers: [
         { provide: MatDialogRef, useValue: {} },
         { provide: MAT_DIALOG_DATA, useValue: {} },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting()
-      ]
-    });
+    ]
+});
     fixture = TestBed.createComponent(SupportTicketUpdateComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -1,17 +1,27 @@
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { TurnoSesion } from 'src/app/models/turno/turno-sesion.model';
 import { LoginService } from 'src/app/services/auth/login.service';
 import { TurnosService } from 'src/app/services/turnos/turnos.service';
 import { environment } from 'src/environments/environment';
 import { EditarTurnoComponent } from '../editar-turno/editar-turno.component.js';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDivider } from '@angular/material/divider';
+import { MatTabGroup, MatTab } from '@angular/material/tabs';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { NgIf, NgFor, DatePipe } from '@angular/common';
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-agenda-detalle',
-  standalone: false,
-  templateUrl: './agenda-detalle.component.html',
-  styleUrl: './agenda-detalle.component.scss'
+    selector: 'app-agenda-detalle',
+    templateUrl: './agenda-detalle.component.html',
+    styleUrl: './agenda-detalle.component.scss',
+    imports: [MatDivider, MatTabGroup, MatTab, CdkScrollable, MatDialogContent, MatIconButton, MatTooltip, MatIcon, NgIf, NgFor, MatFormField, MatLabel, MatInput, FormsModule, MatSuffix, MatDialogActions, MatButton, DatePipe]
 })
 export class AgendaDetalleComponent implements OnInit{
   environmentImg = environment.urlImg;

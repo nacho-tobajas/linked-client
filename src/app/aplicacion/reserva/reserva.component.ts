@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-reserva',
-  templateUrl: './reserva.component.html',
-  styleUrl: './reserva.component.scss',
-  standalone: false
+    selector: 'app-reserva',
+    templateUrl: './reserva.component.html',
+    styleUrl: './reserva.component.scss',
+    imports: [RouterOutlet]
 })
 export class ReservaComponent{
   constructor( private router: Router){}

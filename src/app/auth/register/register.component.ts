@@ -1,11 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  ValidationErrors,
-  ValidatorFn,
-} from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { RegisterService } from 'src/app/services/auth/register.service';
 import { Validators } from '@angular/forms';
@@ -13,12 +7,20 @@ import { ErrorDialogComponent } from 'src/app/components/error-dialog/error-dial
 import { User } from '../auth.models';
 import { EncryptionService } from 'src/app/services/auth/encryption.service';
 import { Router } from '@angular/router';
+import { MatCard, MatCardContent, MatCardActions } from '@angular/material/card';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField, MatLabel, MatPrefix, MatSuffix, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
+import { NgIf } from '@angular/common';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss'],
-  standalone: false
+    selector: 'app-register',
+    templateUrl: './register.component.html',
+    styleUrls: ['./register.component.scss'],
+    imports: [FormsModule, ReactiveFormsModule, MatCard, MatIcon, MatCardContent, MatFormField, MatLabel, MatPrefix, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgIf, MatError, MatIconButton, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatCardActions, MatButton]
 })
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;

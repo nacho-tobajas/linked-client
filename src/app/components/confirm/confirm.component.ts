@@ -1,5 +1,7 @@
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatButton } from '@angular/material/button';
 
 export interface ConfirmModel {
   title: string;
@@ -11,7 +13,7 @@ export interface ConfirmModel {
     selector: 'app-confirm',
     styleUrls: ['./confirm.component.scss'],
     templateUrl: './confirm.component.html',
-    standalone: false
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatDialogActions, MatButton]
 })
 export class ConfirmComponent {
   constructor(

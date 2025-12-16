@@ -38,8 +38,7 @@ describe('NavComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [NavComponent],
-      imports: [
+    imports: [
         RouterTestingModule,
         MatFormFieldModule,
         MatToolbarModule,
@@ -48,17 +47,18 @@ describe('NavComponent', () => {
         MatSnackBarModule,
         MatDialogModule,
         MatButtonModule,
-        FormsModule
-      ],
-      providers: [
+        FormsModule,
+        NavComponent
+    ],
+    providers: [
         { provide: 'LoginService', useClass: MockLoginService },
         { provide: 'UserService', useClass: MockUserService },
         { provide: 'ProximamenteService', useClass: MockProximamenteService },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting()
-      ],
-       schemas: [CUSTOM_ELEMENTS_SCHEMA]
-    });
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+});
 
     fixture = TestBed.createComponent(NavComponent);
     component = fixture.componentInstance;

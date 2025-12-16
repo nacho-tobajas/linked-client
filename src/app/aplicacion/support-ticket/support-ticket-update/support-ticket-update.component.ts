@@ -10,12 +10,17 @@ import { ErrorDialogComponent } from 'src/app/components/error-dialog/error-dial
 
 import { SupportTicketService } from '../support-ticket.service';
 import { UserService } from 'src/app/services/user/user.service';
+import { MatCard, MatCardHeader, MatCardTitle, MatCardSubtitle, MatCardContent, MatCardActions } from '@angular/material/card';
+import { FormsModule } from '@angular/forms';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'app-support-ticket-update',
-  templateUrl: './support-ticket-update.component.html',
-  styleUrls: ['./support-ticket-update.component.scss'],
-  standalone: false
+    selector: 'app-support-ticket-update',
+    templateUrl: './support-ticket-update.component.html',
+    styleUrls: ['./support-ticket-update.component.scss'],
+    imports: [MatCard, MatCardHeader, MatCardTitle, MatCardSubtitle, MatCardContent, FormsModule, MatFormField, MatLabel, MatSelect, MatOption, MatCardActions, MatButton]
 })
 export class SupportTicketUpdateComponent {
   supportTicket: SupportTicket;

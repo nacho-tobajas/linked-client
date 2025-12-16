@@ -1,17 +1,25 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Especialidad } from 'src/app/aplicacion/gestion-sistema/especialidades/especialidades.model';
 import { EspecialidadesService } from 'src/app/aplicacion/gestion-sistema/especialidades/especialidades.service';
 import { TatuadorService } from 'src/app/services/user/tatuador.service';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger, MatAutocomplete } from '@angular/material/autocomplete';
 import { Observable, map, startWith } from 'rxjs';
+import { MatDivider } from '@angular/material/divider';
+import { MatFormField, MatLabel, MatSuffix, MatHint } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
+import { MatChipGrid, MatChipRow, MatChipRemove, MatChipInput } from '@angular/material/chips';
+import { NgFor, AsyncPipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatOption } from '@angular/material/select';
 
 @Component({
-  selector: 'app-tatuador',
-  templateUrl: './tatuador.component.html',
-  styleUrls: ['./tatuador.component.scss'],
-  standalone:false
+    selector: 'app-tatuador',
+    templateUrl: './tatuador.component.html',
+    styleUrls: ['./tatuador.component.scss'],
+    imports: [MatDivider, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatHint, MatChipGrid, NgFor, MatChipRow, MatIcon, MatChipRemove, MatAutocompleteTrigger, MatChipInput, MatAutocomplete, MatOption, AsyncPipe]
 })
 export class TatuadorComponent implements OnInit {
   @Input() userId!: number|undefined;

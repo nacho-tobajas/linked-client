@@ -1,13 +1,16 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { Location } from '@angular/common';
+import { Location, NgIf, NgFor } from '@angular/common';
 import { Tatuador } from 'src/app/models/tatuador/tatuador.model';
 import { TatuadorService } from 'src/app/services/user/tatuador.service';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { ServerUrlPipe } from '../../../pipes/server-url.pipe';
 @Component({
-  selector: 'app-listado-tatuadores',
-  standalone: false,
-  templateUrl: './listado-tatuadores.component.html',
-  styleUrl: './listado-tatuadores.component.scss'
+    selector: 'app-listado-tatuadores',
+    templateUrl: './listado-tatuadores.component.html',
+    styleUrl: './listado-tatuadores.component.scss',
+    imports: [MatIconButton, MatIcon, NgIf, MatButton, NgFor, ServerUrlPipe]
 })
 export class ListadoTatuadoresComponent {
   tatuadoresOriginal: Tatuador[] = [];

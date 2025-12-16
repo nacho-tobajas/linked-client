@@ -6,13 +6,18 @@ import { SupportTicketService } from '../support-ticket.service';
 
 import { ErrorDialogComponent } from 'src/app/components/error-dialog/error-dialog.component';
 import { UserService } from 'src/app/services/user/user.service';
-import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, ValidationErrors, ValidatorFn, FormsModule } from '@angular/forms';
+import { MatCard, MatCardHeader, MatCardTitle, MatCardContent, MatCardActions } from '@angular/material/card';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { NgIf } from '@angular/common';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'app-support-ticket-create',
-  templateUrl: './support-ticket-create.component.html',
-  styleUrls: ['./support-ticket-create.component.scss'],
-  standalone: false
+    selector: 'app-support-ticket-create',
+    templateUrl: './support-ticket-create.component.html',
+    styleUrls: ['./support-ticket-create.component.scss'],
+    imports: [MatCard, MatCardHeader, MatCardTitle, MatCardContent, FormsModule, MatFormField, MatLabel, MatInput, NgIf, MatError, MatCardActions, MatButton]
 })
 export class SupportTicketCreateComponent {
   supportTicket: SupportTicket = {

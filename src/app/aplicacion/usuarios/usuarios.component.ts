@@ -4,12 +4,21 @@ import { MatDialog } from '@angular/material/dialog';
 import { UpdateRolComponent } from './update-rol/update-rol.component';
 import { User } from 'src/app/models/user.model';
 import { RegisterComponent } from 'src/app/auth/register/register.component';
+import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
+import { MatIcon } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { MatInput } from '@angular/material/input';
+import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 
 @Component({
-  selector: 'app-usuarios',
-  templateUrl: './usuarios.component.html',
-  styleUrls: ['./usuarios.component.scss'],
-  standalone: false
+    selector: 'app-usuarios',
+    templateUrl: './usuarios.component.html',
+    styleUrls: ['./usuarios.component.scss'],
+    imports: [MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatIcon, FormsModule, MatFormField, MatLabel, MatSelect, MatOption, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatButton, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatIconButton, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow]
 })
 export class UsuariosComponent implements OnInit {
   usuarios: User[] = [];

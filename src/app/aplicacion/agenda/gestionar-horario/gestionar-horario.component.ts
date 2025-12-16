@@ -1,15 +1,23 @@
 import { Component } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AgendaService } from '../agenda.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { HorarioHabitual, HorarioHabitualInput } from 'src/app/models/horarios-tatuador/horario-habitual';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { NgIf, NgFor } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton } from '@angular/material/button';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 
 @Component({
-  selector: 'app-gestionar-horario',
-  standalone: false,
-  templateUrl: './gestionar-horario.component.html',
-  styleUrl: './gestionar-horario.component.scss'
+    selector: 'app-gestionar-horario',
+    templateUrl: './gestionar-horario.component.html',
+    styleUrl: './gestionar-horario.component.scss',
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, NgIf, MatProgressSpinner, MatIcon, MatButton, FormsModule, ReactiveFormsModule, NgFor, MatSlideToggle, MatFormField, MatLabel, MatInput, MatError, MatDialogActions]
 })
 export class GestionarHorarioComponent {
 horarioForm: FormGroup;

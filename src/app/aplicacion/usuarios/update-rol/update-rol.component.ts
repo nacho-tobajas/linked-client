@@ -3,12 +3,18 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { RolApl } from 'src/app/models/rol.models.js';
 import { User } from 'src/app/models/user.model';
 import { UserService } from 'src/app/services/user/user.service';
+import { MatCard, MatCardHeader, MatCardTitle, MatCardContent, MatCardActions } from '@angular/material/card';
+import { FormsModule } from '@angular/forms';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { NgFor } from '@angular/common';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'app-update-rol',
-  templateUrl: './update-rol.component.html',
-  styleUrls: ['./update-rol.component.scss'],
-  standalone: false
+    selector: 'app-update-rol',
+    templateUrl: './update-rol.component.html',
+    styleUrls: ['./update-rol.component.scss'],
+    imports: [MatCard, MatCardHeader, MatCardTitle, MatCardContent, FormsModule, MatFormField, MatLabel, MatSelect, NgFor, MatOption, MatCardActions, MatButton]
 })
 
 export class UpdateRolComponent {

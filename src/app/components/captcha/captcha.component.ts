@@ -1,13 +1,19 @@
 
 import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
 import { ReCaptchaV3Service } from 'ng-recaptcha-angular19';
+import { MatFormField, MatLabel, MatSuffix, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { NgIf } from '@angular/common';
+import { NgxCaptchaModule } from 'ngx-captcha';
 
 @Component({
-  selector: 'app-captcha',
-  standalone:false,
-  templateUrl: './captcha.component.html',
-  styleUrl: './captcha.component.scss'
+    selector: 'app-captcha',
+    templateUrl: './captcha.component.html',
+    styleUrl: './captcha.component.scss',
+    imports: [MatFormField, MatLabel, MatInput, FormsModule, ReactiveFormsModule, MatIconButton, MatSuffix, MatIcon, NgIf, MatError, NgxCaptchaModule]
 })
 
 

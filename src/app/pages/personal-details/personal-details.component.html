@@ -38,9 +38,9 @@
         <p *ngIf="user?.antiguedad !== undefined && user?.antiguedad !== null"> <b>Antigüedad:</b> {{ user?.antiguedad }} {{ user?.antiguedad === 1 ? 'año' : 'años' }} de experiencia
         </p>
         <div *ngIf="user?.especialidades && user?.especialidades!.length > 0" class="especialidades-container"> <b>Especialidades:</b>
-          <mat-chip-list aria-label="Especialidades del tatuador" class="especialidades-view">
+          <mat-chip-set aria-label="Especialidades del tatuador" class="especialidades-view">
             <mat-chip *ngFor="let esp of user?.especialidades">{{ esp.nombre }}</mat-chip>
-          </mat-chip-list>
+          </mat-chip-set>
         </div>
       </ng-container>
     </mat-card-content>

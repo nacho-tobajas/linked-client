@@ -1,14 +1,19 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogClose } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Trabajo } from 'src/app/models/trabajos/trabajos.model';
 import { LoginService } from 'src/app/services/auth/login.service';
 import { TrabajosService } from 'src/app/services/trabajos/trabajos.service';
+import { NgIf, NgFor, DatePipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatIconButton } from '@angular/material/button';
+import { MatDivider } from '@angular/material/divider';
+import { ServerUrlPipe } from '../../../pipes/server-url.pipe';
 @Component({
-  selector: 'app-detalle-trabajo',
-  standalone: false,
-  templateUrl: './detalle-trabajo.component.html',
-  styleUrl: './detalle-trabajo.component.scss'
+    selector: 'app-detalle-trabajo',
+    templateUrl: './detalle-trabajo.component.html',
+    styleUrl: './detalle-trabajo.component.scss',
+    imports: [NgIf, MatIcon, NgFor, MatIconButton, MatDialogClose, MatDivider, DatePipe, ServerUrlPipe]
 })
 export class DetalleTrabajoComponent implements OnInit {
   currentImageIndex = 0;

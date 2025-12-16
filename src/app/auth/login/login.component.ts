@@ -1,18 +1,25 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { LoginService } from '../../services/auth/login.service';
 import { LoginRequest } from '../../models/loginRequest';
 import { ErrorDialogComponent } from 'src/app/components/error-dialog/error-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { EncryptionService } from 'src/app/services/auth/encryption.service';
 import { ProximamenteService } from 'src/app/services/proximamente.service';
+import { MatCard, MatCardContent, MatCardActions } from '@angular/material/card';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField, MatLabel, MatPrefix, MatError, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { NgIf } from '@angular/common';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { RecaptchaComponent } from 'ng-recaptcha-angular19';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
-  standalone: false
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss'],
+    imports: [FormsModule, ReactiveFormsModule, MatCard, MatIcon, MatCardContent, MatFormField, MatLabel, MatPrefix, MatInput, NgIf, MatError, MatIconButton, MatSuffix, RouterLink, RecaptchaComponent, MatCardActions, MatButton]
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;

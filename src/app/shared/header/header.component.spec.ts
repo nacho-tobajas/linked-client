@@ -24,21 +24,21 @@ describe('HeaderComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [HeaderComponent, NavComponent, ThemeToggleComponent],
-      imports: [
+    imports: [
         MatIconModule,
         MatFormFieldModule,
         MatToolbarModule,
         FormsModule,
         MatMenuModule,
         MatSnackBarModule,
-        NoopAnimationsModule
-      ],
-      providers: [
+        NoopAnimationsModule,
+        HeaderComponent, NavComponent, ThemeToggleComponent
+    ],
+    providers: [
         provideHttpClient(),
         provideHttpClientTesting()
-      ]
-    });
+    ]
+});
     fixture = TestBed.createComponent(HeaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

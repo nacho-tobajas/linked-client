@@ -1,17 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginService } from '../../services/auth/login.service';
 import { MatDialog } from '@angular/material/dialog';
 import { EncryptionService } from 'src/app/services/auth/encryption.service';
 import { ErrorDialogComponent } from 'src/app/components/error-dialog/error-dialog.component';
 import { ForgotPasswordService } from 'src/app/services/auth/forgotpass.service';
+import { MatCard, MatCardHeader, MatCardTitle, MatCardContent, MatCardActions } from '@angular/material/card';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { NgIf } from '@angular/common';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'app-forgot-pass',
-  templateUrl: './forgotPass.component.html',
-  styleUrls: ['./forgotPass.component.scss'],
-  standalone: false
+    selector: 'app-forgot-pass',
+    templateUrl: './forgotPass.component.html',
+    styleUrls: ['./forgotPass.component.scss'],
+    imports: [FormsModule, ReactiveFormsModule, MatCard, MatCardHeader, MatCardTitle, MatCardContent, MatFormField, MatLabel, MatInput, NgIf, MatError, MatCardActions, MatButton]
 })
 export class ForgotPassComponent implements OnInit {
   forgotPassForm: FormGroup;

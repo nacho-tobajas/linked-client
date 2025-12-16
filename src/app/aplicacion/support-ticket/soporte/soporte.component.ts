@@ -3,12 +3,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { SupportTicketCreateComponent } from 'src/app/aplicacion/support-ticket/support-ticket-create/support-ticket-create.component';
 import { LoginService } from 'src/app/services/auth/login.service';
+import { MatIcon } from '@angular/material/icon';
+import { MatDivider } from '@angular/material/divider';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'app-soporte',
-  templateUrl: './soporte.component.html',
-  styleUrls: ['./soporte.component.scss'],
-  standalone: false
+    selector: 'app-soporte',
+    templateUrl: './soporte.component.html',
+    styleUrls: ['./soporte.component.scss'],
+    imports: [MatIcon, MatDivider, MatButton]
 })
 export class SoporteComponent implements OnInit {
   isLoggedIn: boolean = false;

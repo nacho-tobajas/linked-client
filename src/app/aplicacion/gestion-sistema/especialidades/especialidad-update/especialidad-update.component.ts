@@ -4,12 +4,19 @@ import { Especialidad } from '../especialidades.model';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { UserService } from 'src/app/services/user/user.service';
 import { ErrorDialogComponent } from 'src/app/components/error-dialog/error-dialog.component.js';
+import { MatCard, MatCardHeader, MatCardTitle, MatCardContent, MatCardActions } from '@angular/material/card';
+import { FormsModule } from '@angular/forms';
+import { MatFormField, MatLabel, MatSuffix, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { NgIf } from '@angular/common';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
-  selector: 'app-especialidad-update',
-  standalone: false,
-  templateUrl: './especialidad-update.component.html',
-  styleUrl: './especialidad-update.component.scss'
+    selector: 'app-especialidad-update',
+    templateUrl: './especialidad-update.component.html',
+    styleUrl: './especialidad-update.component.scss',
+    imports: [MatCard, MatCardHeader, MatCardTitle, MatCardContent, FormsModule, MatFormField, MatLabel, MatInput, NgIf, MatIconButton, MatSuffix, MatIcon, MatError, MatCardActions, MatButton]
 })
 export class EspecialidadUpdateComponent {
 especialidad: Especialidad;

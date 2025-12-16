@@ -1,16 +1,24 @@
 import { Component, Inject } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { AbstractControl, FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose } from '@angular/material/dialog';
 import { TurnoSesion } from 'src/app/models/turno/turno-sesion.model';
 import { LoginService } from 'src/app/services/auth/login.service';
 import { TurnosService } from 'src/app/services/turnos/turnos.service';
 import { AgendaService } from '../agenda.service';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatFormField, MatLabel, MatSuffix, MatError } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { NgIf, NgFor, DatePipe } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'app-editar-turno',
-  standalone: false,
-  templateUrl: './editar-turno.component.html',
-  styleUrl: './editar-turno.component.scss'
+    selector: 'app-editar-turno',
+    templateUrl: './editar-turno.component.html',
+    styleUrl: './editar-turno.component.scss',
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatSelect, NgIf, MatOption, MatProgressSpinner, NgFor, MatError, MatDialogActions, MatButton, MatDialogClose, DatePipe]
 })
 export class EditarTurnoComponent {
 form: FormGroup;

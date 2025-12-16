@@ -20,21 +20,21 @@ describe('SidemenuComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [SweItemMenuComponent],
-      imports: [
+    imports: [
         FormsModule,
         MatSidenavModule,
         MatIconModule,
         MatListModule,
         MatButtonModule,
         BrowserAnimationsModule,
-        RouterOutlet
-      ],
-      providers: [
+        RouterOutlet,
+        SweItemMenuComponent
+    ],
+    providers: [
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
-      ]
-    });
+    ]
+});
     fixture = TestBed.createComponent(SweItemMenuComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -1,15 +1,22 @@
 import { Component } from '@angular/core';
-import { Location } from '@angular/common';
+import { Location, NgIf, NgFor, NgClass, UpperCasePipe, SlicePipe, DatePipe } from '@angular/common';
 import { TurnoSesion } from 'src/app/models/turno/turno-sesion.model';
 import { AgendaDetalleComponent } from '../agenda/agenda-detalle/agenda-detalle.component';
 import { TurnosService } from 'src/app/services/turnos/turnos.service';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatDivider } from '@angular/material/divider';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatCard, MatCardContent, MatCardActions } from '@angular/material/card';
+import { RouterLink } from '@angular/router';
+import { ServerUrlPipe } from '../../pipes/server-url.pipe';
 
 @Component({
-  selector: 'app-mis-reservas',
-  standalone:false,
-  templateUrl: './mis-reservas.component.html',
-  styleUrl: './mis-reservas.component.scss'
+    selector: 'app-mis-reservas',
+    templateUrl: './mis-reservas.component.html',
+    styleUrl: './mis-reservas.component.scss',
+    imports: [MatIconButton, MatIcon, MatDivider, NgIf, MatProgressSpinner, MatButton, NgFor, MatCard, NgClass, MatCardContent, MatCardActions, RouterLink, UpperCasePipe, SlicePipe, DatePipe, ServerUrlPipe]
 })
 export class MisReservasComponent {
   turnos: TurnoSesion[] = [];

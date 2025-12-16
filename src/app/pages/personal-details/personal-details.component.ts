@@ -2,21 +2,30 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { User } from '../../models/user.model';
 import { UserService } from '../../services/user/user.service';
 import { LoginService } from 'src/app/services/auth/login.service';
-import { FormBuilder, Validators } from '@angular/forms';
-import { DatePipe } from '@angular/common';
-import { Router } from '@angular/router';
+import { FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DatePipe, NgIf, NgFor } from '@angular/common';
+import { Router, RouterLink } from '@angular/router';
 import { forkJoin, Subscription } from 'rxjs';
 import { Especialidad } from 'src/app/aplicacion/gestion-sistema/especialidades/especialidades.model';
 import { TatuadorService } from 'src/app/services/user/tatuador.service';
 import { TatuadorComponent } from './tatuador/tatuador.component';
+import { MatCard, MatCardHeader, MatCardAvatar, MatCardTitle, MatCardSubtitle, MatCardContent, MatCardActions } from '@angular/material/card';
+import { MatDivider } from '@angular/material/divider';
+import { MatChip, MatChipsModule } from '@angular/material/chips';
+import { MatIcon } from '@angular/material/icon';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
+import { ServerUrlPipe } from '../../pipes/server-url.pipe';
 
 
 @Component({
-  selector: 'app-personal-details',
-  templateUrl: './personal-details.component.html',
-  styleUrls: ['./personal-details.component.scss'],
-  providers: [DatePipe],
-  standalone: false
+    selector: 'app-personal-details',
+    templateUrl: './personal-details.component.html',
+    styleUrls: ['./personal-details.component.scss'],
+    providers: [DatePipe],
+    imports: [MatChipsModule,NgIf, MatCard, MatCardHeader, MatCardAvatar, MatCardTitle, MatCardSubtitle, MatDivider, MatCardContent, NgFor, MatChip, MatCardActions, MatIcon, RouterLink, MatIconButton, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, TatuadorComponent, MatButton, DatePipe, ServerUrlPipe]
 })
 export class PersonalDetailsComponent implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;

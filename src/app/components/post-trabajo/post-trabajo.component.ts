@@ -1,11 +1,15 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Trabajo } from 'src/app/models/trabajos/trabajos.model';
+import { NgIf, SlicePipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { MatIconButton } from '@angular/material/button';
+import { ServerUrlPipe } from '../../pipes/server-url.pipe';
 @Component({
-  selector: 'app-post-trabajo',
-  standalone: false,
-  templateUrl: './post-trabajo.component.html',
-  styleUrl: './post-trabajo.component.scss'
+    selector: 'app-post-trabajo',
+    templateUrl: './post-trabajo.component.html',
+    styleUrl: './post-trabajo.component.scss',
+    imports: [NgIf, MatIcon, MatIconButton, SlicePipe, ServerUrlPipe]
 })
 export class PostTrabajoComponent {
   @Input() trabajo!: Trabajo;

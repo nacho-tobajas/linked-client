@@ -7,12 +7,15 @@ import {
 
 import { ErrorDialogComponent } from '../../../components/error-dialog/error-dialog.component';
 import { SupportTicketService } from '../support-ticket.service';
+import { MatCard, MatCardHeader, MatCardTitle, MatCardContent, MatCardActions } from '@angular/material/card';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  selector: 'app-support-ticket-delete',
-  templateUrl: './support-ticket-delete.component.html',
-  styleUrls: ['./support-ticket-delete.component.scss'],
-  standalone: false
+    selector: 'app-support-ticket-delete',
+    templateUrl: './support-ticket-delete.component.html',
+    styleUrls: ['./support-ticket-delete.component.scss'],
+    imports: [MatCard, MatCardHeader, MatCardTitle, MatIcon, MatCardContent, MatCardActions, MatButton]
 })
 export class SupportTicketDeleteComponent implements OnInit {
   supportTicketName: number = 0;
