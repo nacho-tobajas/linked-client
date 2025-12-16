@@ -47,6 +47,10 @@ private apiUrl = `${environment.urlApi}turnos`;
     return this.http.patch(`${this.apiUrl}/gestionar/${idTurno}`, body);
   }
 
+  updateTurno(id: number, datos: { fecha_hora_inicio: string, estado: string }): Observable<TurnoSesion> {
+    return this.http.put<TurnoSesion>(`${this.apiUrl}/${id}`, datos);
+  }
+  
   getMensajesTurno(turnoId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/${turnoId}/mensajes`);
   }
@@ -59,6 +63,16 @@ private apiUrl = `${environment.urlApi}turnos`;
   getMisTurnosCliente(): Observable<TurnoSesion[]> {
     return this.http.get<TurnoSesion[]>(`${this.apiUrl}/mis-reservas-cliente`);
   }
+
+  getHorariosDisponibles(tatuadorId: number, fecha: Date): Observable<string[]> {
+  // Convertimos la fecha a string YYYY-MM-DD para enviarla al back
+  const fechaStr = fecha.toISOString().split('T')[0];
+  
+  // Ajusta la URL si tu endpoint está en /agenda o /turnos
+  return this.http.get<string[]>(`${this.apiUrl}/disponibilidad`, {
+    params: { tatuadorId: tatuadorId.toString(), fecha: fechaStr }
+  });
+}
   
 
 }

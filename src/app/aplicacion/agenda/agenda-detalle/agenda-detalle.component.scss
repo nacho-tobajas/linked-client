@@ -115,6 +115,36 @@
   padding: 16px;
   border-radius: 8px;
   border: 1px solid #eee;
+  position: relative;
+  padding-right: 40px;
+
+  .floating-edit-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    color: #777;
+    background: transparent;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      line-height: 1;
+    }
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+      color: $main-color;
+    }
+  }
 
   .info-item {
     display: flex;

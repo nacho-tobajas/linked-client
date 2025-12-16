@@ -10,6 +10,7 @@ import { TurnosService, TurnoTatuadorResponse } from 'src/app/services/turnos/tu
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AgendaDetalleComponent } from './agenda-detalle/agenda-detalle.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { EditarTurnoComponent } from './editar-turno/editar-turno.component';
 
 @Component({
   selector: 'app-agenda',
@@ -60,11 +61,11 @@ export class AgendaComponent implements OnInit {
       // Parseamos el string del filtro de vuelta a un objeto
       const searchTerms = JSON.parse(filter);
 
-      // A. Filtro por Estado
+      // Filtro por Estado
       const coincideEstado = !searchTerms.estado || 
         data.estado?.toLowerCase() === searchTerms.estado.toLowerCase();
 
-      // B. Filtro por Cliente (Username, Nombre o Apellido)
+      // Filtro por Cliente (Username, Nombre o Apellido)
       const nombreCliente = (
           (data.cliente?.username || '') + ' ' + 
           (data.cliente?.realname || '') + ' ' + 
@@ -74,7 +75,7 @@ export class AgendaComponent implements OnInit {
       const coincideNombre = !searchTerms.username || 
         nombreCliente.includes(searchTerms.username.toLowerCase());
 
-      // C. Filtro por Fecha
+      // Filtro por Fecha
       const fechaTurno = new Date(data.fecha_hora_inicio);
       fechaTurno.setHours(0, 0, 0, 0); // Ignorar hora para comparar días
 
@@ -245,6 +246,9 @@ export class AgendaComponent implements OnInit {
         } else if (result.action === 'completar') {
            this.gestionarTurno(result.turnoId, 'Completada');
         }
+        else if (result.action === 'restaurar') {
+          this.gestionarTurno(result.turnoId, 'Pendiente');
+      }
       }
     });
   }
@@ -253,11 +257,11 @@ export class AgendaComponent implements OnInit {
     this.gestionarTurno(turno.id!, 'Confirmada');
   }
 
-  rechazarTurno(turno: TurnoSesion): void {
+  /*rechazarTurno(turno: TurnoSesion): void {
     // TODO: Pedir un motivo
     // Por ahora, lo rechazamos directamente
     this.gestionarTurno(turno.id!, 'Rechazada');
-  }
+  }*/
 
   completarTurno(turno: TurnoSesion): void {
     this.gestionarTurno(turno.id!, 'Completada');
@@ -281,5 +285,52 @@ export class AgendaComponent implements OnInit {
       }
     });
   }
-  
+
+  // Método para abrir el diálogo de edición
+  editarTurno(turno: TurnoSesion): void {
+    const dialogRef = this.dialog.open(EditarTurnoComponent, {
+      width: '400px',
+      data: { turno: turno }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Llamar al servicio para actualizar los datos completos
+        // Necesitarás un método updateTurnoCompleto en tu servicio
+        // O usar gestionarTurno si solo cambió el estado, pero aquí cambiamos fecha también
+        //this.actualizarTurnoCompleto(turno.id!, result);
+      }
+    });
+  }
+
+  // Método para restaurar (deshacer rechazo)
+  restaurarTurno(turno: TurnoSesion): void {
+    if (confirm('¿Deseas restaurar este turno al estado Pendiente?')) {
+        this.gestionarTurno(turno.id!, 'Pendiente');
+    }
+  }
+
+  // 3. Modificar rechazarTurno para agregar confirmación
+  rechazarTurno(turno: TurnoSesion): void {
+    // Usamos el confirm nativo o un Dialog tuyo
+    if (confirm(`¿Estás seguro de RECHAZAR el turno de ${turno.cliente?.realname}?`)) {
+       this.gestionarTurno(turno.id!, 'Rechazada');
+    }
+  }
+
+  // 4. Nuevo método para el servicio (simulado aquí)
+  /*private actualizarTurnoCompleto(id: number, datos: any): void {
+      this.isLoadingTurnos = true;
+      this.turnosService.updateTurno(id, datos).subscribe({
+          next: (turnoUpdate) => {
+              this.snackBar.open('Turno actualizado correctamente', 'Cerrar', { duration: 3000 });
+              this.loadTurnos(); // Recargamos para ver cambios (o actualizamos localmente)
+          },
+          error: (err) => {
+              this.snackBar.open('Error al actualizar turno', 'Cerrar', { duration: 3000 });
+              this.isLoadingTurnos = false;
+          }
+      });
+  }
+  */
 }

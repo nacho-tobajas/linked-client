@@ -94,6 +94,7 @@ import { SubirTrabajoComponent } from './aplicacion/trabajos/subir-trabajo/subir
 import { PostTrabajoComponent } from './components/post-trabajo/post-trabajo.component';
 import { DetalleTrabajoComponent } from './aplicacion/trabajos/detalle-trabajo/detalle-trabajo.component';
 import { ServerUrlPipe } from './pipes/server-url.pipe';
+import { EditarTurnoComponent } from './aplicacion/agenda/editar-turno/editar-turno.component';
 
 
 registerLocaleData(localeEsAr); // 👈 Esto registra el locale
@@ -145,7 +146,8 @@ registerLocaleData(localeEsAr); // 👈 Esto registra el locale
         SubirTrabajoComponent,
         PostTrabajoComponent,
         DetalleTrabajoComponent,
-        ServerUrlPipe
+        ServerUrlPipe,
+        EditarTurnoComponent,
     ],
     exports: [
     ServerUrlPipe

@@ -9,10 +9,6 @@
         <p class="subtitle">{{ data.turno.cliente?.username }}</p>
       </div>
     </div>
-    
-    <div class="estado-badge" [ngClass]="'status-' + data.turno.estado.toLowerCase()">
-      {{ data.turno.estado }}
-    </div>
   </div>
 
   <mat-divider></mat-divider>
@@ -23,19 +19,27 @@
     <mat-tab label="Detalles">
       <mat-dialog-content class="content-scroll">
           
-          <div class="info-grid">
-             <div class="info-item">
-                <mat-icon>calendar_today</mat-icon>
-                <span>{{ data.turno.fecha_hora_inicio | date:'EEEE dd MMMM yyyy' }}</span>
-             </div>
-             <div class="info-item">
-                <mat-icon>schedule</mat-icon>
-                <span>{{ data.turno.fecha_hora_inicio | date:'HH:mm' }} - {{ data.turno.fecha_hora_fin | date:'HH:mm' }}</span>
-             </div>
-             <div class="info-item">
-                <mat-icon>email</mat-icon>
-                <span>{{ data.turno.cliente?.email }}</span>
-             </div>
+          <div class="info-grid relative-container">
+          
+          <button mat-icon-button class="floating-edit-btn" 
+                  (click)="abrirEdicion()" 
+                  matTooltip="Editar fecha/hora">
+              <mat-icon>edit</mat-icon>
+          </button>
+
+          <div class="info-item">
+             <mat-icon>calendar_today</mat-icon>
+             <span>{{ data.turno.fecha_hora_inicio | date:'EEEE dd MMMM yyyy' }}</span>
+          </div>
+          <div class="info-item">
+             <mat-icon>schedule</mat-icon>
+             <span>{{ data.turno.fecha_hora_inicio | date:'HH:mm' }} - {{ data.turno.fecha_hora_fin | date:'HH:mm' }}</span>
+          </div>
+          <div class="info-item">
+             <mat-icon>email</mat-icon>
+             <span>{{ data.turno.cliente?.email }}</span>
+          </div>
+
           </div>
 
           <div class="section">
@@ -117,6 +121,15 @@
       <button mat-raised-button color="accent" (click)="cerrar('completar')">
         <mat-icon>done_all</mat-icon> Marcar Completado
       </button>
+    </ng-container>
+
+    <ng-container *ngIf="data.turno.estado === 'Rechazada' || data.turno.estado === 'Cancelada'">
+        <span class="text-muted" style="margin-right: 10px; font-size: 0.8rem;">
+            ¿Fue un error?
+        </span>
+        <button mat-stroked-button color="primary" (click)="cerrar('restaurar')">
+            <mat-icon>restore</mat-icon> Restaurar a Pendiente
+        </button>
     </ng-container>
   </mat-dialog-actions>
   

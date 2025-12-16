@@ -91,4 +91,17 @@ export class LoginService {
   get userToken(): string {
     return this.currentUserDataSubject.value;
   }
+
+  get currentUserId(): number | null {
+    const token = sessionStorage.getItem('accessToken');
+    if (!token) return null;
+    
+    try {
+      const decoded: any = jwtDecode(token);
+      return decoded.id || null;
+    } catch (error) {
+      console.error('Error al decodificar token para obtener ID', error);
+      return null;
+    }
+  }
 }

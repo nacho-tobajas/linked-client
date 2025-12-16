@@ -1,0 +1,95 @@
+import { Component, Inject } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { TurnoSesion } from 'src/app/models/turno/turno-sesion.model';
+import { LoginService } from 'src/app/services/auth/login.service';
+import { TurnosService } from 'src/app/services/turnos/turnos.service';
+import { AgendaService } from '../agenda.service';
+
+@Component({
+  selector: 'app-editar-turno',
+  standalone: false,
+  templateUrl: './editar-turno.component.html',
+  styleUrl: './editar-turno.component.scss'
+})
+export class EditarTurnoComponent {
+form: FormGroup;
+horariosDisponibles: string[] = [];
+isLoadingHorarios = false;
+tatuadorId: number | null = null;
+minDate: Date = new Date();
+
+  constructor(
+    private fb: FormBuilder,
+    public dialogRef: MatDialogRef<EditarTurnoComponent>,
+    private loginService: LoginService,
+    private agendaService: AgendaService,
+    @Inject(MAT_DIALOG_DATA) public data: { turno: TurnoSesion }
+  ) {
+    const fecha = new Date(data.turno.fecha_hora_inicio);
+    const user = this.loginService.currentUserId;
+    this.tatuadorId = user;
+
+    // Formateamos la hora para el input type="time" (HH:mm)
+    const horaStr = fecha.toTimeString().substring(0, 5);
+    if (data.turno.tatuadoresAsignados && data.turno.tatuadoresAsignados.length > 0) {
+        this.tatuadorId = data.turno.tatuadoresAsignados[0].tatuador?.id; 
+    }
+
+    this.form = this.fb.group({
+      fecha: [fecha, Validators.required],
+      hora: [horaStr, Validators.required],
+      estado: [data.turno.estado, Validators.required]
+    });
+  }
+
+  get fecha(): AbstractControl | null { return this.form.get('fecha'); }
+  get hora(): AbstractControl | null { return this.form.get('hora'); }
+
+  ngOnInit(): void {
+    // Cargar horarios iniciales (para la fecha que ya tiene el turno)
+    this.cargarHorarios();
+
+    // Escuchar cambios de fecha para recargar los horarios
+    this.form.get('fecha')?.valueChanges.subscribe(() => {
+      this.form.get('hora')?.setValue(''); // Limpiar hora vieja porque quizás no sirve
+      this.cargarHorarios();
+    });
+  }
+
+  cargarHorarios(fechaParam?: Date): void {
+    const fechaBusqueda = fechaParam || this.fecha?.value;
+    
+    if (!fechaBusqueda || !this.tatuadorId) return;
+
+    this.isLoadingHorarios = true;
+    this.horariosDisponibles = [];
+  
+    this.agendaService.getHorariosDisponibles(this.tatuadorId, fechaBusqueda)
+      .subscribe({
+        next: (slots) => {
+          this.horariosDisponibles = slots;
+          this.isLoadingHorarios = false;
+        },
+        error: (err) => {
+          console.error("Error cargando horarios:", err);
+          this.isLoadingHorarios = false;
+        }
+      });
+  }
+
+  guardar(): void {
+    if (this.form.valid) {
+      const fechaVal = this.form.value.fecha;
+      const horaVal = this.form.value.hora; 
+      const nuevaFechaInicio = new Date(fechaVal);
+      const [hours, minutes] = horaVal.split(':');
+      nuevaFechaInicio.setHours(+hours, +minutes, 0, 0);
+
+      this.dialogRef.close({
+        fecha_hora_inicio: nuevaFechaInicio.toISOString(),
+        estado: this.form.value.estado
+      });
+    }
+  }
+}
