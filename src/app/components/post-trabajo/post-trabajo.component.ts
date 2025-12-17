@@ -19,19 +19,21 @@ export class PostTrabajoComponent {
   @Output() toggleLike = new EventEmitter<number>(); 
 
   currentImageIndex: number = 0;
-
+  hasError = false;
   constructor(private router: Router) {}
 
   nextImage(event: MouseEvent) {
     event.stopPropagation(); 
     if (!this.trabajo.fotos) return;
     this.currentImageIndex = (this.currentImageIndex + 1) % this.trabajo.fotos.length;
+    this.hasError = false;
   }
 
   prevImage(event: MouseEvent) {
     event.stopPropagation();
     if (!this.trabajo.fotos) return;
     this.currentImageIndex = (this.currentImageIndex - 1 + this.trabajo.fotos.length) % this.trabajo.fotos.length;
+    this.hasError = false;
   }
 
   onLike(event: MouseEvent) {

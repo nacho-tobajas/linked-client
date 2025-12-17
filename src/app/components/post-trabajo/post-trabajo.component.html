@@ -4,7 +4,14 @@
     <img [src]="trabajo.fotos[currentImageIndex].image_path | serverUrl" 
          class="tile-image" 
          loading="lazy"
+         (error)="hasError = true"
+         [hidden]="hasError"
          alt="Tatuaje">
+
+    <div class="error-placeholder" *ngIf="hasError">
+        <mat-icon>image_not_supported</mat-icon>
+        <span>Imagen no disponible</span>
+    </div>
          
     <ng-container *ngIf="trabajo.fotos.length > 1">
         
