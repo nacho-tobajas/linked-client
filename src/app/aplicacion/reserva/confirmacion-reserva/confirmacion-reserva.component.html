@@ -1,31 +1,65 @@
-<div class="screen">
-    <button class="back-button" (click)="goBack()">
-            </button>
+<div class="screen-container">
+  
+  <div class="content">
     
-    <div class="content confirmation-content" *ngIf="reserva">
-      <h2 class="screen-title">Turno Solicitado</h2>       <div class="confirmation-icon">
-              </div>
-      
-      <p style="text-align: center; margin-bottom: 20px;">
-        Tu solicitud fue enviada. Recibirás una notificación cuando el tatuador la confirme.
-      </p>
+    <div class="success-animation">
+      <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+        <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />
+        <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+      </svg>
+    </div>
 
-      <div class="confirmation-details">
-        <div class="detail-line">
-          <span class="detail-icon">👤</span>
-                    <span>{{ reserva.tatuador?.realname }} {{ reserva.tatuador?.surname }}</span>
-        </div>
-        <div class="detail-line">
-          <span class="detail-icon">📅</span>
-                    <span>{{ reserva.fecha_hora_inicio | date: 'dd/MM/yyyy' }}</span>
-        </div>
-        <div class="detail-line">
-          <span class="detail-icon">🕐</span>
-                    <span>{{ reserva.fecha_hora_inicio | date: 'HH:mm' }} hs</span>
+    <h2 class="title">¡Solicitud Enviada!</h2>
+    <p class="subtitle">El tatuador revisará tu idea y te confirmará pronto.</p>
+
+    <div class="ticket-card mat-elevation-z3">
+      
+      <div class="ticket-header">
+        <span class="label">TATUADOR</span>
+        <div class="artist-info">
+            <img [src]="reserva.tatuador?.profile_photo | serverUrl" 
+                 class="avatar" 
+                 alt="Avatar"
+                 onerror="this.src='assets/images/default-profile.jpg'"> 
+            <span class="artist-name">{{ reserva.tatuador?.realname }} {{ reserva.tatuador?.surname }}</span>
         </div>
       </div>
-      <button class="btn-done" (click)="volverInicio()">
-        Listo
-      </button>
+
+      <div class="ticket-divider">
+        <div class="notch-left"></div>
+        <div class="dashed-line"></div>
+        <div class="notch-right"></div>
+      </div>
+
+      <div class="ticket-body">
+        <div class="info-row">
+            <div class="info-item">
+                <mat-icon>calendar_today</mat-icon>
+                <div>
+                    <span class="label">FECHA</span>
+                    <span class="value">{{ reserva.fecha_hora_inicio | date: 'dd/MM/yyyy' }}</span>
+                </div>
+            </div>
+            <div class="info-item">
+                <mat-icon>schedule</mat-icon>
+                <div>
+                    <span class="label">HORA</span>
+                    <span class="value">{{ reserva.fecha_hora_inicio | date: 'HH:mm' }} hs</span>
+                </div>
+            </div>
+        </div>
+      </div>
+
     </div>
+
+    <div class="actions">
+        <button mat-flat-button class="btn-primary create-btn" (click)="volverInicio()">
+            Volver al Inicio
+        </button>
+        <button mat-button class="btn-secondary" (click)="goBack()">
+            Ver mis turnos
+        </button>
+    </div>
+
   </div>
+</div>
