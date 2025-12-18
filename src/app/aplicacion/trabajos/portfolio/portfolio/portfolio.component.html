@@ -1,7 +1,13 @@
 <div class="portfolio-container" *ngIf="tatuador">
   
+  <div class="page-header">
+    <button mat-icon-button (click)="goBack()" class="btn-back">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+  </div>
   <div class="profile-header mat-elevation-z1">
-    
+
+
     <div class="avatar-container">
       <img [src]="tatuador.profile_photo | serverUrl" 
            class="profile-avatar" 
@@ -39,34 +45,17 @@
   </div>
 
   <div class="galeria-grid" *ngIf="!isLoading && trabajos.length > 0">
-    <div class="trabajo-card" *ngFor="let trabajo of trabajos" (click)="abrirDetalle(trabajo)">
-      
-      <img *ngIf="trabajo.fotos && trabajo.fotos.length > 0" 
-           [src]="trabajo.fotos[0].image_path | serverUrl" 
-           class="trabajo-img">
-
-      <mat-icon class="multiple-icon" *ngIf="trabajo.fotos.length > 1">filter_none</mat-icon>
-      
-      <div class="overlay">
-        <div class="actions-container">
-            <button mat-icon-button 
-                    class="btn-like"
-                    [class.liked]="misLikes.has(trabajo.id)"
-                    (click)="$event.stopPropagation(); toggleLike(trabajo)"> <mat-icon>{{ misLikes.has(trabajo.id) ? 'favorite' : 'favorite_border' }}</mat-icon>
-            </button>
-
-            <span class="likes-count">
-              {{ trabajo.favoritos?.length || 0 }}
-            </span>
-        </div>
-
-        <p class="desc" *ngIf="trabajo.descripcion">
-          {{ trabajo.descripcion | slice:0:50 }}...
-        </p>
-      </div>
-
-    </div>
+    <app-post-tile 
+      *ngFor="let trabajo of trabajos"
+      [trabajo]="trabajo"
+      [isLiked]="misLikes.has(trabajo.id)"
+      [showArtistInfo]="false" 
+      (click)="abrirDetalle(trabajo)"
+      (toggleLike)="toggleLike(trabajo)">
+      </app-post-tile>
   </div>
+
+  
 
   <div *ngIf="!isLoading && trabajos.length === 0" class="empty-state">
       <mat-icon>image_not_supported</mat-icon>

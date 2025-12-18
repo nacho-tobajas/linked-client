@@ -7,16 +7,16 @@ import { TatuadorService } from 'src/app/services/user/tatuador.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Tatuador } from 'src/app/models/tatuador/tatuador.model';
-import { NgIf, NgFor, SlicePipe } from '@angular/common';
+import { NgIf, NgFor, Location } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { ServerUrlPipe } from '../../../../pipes/server-url.pipe';
-
+import { PostTileComponent } from 'src/app/components/post-tile/post-tile.component';
 @Component({
     selector: 'app-portfolio',
     templateUrl: './portfolio.component.html',
     styleUrl: './portfolio.component.scss',
-    imports: [NgIf, MatIcon, NgFor, MatButton, MatIconButton, SlicePipe, ServerUrlPipe]
+    imports: [PostTileComponent, NgIf, MatIcon, NgFor, MatButton, MatIconButton, ServerUrlPipe]
 })
 export class PortfolioComponent {
 tatuador: Tatuador | null = null;
@@ -33,11 +33,12 @@ tatuador: Tatuador | null = null;
     private tatuadorService: TatuadorService,
     private trabajosService: TrabajosService,
     private loginService: LoginService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
-    // 1. Obtener ID de la URL
+    // Obtener ID de la URL
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) {
       this.router.navigate(['/']);
@@ -46,11 +47,11 @@ tatuador: Tatuador | null = null;
 
     const tatuadorId = Number(id);
 
-    // 2. Cargar Datos
+    // Cargar Datos
     this.cargarPerfil(tatuadorId);
     this.cargarTrabajos(tatuadorId);
     
-    // 3. Verificar Login para los Likes
+    // Verificar Login para los Likes
     this.loginService.userLoginOn.subscribe(logged => {
       this.userLoginOn = logged;
       if (logged) this.cargarMisLikes();
@@ -62,8 +63,6 @@ tatuador: Tatuador | null = null;
   }
 
   cargarPerfil(id: number) {
-    // Asumo que tienes un método getById, sino usas el getTatuadores().find...
-    // Idealmente: this.tatuadorService.getById(id)...
     this.tatuadorService.getTatuadores().subscribe(tatuadores => {
         this.tatuador = tatuadores.find(t => t.idUser === id) || null;
     });
@@ -123,5 +122,9 @@ tatuador: Tatuador | null = null;
             error: () => { this.misLikes.delete(trabajo.id); trabajo.favoritos?.pop(); }
         });
     }
+  }
+
+   goBack(): void {
+    this.location.back(); 
   }
 }

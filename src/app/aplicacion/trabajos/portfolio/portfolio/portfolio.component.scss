@@ -6,6 +6,17 @@
   padding-bottom: 40px;
 }
 
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 10px;
+
+  .btn-back {
+    color: #555;
+  }
+}
+
 // Header
 .profile-header {
   display: flex;
