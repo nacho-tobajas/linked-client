@@ -486,3 +486,20 @@ mat-accordion {
     }
   }
 }
+
+
+//Estilos para cambiar calendario
+.mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover>.mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
+  background-color: $main-color !important;
+  color: #ffffff !important;
+}
+
+.mat-calendar-body-selected {
+  background-color: $main-color !important;
+  color: white !important;
+}
+
+
+.mat-calendar-body-today:not(.mat-calendar-body-selected) {
+  border-color: $main-color !important;
+}
