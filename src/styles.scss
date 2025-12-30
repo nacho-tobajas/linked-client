@@ -1,4 +1,11 @@
+// 1. Importamos las herramientas de Material
+@use '@angular/material' as mat;
 @use 'sass:math';
+
+// 2. Incluimos los estilos base (core)
+@include mat.core();
+
+
 @import 'assets/styles/_mixins';
 
 @import '../src/assets/styles/variables';
@@ -502,4 +509,144 @@ mat-accordion {
 
 .mat-calendar-body-today:not(.mat-calendar-body-selected) {
   border-color: $main-color !important;
+}
+
+
+// Aplicacion de estilos para no usar los predeterminados de angular material:
+
+// PALETA VERDE 
+$custom-green-palette: (
+  50: #e8f5e9,
+  100: #c8e6c9,
+  200: #a5d6a7,
+  300: #81c784,
+  400: #66bb6a,
+  500: #4caf50,
+  600: #43a047,
+  700: #388e3c,
+  800: #2e7d32,
+  900: #1b5e20,
+  A100: #b9f6ca,
+  A200: #69f0ae,
+  A400: #00e676,
+  A700: #00c853,
+  contrast: (50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: rgba(black, 0.87),
+    400: rgba(black, 0.87),
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: rgba(black, 0.87),
+    A200: rgba(black, 0.87),
+    A400: rgba(black, 0.87),
+    A700: rgba(black, 0.87),
+  )
+);
+
+// PALETA ÁMBAR 
+$custom-amber-palette: (
+  50: #fff8e1,
+  100: #ffecb3,
+  200: #ffe082,
+  300: #ffd54f,
+  400: #ffca28,
+  500: #ffc107,
+  600: #ffb300,
+  700: #ffa000,
+  800: #ff8f00,
+  900: #ff6f00,
+  A100: #ffe57f,
+  A200: #ffd740,
+  A400: #ffc400,
+  A700: #ffab00,
+  contrast: (50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: rgba(black, 0.87),
+    400: rgba(black, 0.87),
+    500: rgba(black, 0.87),
+    600: rgba(black, 0.87),
+    700: rgba(black, 0.87),
+    800: rgba(black, 0.87),
+    900: rgba(black, 0.87),
+    A100: rgba(black, 0.87),
+    A200: rgba(black, 0.87),
+    A400: rgba(black, 0.87),
+    A700: rgba(black, 0.87),
+  )
+);
+
+// PALETA ROJA 
+$custom-red-palette: (
+  50: #ffebee,
+  100: #ffcdd2,
+  200: #ef9a9a,
+  300: #e57373,
+  400: #ef5350,
+  500: #f44336,
+  600: #e53935,
+  700: #d32f2f,
+  800: #c62828,
+  900: #b71c1c,
+  A100: #ff8a80,
+  A200: #ff5252,
+  A400: #ff1744,
+  A700: #d50000,
+  contrast: (50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: rgba(black, 0.87),
+    400: rgba(black, 0.87),
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: rgba(black, 0.87),
+    A200: white,
+    A400: white,
+    A700: white,
+  )
+);
+
+// CONFIGURACIÓN DEL TEMA
+
+$mi-primary: mat.m2-define-palette($custom-green-palette, 800);
+$mi-accent: mat.m2-define-palette($custom-amber-palette, A200, A100, A400);
+$mi-warn: mat.m2-define-palette($custom-red-palette);
+
+$mi-tema: mat.m2-define-light-theme((color: (primary: $mi-primary,
+        accent: $mi-accent,
+        warn: $mi-warn,
+      ),
+      typography: mat.m2-define-typography-config(),
+      density: 0));
+
+// Aplicar el tema
+@include mat.all-component-themes($mi-tema);
+
+
+// ESTILOS GLOBALES Y PARCHES CSS
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: #fafafa;
+}
+
+:root {
+  --mat-sys-primary: #2E7D32;
+  --mat-sys-on-primary: #ffffff;
+
+  --mat-datepicker-calendar-date-selected-state-background-color: #2E7D32;
+  --mat-datepicker-calendar-date-selected-state-text-color: white;
+  --mat-datepicker-calendar-date-today-outline-color: #2E7D32;
 }
