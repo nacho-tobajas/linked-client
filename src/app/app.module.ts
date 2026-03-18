@@ -1,6 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, LOCALE_ID, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -30,7 +29,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import {MatTabsModule} from '@angular/material/tabs';
+import { MatTabsModule } from '@angular/material/tabs';
 
 import { FooterComponent } from './shared/footer/footer.component';
 import { HeaderComponent } from './shared/header/header.component';
@@ -95,6 +94,8 @@ import { PostTrabajoComponent } from './components/post-trabajo/post-trabajo.com
 import { DetalleTrabajoComponent } from './aplicacion/trabajos/detalle-trabajo/detalle-trabajo.component';
 import { ServerUrlPipe } from './pipes/server-url.pipe';
 import { EditarTurnoComponent } from './aplicacion/agenda/editar-turno/editar-turno.component';
+import { BrowserModule } from '@angular/platform-browser';
+import { TatuajesFavoritosComponent } from './aplicacion/tatuajes-favoritos/tatuajes-favoritos.component';
 
 
 registerLocaleData(localeEsAr); // 👈 Esto registra el locale
@@ -190,9 +191,9 @@ registerLocaleData(localeEsAr); // 👈 Esto registra el locale
         PostTrabajoComponent,
         DetalleTrabajoComponent,
         ServerUrlPipe,
-        EditarTurnoComponent,],
+        EditarTurnoComponent,
+        TatuajesFavoritosComponent],
     providers: [
-        RegisterService,
         RegisterService,
         SweItemMenuService,
         { provide: DateAdapter, useClass: CustomDateAdapter },

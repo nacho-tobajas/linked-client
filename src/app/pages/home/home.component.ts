@@ -14,10 +14,10 @@ import { MatDivider } from '@angular/material/divider';
 import { PostTrabajoComponent } from '../../components/post-trabajo/post-trabajo.component';
 
 @Component({
-    selector: 'app-home',
-    templateUrl: './home.component.html',
-    styleUrls: ['./home.component.scss'],
-    imports: [NgIf, RouterLink, MatTooltip, MatIcon, MatDivider, NgFor, PostTrabajoComponent]
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss'],
+  imports: [NgIf, RouterLink, MatTooltip, MatIcon, MatDivider, NgFor, PostTrabajoComponent]
 })
 
 export class HomeComponent {
@@ -36,17 +36,16 @@ export class HomeComponent {
   ) { }
 
   ngOnInit(): void {
-    console.log("entra")
     this.loginService.userLoginOn.subscribe(logged => {
       this.userLoginOn = logged;
-    this.loginService.userRol.subscribe(rol => {
+      this.loginService.userRol.subscribe(rol => {
         this.userRol = rol;
-    });
-      
+      });
+
       if (logged) {
         this.cargarMisLikes();
       } else {
-        this.misLikes.clear(); 
+        this.misLikes.clear();
       }
     });
 
@@ -55,18 +54,18 @@ export class HomeComponent {
 
   abrirDetalle(trabajo: Trabajo) {
     const dialogRef = this.dialog.open(DetalleTrabajoComponent, {
-      panelClass: 'custom-modal-panel', 
-      maxWidth: '100vw', 
-      maxHeight: '90vh',      
-      data: { 
-          trabajo: trabajo,
-          isLiked: this.misLikes.has(trabajo.id)
+      panelClass: 'custom-modal-panel',
+      maxWidth: '100vw',
+      maxHeight: '90vh',
+      data: {
+        trabajo: trabajo,
+        isLiked: this.misLikes.has(trabajo.id)
       }
     });
 
     dialogRef.afterClosed().subscribe(() => {
-       // Opcional: Recargar likes o feed al volver si hubo cambios drásticos
-       // this.cargarMisLikes(); 
+      // Opcional: Recargar likes o feed al volver si hubo cambios drásticos
+      // this.cargarMisLikes(); 
     });
   }
 
@@ -87,9 +86,9 @@ export class HomeComponent {
 
   onToggleLike(trabajoId: number) {
     if (!this.userLoginOn) {
-        this.snackBar.open("Debes iniciar sesión para dar Me Gusta.", 'Cerrar', { duration: 3000 });
-        this.router.navigate(['/login']); 
-        return;
+      this.snackBar.open("Debes iniciar sesión para dar Me Gusta.", 'Cerrar', { duration: 3000 });
+      this.router.navigate(['/login']);
+      return;
     }
     const trabajo = this.feed.find(t => t.id === trabajoId);
     if (!trabajo) return;
@@ -99,27 +98,27 @@ export class HomeComponent {
     const yaTieneLike = this.misLikes.has(trabajoId);
 
     if (yaTieneLike) {
-        this.misLikes.delete(trabajoId);
-        trabajo.favoritos.pop(); 
+      this.misLikes.delete(trabajoId);
+      trabajo.favoritos.pop();
 
-        this.trabajosService.quitarLike(trabajoId).subscribe({
-            error: () => {
-                this.misLikes.add(trabajoId);
-                trabajo.favoritos?.push({}); 
-                console.error("Error al quitar like");
-            }
-        });
+      this.trabajosService.quitarLike(trabajoId).subscribe({
+        error: () => {
+          this.misLikes.add(trabajoId);
+          trabajo.favoritos?.push({});
+          console.error("Error al quitar like");
+        }
+      });
 
     } else {
-        this.misLikes.add(trabajoId);
-        trabajo.favoritos.push({});
-        this.trabajosService.darLike(trabajoId).subscribe({
-            error: () => {
-                this.misLikes.delete(trabajoId);
-                trabajo.favoritos?.pop();
-                console.error("Error al dar like");
-            }
-        });
+      this.misLikes.add(trabajoId);
+      trabajo.favoritos.push({});
+      this.trabajosService.darLike(trabajoId).subscribe({
+        error: () => {
+          this.misLikes.delete(trabajoId);
+          trabajo.favoritos?.pop();
+          console.error("Error al dar like");
+        }
+      });
     }
   }
 

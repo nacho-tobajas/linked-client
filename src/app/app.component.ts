@@ -1,39 +1,72 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { firstValueFrom, Observable, Subscription } from 'rxjs';
 import { LoginService } from './services/auth/login.service';
 import { LoadingService } from './services/loading.service';
 import { ThemeService } from './core/services/theme.service';
+import { UserService } from './services/user/user.service';
+import { RolApl } from './models/rol.models';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
-    standalone: false
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  standalone: false
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'linked-client';
   isLoading$: Observable<boolean>;
+
   userLoginOn: boolean = false;
-  private subscription: Subscription = new Subscription();
+  userIsAdmin: boolean = false;
+  userId: number | null = null;
 
-  constructor(private loginService: LoginService,
-              private themeService: ThemeService, 
-              private loadingService: LoadingService) {  
+  private authSub?: Subscription;
 
-     this.isLoading$ = this.loadingService.loading$;
-    }
-
+  constructor(
+    private loginService: LoginService,
+    private themeService: ThemeService,
+    private loadingService: LoadingService,
+    private userService: UserService
+  ) {
+    this.isLoading$ = this.loadingService.loading$;
+  }
 
   ngOnInit(): void {
-    this.subscription.add(
-      this.loginService.userLoginOn.subscribe({
-        next: (userLoginOn) => {
-          this.userLoginOn = userLoginOn;
-        },
-        error: (err) => {
-          console.error('Error al suscribirse al estado de login', err);
-        },
-      })
-    );
+    this.authSub = this.loginService.userLoginOn.subscribe(async (isLoggedIn) => {
+      this.userLoginOn = isLoggedIn;
+
+      if (isLoggedIn) {
+        await this.checkIfAdmin();
+      } else {
+        this.userIsAdmin = false;
+        this.userId = null;
+      }
+    });
+  }
+
+  async checkIfAdmin(): Promise<void> {
+    try {
+      this.userId = await firstValueFrom(this.userService.getUserId());
+      if (!this.userId) return;
+
+      const roles = await firstValueFrom(this.userService.getAllUserRoles(this.userId));
+
+      if (roles) {
+        for (const idRol of roles) {
+          const rol: RolApl = await firstValueFrom(this.userService.getUserRolByidRole(idRol.toString()));
+
+          if (rol.description === 'Administrador') {
+            this.userIsAdmin = true;
+            break;
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error al verificar los roles del usuario:', error);
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.authSub?.unsubscribe();
   }
 }

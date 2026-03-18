@@ -1,0 +1,20 @@
+<div class="favs-container">
+  <div class="feed-section">
+    <!-- Componente con publicaciones (post-trabajo) -->
+    <div class="gallery-grid">
+      <app-post-trabajo
+        *ngFor="let trabajo of trabajosFavoritos"
+        [trabajo]="trabajo"
+        [isLiked]="favorites.has(trabajo.id)"
+        [showArtistInfo]="true"
+        (toggleLike)="onToggleLike($event)"
+        (click)="abrirDetalle(trabajo)"
+      >
+      </app-post-trabajo>
+    </div>
+
+    <div *ngIf="trabajosFavoritos.length === 0" class="empty-page">
+      <p>No has marcado como favorita ninguna publicacion.</p>
+    </div>
+  </div>
+</div>

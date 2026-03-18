@@ -1,0 +1,34 @@
+.favs-container {
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  padding-bottom: 40px;
+}
+
+.empty-page {
+  text-align: center;
+  padding: 40px;
+  color: #777;
+}
+
+.feed-section {
+  h3 {
+    margin-bottom: 15px;
+    font-weight: 500;
+  }
+
+  .feed-placeholder {
+    background: #f9f9f9;
+    border-radius: 8px;
+    padding: 40px;
+    text-align: center;
+    color: #999;
+    border: 2px dashed #eee;
+  }
+}
