@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { Especialidad } from './especialidades.model';
 import { MatDialog } from '@angular/material/dialog';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
@@ -17,31 +18,37 @@ import { MatIconButton } from '@angular/material/button';
     styleUrl: './especialidades.component.scss',
     imports: [MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatIconButton, MatIcon, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow]
 })
-export class EspecialidadesComponent {
+export class EspecialidadesComponent implements OnInit, OnDestroy {
   especialidades: Especialidad[] = [];
+  displayedColumns: string[] = ['id', 'nombre', 'desc', 'actions'];
+  private destroy$ = new Subject<void>();
+
   constructor(
     private especialidadesService: EspecialidadesService,
     private dialog: MatDialog,
     private breakpointObserver: BreakpointObserver
   ) { }
 
-  displayedColumns: string[] = ['id', 'nombre', 'desc', 'actions'];
-
   ngOnInit(): void {
     this.loadEspecialidadess();
     this.setupResponsiveColumns();
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   private setupResponsiveColumns(): void {
-    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
-      if (result.matches) {
-        // pantalla pequeña: oculto la columna 'desc'
-        this.displayedColumns = ['id', 'nombre', 'actions'];
-      } else {
-        // pantalla grande: muestro todas
-        this.displayedColumns = ['id', 'nombre', 'desc', 'actions'];
-      }
-    });
+    this.breakpointObserver.observe([Breakpoints.Handset])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(result => {
+        if (result.matches) {
+          this.displayedColumns = ['id', 'nombre', 'actions'];
+        } else {
+          this.displayedColumns = ['id', 'nombre', 'desc', 'actions'];
+        }
+      });
   }
 
   getCreateComponent() {

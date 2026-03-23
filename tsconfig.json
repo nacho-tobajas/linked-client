@@ -19,7 +19,8 @@
     "module": "ES2022",
     "useDefineForClassFields": false,
     "lib": ["ES2022", "dom"],
-    "typeRoots": ["node_modules/@types", "src"]
+    "skipLibCheck": true,
+    "typeRoots": ["node_modules/@types"]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
