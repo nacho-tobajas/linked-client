@@ -42,6 +42,49 @@
             <mat-chip *ngFor="let esp of user?.especialidades">{{ esp.nombre }}</mat-chip>
           </mat-chip-set>
         </div>
+
+        <!-- Sección Instagram -->
+        <mat-divider style="margin: 1rem 0;"></mat-divider>
+        <h4 class="tatuador-section-title-view">Instagram</h4>
+
+        <p *ngIf="instagramMessage" class="instagram-message">{{ instagramMessage }}</p>
+
+        <!-- No vinculado -->
+        <div *ngIf="!instagramStatus.connected" class="instagram-connect-area">
+          <p class="instagram-status-text">
+            <mat-icon class="instagram-icon-disconnected">link_off</mat-icon>
+            Cuenta no vinculada
+          </p>
+          <button class="btn-meta" (click)="connectInstagram()" [disabled]="instagramLoading">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" width="20" height="20">
+              <path fill="#fff" d="M36 4C18.4 4 4 18.4 4 36s14.4 32 32 32 32-14.4 32-32S53.6 4 36 4zm16 22h-5c-1.7 0-2 .7-2 2v4h7l-1 7h-6v18h-8V39h-5v-7h5v-5c0-5.4 3.3-8.3 8.1-8.3 2.3 0 4.6.2 6.9.5V26z"/>
+            </svg>
+            Continuar con Meta
+          </button>
+        </div>
+
+        <!-- Vinculado -->
+        <div *ngIf="instagramStatus.connected" class="instagram-connected-area">
+          <p class="instagram-status-text">
+            <mat-icon class="instagram-icon-connected">check_circle</mat-icon>
+            Cuenta vinculada
+            <span class="instagram-account-id">(ID: {{ instagramStatus.instagram_user_id }})</span>
+          </p>
+          <p *ngIf="instagramStatus.expires_at" class="instagram-expires">
+            Token válido hasta: {{ instagramStatus.expires_at | date:'dd/MM/yyyy' }}
+          </p>
+          <div class="instagram-actions">
+            <button class="btn-instagram-sync" (click)="syncInstagramPosts()" [disabled]="instagramLoading">
+              <mat-icon>sync</mat-icon>
+              {{ instagramLoading ? 'Sincronizando...' : 'Sincronizar posts' }}
+            </button>
+            <button class="btn-instagram-disconnect" (click)="disconnectInstagram()" [disabled]="instagramLoading">
+              <mat-icon>link_off</mat-icon>
+              Desvincular
+            </button>
+          </div>
+        </div>
+
       </ng-container>
     </mat-card-content>
 

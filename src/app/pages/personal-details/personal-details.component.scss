@@ -367,3 +367,104 @@
   margin-bottom: 0.5rem;
   color: #333;
 }
+
+/* --- INSTAGRAM --- */
+.instagram-message {
+  font-size: 0.85rem;
+  color: #4caf50;
+  margin-bottom: 0.5rem;
+}
+
+.instagram-status-text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-color, #333);
+
+  .instagram-icon-disconnected { color: #9e9e9e; font-size: 20px; }
+  .instagram-icon-connected    { color: #4caf50; font-size: 20px; }
+
+  .instagram-account-id {
+    font-size: 0.78rem;
+    color: #777;
+  }
+}
+
+.instagram-expires {
+  font-size: 0.8rem;
+  color: #888;
+  margin-bottom: 0.75rem;
+}
+
+// Botón "Continuar con Meta" (azul Facebook)
+.btn-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  background-color: #1877F2;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+
+  &:hover:not(:disabled) {
+    background-color: #1464d8;
+    transform: translateY(-1px);
+  }
+
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+.instagram-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+// Botón "Sincronizar posts"
+.btn-instagram-sync {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: linear-gradient(135deg, #405DE6, #833AB4, #E1306C);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+
+  &:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+  &:disabled { opacity: 0.55; cursor: not-allowed; }
+}
+
+// Botón "Desvincular"
+.btn-instagram-disconnect {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background-color: transparent;
+  color: #e53935;
+  border: 1px solid #e5393540;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+
+  &:hover:not(:disabled) { background-color: #ffebee; }
+  &:disabled { opacity: 0.55; cursor: not-allowed; }
+}

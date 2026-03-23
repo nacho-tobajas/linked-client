@@ -4,7 +4,7 @@ import { UserService } from '../../services/user/user.service';
 import { LoginService } from 'src/app/services/auth/login.service';
 import { FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatePipe, NgIf, NgFor } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { forkJoin, Subscription } from 'rxjs';
 import { Especialidad } from 'src/app/aplicacion/gestion-sistema/especialidades/especialidades.model';
 import { TatuadorService } from 'src/app/services/user/tatuador.service';
@@ -18,6 +18,7 @@ import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field'
 import { MatInput } from '@angular/material/input';
 import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
 import { ServerUrlPipe } from '../../pipes/server-url.pipe';
+import { InstagramService, InstagramStatus } from '../../services/instagram/instagram.service';
 
 
 @Component({
@@ -25,7 +26,7 @@ import { ServerUrlPipe } from '../../pipes/server-url.pipe';
     templateUrl: './personal-details.component.html',
     styleUrls: ['./personal-details.component.scss'],
     providers: [DatePipe],
-    imports: [MatChipsModule,NgIf, MatCard, MatCardHeader, MatCardAvatar, MatCardTitle, MatCardSubtitle, MatDivider, MatCardContent, NgFor, MatChip, MatCardActions, MatIcon, RouterLink, MatIconButton, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, TatuadorComponent, MatButton, DatePipe, ServerUrlPipe]
+    imports: [MatChipsModule, NgIf, MatCard, MatCardHeader, MatCardAvatar, MatCardTitle, MatCardSubtitle, MatDivider, MatCardContent, NgFor, MatChip, MatCardActions, MatIcon, RouterLink, MatIconButton, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, TatuadorComponent, MatButton, DatePipe, ServerUrlPipe]
 })
 export class PersonalDetailsComponent implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
@@ -44,6 +45,11 @@ export class PersonalDetailsComponent implements OnInit {
   selectedFile: File | null = null;
   private subscriptions: Subscription = new Subscription();
 
+  // Instagram
+  instagramStatus: InstagramStatus = { connected: false };
+  instagramLoading: boolean = false;
+  instagramMessage: string = '';
+
   registerForm = this.formBuilder.group({
     id: this.formBuilder.control<number | null>(null),
     surname: this.formBuilder.control<string | null>(null),
@@ -56,15 +62,74 @@ export class PersonalDetailsComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private tatuadorService : TatuadorService,
+    private tatuadorService: TatuadorService,
     private formBuilder: FormBuilder,
     private loginService: LoginService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
+    private instagramService: InstagramService
   ) {}
 
   ngOnInit(): void {
     this.loadUserSession();
     this.watchLoginState();
+    this.handleInstagramCallback();
+  }
+
+  // ----------------------------------------------------------
+  // Instagram
+  // ----------------------------------------------------------
+
+  private handleInstagramCallback(): void {
+    const igParam = this.route.snapshot.queryParamMap.get('instagram');
+    if (igParam === 'success') {
+      this.instagramMessage = 'Instagram vinculado correctamente.';
+      this.router.navigate([], { queryParams: {}, replaceUrl: true });
+    } else if (igParam === 'denied') {
+      this.instagramMessage = 'Vinculación cancelada.';
+      this.router.navigate([], { queryParams: {}, replaceUrl: true });
+    }
+  }
+
+  private loadInstagramStatus(): void {
+    this.instagramService.getStatus().subscribe({
+      next: (status) => (this.instagramStatus = status),
+      error: () => (this.instagramStatus = { connected: false })
+    });
+  }
+
+  connectInstagram(): void {
+    if (this.userId) this.instagramService.connectInstagram(this.userId);
+  }
+
+  syncInstagramPosts(): void {
+    this.instagramLoading = true;
+    this.instagramMessage = '';
+    this.instagramService.syncPosts().subscribe({
+      next: (res) => {
+        this.instagramMessage = res.message;
+        this.instagramLoading = false;
+      },
+      error: () => {
+        this.instagramMessage = 'Error al sincronizar los posts.';
+        this.instagramLoading = false;
+      }
+    });
+  }
+
+  disconnectInstagram(): void {
+    this.instagramLoading = true;
+    this.instagramService.disconnect().subscribe({
+      next: () => {
+        this.instagramStatus = { connected: false };
+        this.instagramMessage = 'Cuenta de Instagram desvinculada.';
+        this.instagramLoading = false;
+      },
+      error: () => {
+        this.instagramMessage = 'Error al desvincular.';
+        this.instagramLoading = false;
+      }
+    });
   }
 
   private loadUserSession(): void {
@@ -128,7 +193,10 @@ export class PersonalDetailsComponent implements OnInit {
   private loadUserRol(): void {
     this.subscriptions.add(
       this.loginService.userRol.subscribe({
-        next: (role) => (this.userRol = role),
+        next: (role) => {
+          this.userRol = role;
+          if (role === 'Tatuador') this.loadInstagramStatus();
+        },
         error: (err) => console.error('Error al obtener el rol', err),
       })
     );
