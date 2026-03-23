@@ -22,9 +22,9 @@
       "ES2022",
       "dom"
     ],
+    "skipLibCheck": true,
     "typeRoots": [
-      "node_modules/@types",
-      "src"
+      "node_modules/@types"
     ]
   },
   "angularCompilerOptions": {

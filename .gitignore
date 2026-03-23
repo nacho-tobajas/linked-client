@@ -6,6 +6,9 @@
 /out-tsc
 /bazel-out
 
+.claude/
+CLAUDE.md
+
 # Node
 /node_modules
 npm-debug.log

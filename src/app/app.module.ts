@@ -197,7 +197,7 @@ registerLocaleData(localeEsAr); // 👈 Esto registra el locale
         RegisterService,
         SweItemMenuService,
         { provide: DateAdapter, useClass: CustomDateAdapter },
-        { provide: LOCALE_ID, useValue: 'es' },
+        { provide: LOCALE_ID, useValue: 'es-AR' },
         { provide: MAT_DATE_FORMATS, useValue: CUSTOM_DATE_FORMATS },
         { provide: RECAPTCHA_V3_SITE_KEY, useValue: '6LfpC-ErAAAAAJxd1G8rldVAIzoe7ZdQY3By5j-o' },
         {
@@ -210,9 +210,12 @@ registerLocaleData(localeEsAr); // 👈 Esto registra el locale
             useClass: LoadingInterceptor,
             multi: true
         },
-        provideHttpClient(withInterceptorsFromDi()),
-        { provide: LOCALE_ID, useValue: 'es-AR' },
-        { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: HttpErrorInterceptor,
+            multi: true
+        },
+        provideHttpClient(withInterceptorsFromDi())
     ]
 })
 export class AppModule { }

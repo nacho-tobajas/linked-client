@@ -71,9 +71,7 @@ export class RegisterComponent implements OnInit {
     this.user.modificationuser = 'admin';
     this.user.modificationtimestamp = new Date();
     this.user.status = true;
-    this.user.password = this.encryptionService.encrypt(
-      this.registerForm.controls['password'].value
-    );
+    this.user.password = this.registerForm.controls['password'].value;
     this.user.birth_date = this.registerForm.controls['birth_date'].value;
     this.user.email = this.registerForm.controls['email'].value;
     this.registerService.register(this.user).subscribe(
@@ -81,7 +79,7 @@ export class RegisterComponent implements OnInit {
         this.showSuccessDialog();
         setTimeout(() => {
           this.router.navigate(['/login']);
-          this.dialog.closeAll;
+          this.dialog.closeAll();
         }, 2500);
       },
       (error) => {

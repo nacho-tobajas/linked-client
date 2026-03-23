@@ -24,8 +24,9 @@ import { RecaptchaComponent } from 'ng-recaptcha-angular19';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   loginError: string = '';
-  hide = true; 
-  isCaptchaValid = false;
+  hide = true;
+  captchaValid = false;
+  captchaToken: string | null = null;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -51,15 +52,11 @@ export class LoginComponent implements OnInit {
     return this.loginForm.get('password');
   }
 
-  get encryptedPassword() {
-    return this.encryptionService.encrypt(this.passwordControl?.value || '');
-  }
-
   login() {
     if (this.loginForm.valid && this.captchaToken) {
       const loginRequest: LoginRequest = {
         username: this.username?.value,
-        password: this.encryptedPassword,
+        password: this.passwordControl?.value,
         recaptchaToken: this.captchaToken
       };
 
@@ -91,9 +88,6 @@ export class LoginComponent implements OnInit {
       data: { message: errorMessage, type: 'error' },
     });
   }
-
-  captchaValid = false;
-  captchaToken: string | null = null;
 
   onCaptchaResolved(token: string | null) {
   this.captchaToken = token;

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { UserService } from 'src/app/services/user/user.service';
 import { MatDialog } from '@angular/material/dialog';
 import { UpdateRolComponent } from './update-rol/update-rol.component';
@@ -20,10 +21,11 @@ import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, Ma
     styleUrls: ['./usuarios.component.scss'],
     imports: [MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatIcon, FormsModule, MatFormField, MatLabel, MatSelect, MatOption, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatButton, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatIconButton, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow]
 })
-export class UsuariosComponent implements OnInit {
+export class UsuariosComponent implements OnInit, OnDestroy {
   usuarios: User[] = [];
   filteredUsuarios: User[] = [];
   today: Date = new Date();
+  private destroy$ = new Subject<void>();
 
   constructor(private userService: UserService, private dialog: MatDialog) {
   }
@@ -107,11 +109,18 @@ export class UsuariosComponent implements OnInit {
   }
 
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   loadUsuarios(): void {
-    this.userService.getAllUsers().subscribe((data) => {
-      this.usuarios = data;
-      this.filteredUsuarios = [...data];
-    });
+    this.userService.getAllUsers()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.usuarios = data;
+        this.filteredUsuarios = [...data];
+      });
   }
 
   onDateInput(event: any) {

@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { GestionarHorarioComponent } from './gestionar-horario/gestionar-horario.component';
 import { AgendaService } from './agenda.service';
@@ -30,7 +31,7 @@ import { MatTooltip } from '@angular/material/tooltip';
     styleUrl: './agenda.component.scss',
     imports: [MatButton, MatIcon, MatDivider, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, FormsModule, MatFormField, MatLabel, MatSelect, MatOption, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgIf, MatProgressSpinner, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, NgClass, MatIconButton, MatTooltip, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow, MatPaginator, DatePipe]
 })
-export class AgendaComponent implements OnInit {
+export class AgendaComponent implements OnInit, OnDestroy {
 
   displayedColumns: string[] = ['fecha', 'hora', 'cliente', 'estado', 'acciones'];
   dataSource = new MatTableDataSource<TurnoSesion>([]); 
@@ -59,6 +60,7 @@ export class AgendaComponent implements OnInit {
 
   isLoadingTurnos = false;
   errorTurnos: string | null = null;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private dialog: MatDialog, 
@@ -162,16 +164,21 @@ export class AgendaComponent implements OnInit {
     this.configurarFiltro(); 
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   private setupResponsiveColumns(): void {
-    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
-      if (result.matches) {
-        // pantalla pequeña: oculto la columna 'cliente' (alguna otra??)
-        this.displayedColumns = ['fecha', 'hora', 'estado', 'acciones'];
-      } else {
-        // pantalla grande: muestro todas
-        this.displayedColumns = ['fecha', 'hora', 'cliente', 'estado', 'acciones'];
-      }
-    });
+    this.breakpointObserver.observe([Breakpoints.Handset])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(result => {
+        if (result.matches) {
+          this.displayedColumns = ['fecha', 'hora', 'estado', 'acciones'];
+        } else {
+          this.displayedColumns = ['fecha', 'hora', 'cliente', 'estado', 'acciones'];
+        }
+      });
   }  
 
   abrirConfiguracionHorario(): void {
@@ -209,7 +216,6 @@ export class AgendaComponent implements OnInit {
       next: (turnosTatuador: TurnoTatuadorResponse[]) => {
         this.dataSource.data = turnosTatuador.map(tt => tt.turnoSesion);
         this.isLoadingTurnos = false;
-        console.log(this.dataSource.data)
       },
       error: (err) => {
         console.error("Error al cargar turnos:", err);
@@ -241,7 +247,6 @@ export class AgendaComponent implements OnInit {
 
 
   verDetalleTurno(turno: TurnoSesion): void {
-    console.log(turno);
     const dialogRef = this.dialog.open(AgendaDetalleComponent, {
       width: '600px',
       data: { turno: turno }
@@ -249,8 +254,6 @@ export class AgendaComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log('Acción recibida:', result.action, 'Mensaje:', result.message);
-
         if (result.action === 'confirmar') {
            this.gestionarTurno(result.turnoId, 'Confirmada'); 
         } else if (result.action === 'rechazar') {

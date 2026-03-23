@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, RouterLink } from '@angular/router';
@@ -20,12 +21,14 @@ import { PostTrabajoComponent } from '../../components/post-trabajo/post-trabajo
   imports: [NgIf, RouterLink, MatTooltip, MatIcon, MatDivider, NgFor, PostTrabajoComponent]
 })
 
-export class HomeComponent {
+export class HomeComponent implements OnInit, OnDestroy {
 
-  userLoginOn: boolean = false; // Estado de login
+  userLoginOn: boolean = false;
   userRol: string | null = null;
   feed: Trabajo[] = [];
   misLikes: Set<number> = new Set();
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private router: Router,
@@ -36,20 +39,27 @@ export class HomeComponent {
   ) { }
 
   ngOnInit(): void {
-    this.loginService.userLoginOn.subscribe(logged => {
-      this.userLoginOn = logged;
-      this.loginService.userRol.subscribe(rol => {
-        this.userRol = rol;
+    this.loginService.userLoginOn
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(logged => {
+        this.userLoginOn = logged;
+        if (logged) {
+          this.cargarMisLikes();
+        } else {
+          this.misLikes.clear();
+        }
       });
 
-      if (logged) {
-        this.cargarMisLikes();
-      } else {
-        this.misLikes.clear();
-      }
-    });
+    this.loginService.userRol
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(rol => { this.userRol = rol; });
 
     this.cargarFeed();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   abrirDetalle(trabajo: Trabajo) {

@@ -1,22 +1,25 @@
-import * as CryptoJS from 'crypto-js';
 import { Injectable } from '@angular/core';
 
+/**
+ * Servicio de encriptación.
+ *
+ * La encriptación AES client-side con clave hardcodeada fue eliminada porque:
+ * - La clave es visible en el bundle JS (no ofrece seguridad real).
+ * - HTTPS protege la contraseña en tránsito de forma estándar y correcta.
+ * - Es incompatible con backends que no compartan la misma clave (ej. Spring Security).
+ *
+ * Si en el futuro se necesita encriptación extra (ej. clave pública derivada del servidor),
+ * implementarla aquí obteniendo la clave desde el backend, nunca hardcodeada.
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class EncryptionService {
-  private key = CryptoJS.enc.Hex.parse(
-    '91e87395dcdc7494f82d3a67b5fa118d264d92fe75f4a7c3d4f4d5e12348ab93'
-  ); // Tu clave de 32 bytes en Hex
-  private iv = CryptoJS.enc.Hex.parse('dcf2a4bf8b9876e5df8c2ba0a77d234b'); // Tu IV de 16 bytes en Hex
-
+  /**
+   * Devuelve el texto tal cual. La protección es responsabilidad de HTTPS.
+   * Mantener la firma del método para no romper llamadas existentes durante la migración.
+   */
   encrypt(text: string): string {
-    const encrypted = CryptoJS.AES.encrypt(text, this.key, {
-      iv: this.iv,
-      mode: CryptoJS.mode.CBC, //Cifrado de Blockchain
-      padding: CryptoJS.pad.Pkcs7
-    });
-    return encrypted.toString();
+    return text;
   }
-
 }
