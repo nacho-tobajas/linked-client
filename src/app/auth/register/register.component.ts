@@ -61,7 +61,7 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void { }
 
-  register() {
+  async register() {
     this.user.surname = this.registerForm.controls['surname'].value;
     this.user.realname = this.registerForm.controls['realname'].value;
     this.user.username = this.registerForm.controls['username'].value;
@@ -71,7 +71,7 @@ export class RegisterComponent implements OnInit {
     this.user.modificationuser = 'admin';
     this.user.modificationtimestamp = new Date();
     this.user.status = true;
-    this.user.password = this.registerForm.controls['password'].value;
+    this.user.password = await this.encryptionService.encrypt(this.registerForm.controls['password'].value);
     this.user.birth_date = this.registerForm.controls['birth_date'].value;
     this.user.email = this.registerForm.controls['email'].value;
     this.registerService.register(this.user).subscribe(

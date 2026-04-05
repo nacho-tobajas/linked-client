@@ -23,10 +23,12 @@ $nav-bar-background-color: #393e31;
   //unclassified colors
   --light-gray-background-color: #f5f5f5;
   --white-color: #ffffff;
+  --card-background-color: #ffffff;
   --text-color: #414e3b;
+  --text-secondary-color: #666666;
   --button-text-color: #f5f5f5;
-  --input-text-color: #f5f5f5;
-  --line-divider: #ccd0d0;
+  --input-text-color: #414e3b;
+  --line-divider: #dde0da;
 
   //dropdown component
   --dropdown-label-txt-color: #393e31;
@@ -44,35 +46,37 @@ $nav-bar-background-color: #393e31;
 }
 
 .dark-theme {
-  //body
-  --bs-body-bg: #1c1c1c;
-  --body-background-color: #1e1e1e;
-  --title-text-color: #b0a881;
+  //body — gris verdáceo, no demasiado oscuro
+  --body-background-color: #2e332b;
+  --bs-body-bg: #2a2e27;
+  --title-text-color: #d0dbc8;
 
   //menu
-  --menu-text-color: #ccd0d0;
-  --menu-arrow-color: #ccd0d0;
-  --menu-open-button: #393e31;
+  --menu-text-color: #d8e2d4;
+  --menu-arrow-color: #a4ae9c;
+  --menu-open-button: #383d33;
 
   //unclassified colors
-  --light-gray-background-color: #1e1e1e;
-  --white-color: #121212;
-  --text-color: #b0a881;
-  --button-text-color: #b0a881;
-  --input-text-color: #b0a881;
-  --line-divider: #515046;
+  --light-gray-background-color: #383d33;
+  --white-color: #383d33;
+  --card-background-color: #404840;
+  --text-color: #c4d0bc;
+  --text-secondary-color: #a4ae9c;
+  --button-text-color: #d4ddd0;
+  --input-text-color: #d4ddd0;
+  --line-divider: #484e42;
 
   //dropdown component
-  --dropdown-label-txt-color: #ccd0d0;
-  --dropdown-txt-arrow-inside-color: #b0a881;
+  --dropdown-label-txt-color: #c8d4c0;
+  --dropdown-txt-arrow-inside-color: #8a9884;
 
   //Titulos para cada listado gestionar sistema
-  --title-crud-h3: #f5f5f5;
+  --title-crud-h3: #c8d4c0;
 
   //carousel
-  --carousel-dot-color: #555568;
-  --carousel-arrow-color: #b0a881;
+  --carousel-dot-color: #6b7866;
+  --carousel-arrow-color: #c0cbb8;
 
   //footer
-  --footer-text-color: #7a7e73;
+  --footer-text-color: #6b7866;
 }

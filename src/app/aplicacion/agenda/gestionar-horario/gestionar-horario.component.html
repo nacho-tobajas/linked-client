@@ -1,4 +1,5 @@
-<div mat-dialog-title class="dialog-title-container"> <span>Gestionar Horario Semanal</span>
+<div mat-dialog-title class="dialog-title-container">
+  <span>Gestionar Horario Semanal</span>
 </div>
 
 <mat-dialog-content class="mat-typography">
@@ -15,47 +16,55 @@
   </div>
 
   <form *ngIf="!isLoading && !errorCarga" [formGroup]="horarioForm">
-
     <div formArrayName="dias" class="dias-container">
-      <div *ngFor="let diaGroup of diasFormArray.controls; let i = index" [formGroupName]="i" class="dia-card mat-elevation-z2">
-
+      <div
+        *ngFor="let diaGroup of diasFormArray.controls; let i = index"
+        [formGroupName]="i"
+        class="dia-card"
+        [class.dia-card--activo]="diaGroup.get('enabled')?.value"
+      >
         <div class="dia-header">
           <h3>{{ diasSemana[diaGroup.get('dia_semana')?.value] }}</h3>
           <mat-slide-toggle formControlName="enabled" color="primary"></mat-slide-toggle>
         </div>
 
         <div *ngIf="diaGroup.get('enabled')?.value" class="dia-inputs">
-          <mat-form-field appearance="outline">
-            <mat-label>Hora Inicio</mat-label>
+          <mat-form-field appearance="outline" subscriptSizing="dynamic">
+            <mat-label>Inicio</mat-label>
             <input matInput type="time" formControlName="hora_inicio" required>
-             <mat-error *ngIf="diaGroup.get('hora_inicio')?.hasError('required')">Requerido</mat-error>
-             <mat-error *ngIf="diaGroup.get('hora_inicio')?.hasError('pattern')">Formato HH:MM</mat-error>
+            <mat-error *ngIf="diaGroup.get('hora_inicio')?.hasError('required')">Requerido</mat-error>
+            <mat-error *ngIf="diaGroup.get('hora_inicio')?.hasError('pattern')">HH:MM</mat-error>
           </mat-form-field>
 
-          <mat-form-field appearance="outline">
-            <mat-label>Hora Fin</mat-label>
+          <mat-form-field appearance="outline" subscriptSizing="dynamic">
+            <mat-label>Fin</mat-label>
             <input matInput type="time" formControlName="hora_fin" required>
             <mat-error *ngIf="diaGroup.get('hora_fin')?.hasError('required')">Requerido</mat-error>
-            <mat-error *ngIf="diaGroup.get('hora_fin')?.hasError('pattern')">Formato HH:MM</mat-error>
+            <mat-error *ngIf="diaGroup.get('hora_fin')?.hasError('pattern')">HH:MM</mat-error>
           </mat-form-field>
 
-          <mat-form-field appearance="outline">
-            <mat-label>Duración Turno (min)</mat-label>
+          <mat-form-field appearance="outline" subscriptSizing="dynamic">
+            <mat-label>Duración (min)</mat-label>
             <input matInput type="number" formControlName="duracion_turno_min" min="1" required>
-             <mat-error *ngIf="diaGroup.get('duracion_turno_min')?.hasError('required')">Requerido</mat-error>
-             <mat-error *ngIf="diaGroup.get('duracion_turno_min')?.hasError('min')">Mínimo 1</mat-error>
+            <mat-error *ngIf="diaGroup.get('duracion_turno_min')?.hasError('required')">Requerido</mat-error>
+            <mat-error *ngIf="diaGroup.get('duracion_turno_min')?.hasError('min')">Mín. 1</mat-error>
           </mat-form-field>
         </div>
 
         <div *ngIf="!diaGroup.get('enabled')?.value" class="dia-disabled-message">
-            Día no laborable
+          Libre
         </div>
+      </div>
+    </div>
+  </form>
 
-      </div> </div> </form> </mat-dialog-content> <mat-dialog-actions align="end">
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
   <button mat-stroked-button (click)="onCancel()">Cancelar</button>
   <button mat-raised-button class="create-button" (click)="onSubmit()" [disabled]="horarioForm.invalid || isSaving || !horarioForm.dirty">
     <mat-icon *ngIf="!isSaving">save</mat-icon>
     <mat-progress-spinner *ngIf="isSaving" diameter="20" mode="indeterminate"></mat-progress-spinner>
     {{ isSaving ? 'Guardando...' : 'Guardar Horario' }}
   </button>
-  </mat-dialog-actions>
+</mat-dialog-actions>

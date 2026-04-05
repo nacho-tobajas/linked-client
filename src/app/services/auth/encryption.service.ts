@@ -1,25 +1,46 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
-/**
- * Servicio de encriptación.
- *
- * La encriptación AES client-side con clave hardcodeada fue eliminada porque:
- * - La clave es visible en el bundle JS (no ofrece seguridad real).
- * - HTTPS protege la contraseña en tránsito de forma estándar y correcta.
- * - Es incompatible con backends que no compartan la misma clave (ej. Spring Security).
- *
- * Si en el futuro se necesita encriptación extra (ej. clave pública derivada del servidor),
- * implementarla aquí obteniendo la clave desde el backend, nunca hardcodeada.
- */
 @Injectable({
   providedIn: 'root',
 })
 export class EncryptionService {
-  /**
-   * Devuelve el texto tal cual. La protección es responsabilidad de HTTPS.
-   * Mantener la firma del método para no romper llamadas existentes durante la migración.
-   */
-  encrypt(text: string): string {
-    return text;
+  private cachedKey: CryptoKey | null = null;
+
+  constructor(private http: HttpClient) {}
+
+  async encrypt(text: string): Promise<string> {
+    const key = await this.getPublicKey();
+    const encrypted = await window.crypto.subtle.encrypt(
+      { name: 'RSA-OAEP' },
+      key,
+      new TextEncoder().encode(text)
+    );
+    return btoa(String.fromCharCode(...new Uint8Array(encrypted)));
+  }
+
+  private async getPublicKey(): Promise<CryptoKey> {
+    if (this.cachedKey) return this.cachedKey;
+
+    const { publicKey } = await firstValueFrom(
+      this.http.get<{ publicKey: string }>(`${environment.urlApi}auth/public-key`)
+    );
+
+    const pem = publicKey
+      .replace('-----BEGIN PUBLIC KEY-----', '')
+      .replace('-----END PUBLIC KEY-----', '')
+      .replace(/\s/g, '');
+    const binaryDer = Uint8Array.from(atob(pem), c => c.charCodeAt(0));
+
+    this.cachedKey = await window.crypto.subtle.importKey(
+      'spki',
+      binaryDer,
+      { name: 'RSA-OAEP', hash: 'SHA-256' },
+      false,
+      ['encrypt']
+    );
+    return this.cachedKey;
   }
 }

@@ -52,11 +52,11 @@ export class LoginComponent implements OnInit {
     return this.loginForm.get('password');
   }
 
-  login() {
+  async login() {
     if (this.loginForm.valid && this.captchaToken) {
       const loginRequest: LoginRequest = {
         username: this.username?.value,
-        password: this.passwordControl?.value,
+        password: await this.encryptionService.encrypt(this.passwordControl?.value),
         recaptchaToken: this.captchaToken
       };
 

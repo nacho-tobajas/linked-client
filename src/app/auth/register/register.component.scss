@@ -6,7 +6,7 @@
     align-items: flex-start;
     padding-top: 5vh;
     min-height: 100vh;
-    background-color: #f5f7fa;
+    background-color: var(--bs-body-bg);
     box-sizing: border-box;
     padding-left: 20px;
     padding-right: 20px;
@@ -19,7 +19,7 @@
     padding: 2rem;
     border-radius: 16px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-    background: #fff;
+    background: var(--card-background-color);
 
     .card-header {
         text-align: center;
@@ -46,12 +46,12 @@
         h2 {
             font-size: 1.8rem;
             font-weight: 700;
-            color: #333;
+            color: var(--title-text-color);
             margin: 0 0 0.5rem 0;
         }
 
         .subtitle {
-            color: #666;
+            color: var(--text-secondary-color);
             font-size: 0.95rem;
             margin: 0;
         }
@@ -67,10 +67,9 @@
         gap: 16px;
     }
 
-    // Ajuste de iconos dentro de inputs
     ::ng-deep .mat-mdc-form-field-icon-prefix {
         padding-right: 8px;
-        color: #999;
+        color: var(--text-secondary-color);
     }
 
     .custom-accordion {
@@ -78,13 +77,13 @@
 
         mat-expansion-panel {
             box-shadow: none;
-            border: 1px solid #eee;
+            border: 1px solid var(--line-divider);
             border-radius: 8px !important;
         }
 
         .panel-icon {
             margin-right: 10px;
-            color: #777;
+            color: var(--text-secondary-color);
         }
 
         .mt-2 {
@@ -109,11 +108,11 @@
 
     .card-footer {
         text-align: center;
-        border-top: 1px solid #eee;
+        border-top: 1px solid var(--line-divider);
         padding-top: 1.5rem;
         margin-top: 1.5rem;
         font-size: 0.9rem;
-        color: #666;
+        color: var(--text-secondary-color);
 
         .link-action {
             color: $main-color;
@@ -135,7 +134,7 @@
         padding-top: 20px;
         padding-left: 10px;
         padding-right: 10px;
-        background-color: #fff;
+        background-color: var(--card-background-color);
     }
 
     .register-card {

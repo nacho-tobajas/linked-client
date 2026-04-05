@@ -51,9 +51,9 @@ export class ResetPassComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  resetPass(){
+  async resetPass(){
     this.token = this.tokenControl?.value;
-    this.password = this.encryptionService.encrypt(this.newPasswordControl?.value);
+    this.password = await this.encryptionService.encrypt(this.newPasswordControl?.value);
 
     if (this.ResetPassForm.valid) {
       this.resetPasswordService.resetPassword(this.token, this.password).subscribe({

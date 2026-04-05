@@ -3,7 +3,7 @@
 /* Contenedor principal */
 .screen-container {
   min-height: 100vh;
-  background-color: #fafafa;
+  background-color: var(--bs-body-bg);
   display: flex;
   justify-content: center;
   padding: 20px;
@@ -31,7 +31,7 @@
   border-radius: 50%;
   display: block;
   stroke-width: 3;
-  stroke: #4caf50; // Ese color o el de la pagina?
+  stroke: #4caf50;
   stroke-miterlimit: 10;
   box-shadow: inset 0px 0px 0px #4caf50;
   animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
@@ -53,28 +53,21 @@
 }
 
 @keyframes scaleIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.5);
-  }
-
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
+  0% { opacity: 0; transform: scale(0.5); }
+  100% { opacity: 1; transform: scale(1); }
 }
 
 /* Tipografía */
 .title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #333;
+  color: var(--title-text-color);
   margin: 0 0 8px 0;
 }
 
 .subtitle {
   text-align: center;
-  color: #666;
+  color: var(--text-secondary-color);
   font-size: 0.95rem;
   margin-bottom: 30px;
   line-height: 1.5;
@@ -82,7 +75,7 @@
 
 /* Tarjeta Ticket */
 .ticket-card {
-  background: white;
+  background: var(--card-background-color);
   width: 100%;
   border-radius: 16px;
   overflow: hidden;
@@ -92,11 +85,11 @@
 
 .ticket-header {
   padding: 24px;
-  background-color: #fff;
+  background-color: var(--card-background-color);
 
   .label {
     font-size: 0.7rem;
-    color: #999;
+    color: var(--text-secondary-color);
     letter-spacing: 1px;
     font-weight: bold;
     display: block;
@@ -113,29 +106,29 @@
       height: 48px;
       border-radius: 50%;
       object-fit: cover;
-      border: 2px solid #eee;
+      border: 2px solid var(--line-divider);
     }
 
     .artist-name {
       font-size: 1.1rem;
       font-weight: 600;
-      color: #222;
+      color: var(--title-text-color);
     }
   }
 }
 
-/* Línea divisoria */
+/* Línea divisoria tipo ticket */
 .ticket-divider {
   position: relative;
   height: 20px;
-  background: white;
+  background: var(--card-background-color);
   display: flex;
   align-items: center;
 
   .dashed-line {
     flex: 1;
     height: 1px;
-    border-top: 2px dashed #eee;
+    border-top: 2px dashed var(--line-divider);
     margin: 0 10px;
   }
 
@@ -143,19 +136,14 @@
   .notch-right {
     width: 20px;
     height: 20px;
-    background-color: #fafafa;
+    background-color: var(--bs-body-bg);
     border-radius: 50%;
     position: absolute;
     top: 0;
   }
 
-  .notch-left {
-    left: -10px;
-  }
-
-  .notch-right {
-    right: -10px;
-  }
+  .notch-left  { left: -10px; }
+  .notch-right { right: -10px; }
 }
 
 .ticket-body {
@@ -171,8 +159,8 @@
       gap: 10px;
 
       mat-icon {
-        color: #333;
-        background: #f0f0f0;
+        color: var(--text-color);
+        background: var(--light-gray-background-color);
         padding: 8px;
         border-radius: 8px;
         width: 36px;
@@ -190,7 +178,7 @@
 
       .label {
         font-size: 0.7rem;
-        color: #999;
+        color: var(--text-secondary-color);
         font-weight: bold;
         margin-bottom: 2px;
       }
@@ -198,7 +186,7 @@
       .value {
         font-size: 1rem;
         font-weight: 600;
-        color: #333;
+        color: var(--title-text-color);
       }
     }
   }
@@ -221,6 +209,6 @@
   }
 
   .btn-secondary {
-    color: #666;
+    color: var(--text-secondary-color);
   }
 }

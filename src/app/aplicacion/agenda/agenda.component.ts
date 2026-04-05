@@ -183,7 +183,7 @@ export class AgendaComponent implements OnInit, OnDestroy {
 
   abrirConfiguracionHorario(): void {
     const dialogRef = this.dialog.open(GestionarHorarioComponent, {
-      width: '85%', maxWidth: '800px', disableClose: true,
+      panelClass: 'horario-dialog', disableClose: true,
     });
   }
 

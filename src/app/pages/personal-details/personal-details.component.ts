@@ -48,7 +48,10 @@ export class PersonalDetailsComponent implements OnInit, OnDestroy {
   // Instagram
   instagramStatus: InstagramStatus = { connected: false };
   instagramLoading: boolean = false;
+  instagramLoadingMessage: string = '';
   instagramMessage: string = '';
+  instagramMessageIsError: boolean = false;
+  showInstagramWarning: boolean = false;
 
   registerForm = this.formBuilder.group({
     id: this.formBuilder.control<number | null>(null),
@@ -82,11 +85,26 @@ export class PersonalDetailsComponent implements OnInit, OnDestroy {
 
   private handleInstagramCallback(): void {
     const igParam = this.route.snapshot.queryParamMap.get('instagram');
+    const reason = this.route.snapshot.queryParamMap.get('reason');
+
     if (igParam === 'success') {
       this.instagramMessage = 'Instagram vinculado correctamente.';
-      this.router.navigate([], { queryParams: {}, replaceUrl: true });
+      this.instagramMessageIsError = false;
     } else if (igParam === 'denied') {
       this.instagramMessage = 'Vinculación cancelada.';
+      this.instagramMessageIsError = false;
+    } else if (igParam === 'error') {
+      this.instagramMessageIsError = true;
+      if (reason === 'no_business_account') {
+        this.instagramMessage =
+          'Tu cuenta de Instagram no es de tipo Creador ni Empresa. ' +
+          'Convertí tu cuenta desde la app de Instagram antes de intentar vincularla.';
+      } else {
+        this.instagramMessage = 'Ocurrió un error al vincular tu cuenta de Instagram. Intentá de nuevo.';
+      }
+    }
+
+    if (igParam) {
       this.router.navigate([], { queryParams: {}, replaceUrl: true });
     }
   }
@@ -99,31 +117,54 @@ export class PersonalDetailsComponent implements OnInit, OnDestroy {
   }
 
   connectInstagram(): void {
-    if (this.userId) this.instagramService.connectInstagram(this.userId);
+    this.showInstagramWarning = true;
+  }
+
+  confirmConnectInstagram(): void {
+    this.showInstagramWarning = false;
+    if (this.userRol !== 'Tatuador') {
+      this.instagramMessage = 'Solo los tatuadores pueden vincular su cuenta de Instagram.';
+      this.instagramMessageIsError = true;
+      return;
+    }
+    if (this.userId) {
+      this.instagramService.connectInstagram(this.userId, this.loginService.userToken);
+    }
+  }
+
+  cancelConnectInstagram(): void {
+    this.showInstagramWarning = false;
   }
 
   syncInstagramPosts(): void {
     this.instagramLoading = true;
+    this.instagramLoadingMessage = 'Sincronizando posts...';
     this.instagramMessage = '';
     this.instagramService.syncPosts().subscribe({
       next: (res) => {
         this.instagramMessage = res.message;
+        this.instagramMessageIsError = false;
         this.instagramLoading = false;
+        if (this.userId) this.loadUserData(this.userId);
       },
-      error: () => {
-        this.instagramMessage = 'Error al sincronizar los posts.';
+      error: (err) => {
+        this.instagramMessage = err?.error?.message || 'Error al sincronizar los posts.';
+        this.instagramMessageIsError = true;
         this.instagramLoading = false;
+        this.loadInstagramStatus();
       }
     });
   }
 
   disconnectInstagram(): void {
     this.instagramLoading = true;
+    this.instagramLoadingMessage = 'Desvinculando cuenta...';
     this.instagramService.disconnect().subscribe({
       next: () => {
         this.instagramStatus = { connected: false };
         this.instagramMessage = 'Cuenta de Instagram desvinculada.';
         this.instagramLoading = false;
+        if (this.userId) this.loadUserData(this.userId);
       },
       error: () => {
         this.instagramMessage = 'Error al desvincular.';
@@ -208,7 +249,12 @@ export class PersonalDetailsComponent implements OnInit, OnDestroy {
 
   /** Manejo del archivo seleccionado */
  
+  get isPhotoBlockedByInstagram(): boolean {
+    return this.userRol === 'Tatuador' && this.instagramStatus.connected;
+  }
+
   triggerFileInput(): void {
+    if (this.isPhotoBlockedByInstagram) return;
     this.fileInput.nativeElement.click();
   }
 
@@ -289,8 +335,8 @@ export class PersonalDetailsComponent implements OnInit, OnDestroy {
 
     requests.push(this.userService.updateUser(this.userId, updatedUser));
 
-    // 2. Subir imagen si hay nueva
-    if (this.selectedFile) {
+    // 2. Subir imagen si hay nueva y no está bloqueada por Instagram
+    if (this.selectedFile && !this.isPhotoBlockedByInstagram) {
       requests.push(this.userService.updateProfilePhoto(this.userId, this.selectedFile));
     }
 

@@ -1,0 +1,105 @@
+import { Component, OnInit } from '@angular/core';
+import { NgIf, NgFor } from '@angular/common';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import { MatIconButton } from '@angular/material/button';
+
+import { User } from 'src/app/models/user.model';
+import { Trabajo } from 'src/app/models/trabajos/trabajos.model';
+import { UserService } from 'src/app/services/user/user.service';
+import { TrabajosService } from 'src/app/services/trabajos/trabajos.service';
+import { InstagramService, InstagramStatus } from 'src/app/services/instagram/instagram.service';
+import { ServerUrlPipe } from 'src/app/pipes/server-url.pipe';
+import { PostTileComponent } from 'src/app/components/post-tile/post-tile.component';
+import { DetalleTrabajoComponent } from '../detalle-trabajo/detalle-trabajo.component';
+
+@Component({
+  selector: 'app-mi-portfolio',
+  imports: [NgIf, NgFor, MatIcon, MatIconButton, ServerUrlPipe, PostTileComponent],
+  templateUrl: './mi-portfolio.component.html',
+  styleUrl: './mi-portfolio.component.scss'
+})
+export class MiPortfolioComponent implements OnInit {
+
+  user: User | null = null;
+  trabajos: Trabajo[] = [];
+  instagramStatus: InstagramStatus = { connected: false };
+
+  isLoading = true;
+  instagramLoading = false;
+  instagramLoadingMessage = '';
+  syncMessage = '';
+  syncMessageIsError = false;
+
+  private userId: number | null = null;
+
+  constructor(
+    private userService: UserService,
+    private trabajosService: TrabajosService,
+    private instagramService: InstagramService,
+    private dialog: MatDialog,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.userService.getUserId().subscribe(id => {
+      if (!id) {
+        this.router.navigate(['/inicio']);
+        return;
+      }
+      this.userId = id;
+      this.loadData();
+      this.loadInstagramStatus();
+    });
+  }
+
+  private loadData(): void {
+    if (!this.userId) return;
+    this.userService.getUser(this.userId).subscribe({
+      next: (user) => (this.user = user),
+      error: () => {}
+    });
+    this.trabajosService.getTrabajosPorTatuador(this.userId).subscribe({
+      next: (data) => { this.trabajos = data; this.isLoading = false; },
+      error: () => { this.isLoading = false; }
+    });
+  }
+
+  private loadInstagramStatus(): void {
+    this.instagramService.getStatus().subscribe({
+      next: (status) => (this.instagramStatus = status),
+      error: () => (this.instagramStatus = { connected: false })
+    });
+  }
+
+  syncInstagram(): void {
+    this.instagramLoading = true;
+    this.instagramLoadingMessage = 'Sincronizando con Instagram...';
+    this.syncMessage = '';
+    this.instagramService.syncPosts().subscribe({
+      next: (res) => {
+        this.syncMessage = res.message;
+        this.syncMessageIsError = false;
+        this.instagramLoading = false;
+        this.loadData();
+      },
+      error: (err) => {
+        this.syncMessage = err?.error?.message || 'Error al sincronizar con Instagram.';
+        this.syncMessageIsError = true;
+        this.instagramLoading = false;
+        this.loadInstagramStatus();
+      }
+    });
+  }
+
+  abrirDetalle(trabajo: Trabajo): void {
+    this.dialog.open(DetalleTrabajoComponent, {
+      width: '900px',
+      maxWidth: '100vw',
+      maxHeight: '90vh',
+      panelClass: 'custom-modal-panel',
+      data: { trabajo, isLiked: false }
+    });
+  }
+}

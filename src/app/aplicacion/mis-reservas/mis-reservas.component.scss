@@ -13,6 +13,7 @@
   h2 {
     margin: 0;
     font-weight: 500;
+    color: var(--title-text-color);
   }
 }
 
@@ -24,7 +25,7 @@
   align-items: center;
   justify-content: center;
   padding: 60px 0;
-  color: #666;
+  color: var(--text-secondary-color);
   gap: 16px;
 }
 
@@ -60,27 +61,15 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px;
-  background-color: #fafafa;
-  border-bottom: 1px solid #eee;
-  border-left: 6px solid #ccc; // Color default
+  background-color: var(--light-gray-background-color);
+  border-bottom: 1px solid var(--line-divider);
+  border-left: 6px solid var(--line-divider);
 
-  // Colores de borde según estado
-  &.border-pendiente {
-    border-left-color: #f57f17;
-  }
-
-  &.border-confirmada {
-    border-left-color: #2e7d32;
-  }
-
+  &.border-pendiente   { border-left-color: #f57f17; }
+  &.border-confirmada  { border-left-color: #2e7d32; }
   &.border-rechazada,
-  &.border-cancelada {
-    border-left-color: #c62828;
-  }
-
-  &.border-completada {
-    border-left-color: #006064;
-  }
+  &.border-cancelada   { border-left-color: #c62828; }
+  &.border-completada  { border-left-color: #006064; }
 
   .fecha-box {
     display: flex;
@@ -92,13 +81,13 @@
     .dia {
       font-size: 1.8rem;
       font-weight: bold;
-      color: #333;
+      color: var(--title-text-color);
     }
 
     .mes {
       font-size: 0.8rem;
       font-weight: 600;
-      color: #777;
+      color: var(--text-secondary-color);
     }
   }
 
@@ -106,9 +95,9 @@
     display: flex;
     align-items: center;
     gap: 4px;
-    color: #555;
+    color: var(--text-color);
     font-size: 0.9rem;
-    margin-right: auto; // Empuja el estado a la derecha
+    margin-right: auto;
 
     mat-icon {
       font-size: 18px;
@@ -125,22 +114,11 @@
     text-transform: uppercase;
     color: white;
 
-    &.bg-pendiente {
-      background-color: #f57f17;
-    }
-
-    &.bg-confirmada {
-      background-color: #2e7d32;
-    }
-
+    &.bg-pendiente  { background-color: #f57f17; }
+    &.bg-confirmada { background-color: #2e7d32; }
     &.bg-rechazada,
-    &.bg-cancelada {
-      background-color: #c62828;
-    }
-
-    &.bg-completada {
-      background-color: #006064;
-    }
+    &.bg-cancelada  { background-color: #c62828; }
+    &.bg-completada { background-color: #006064; }
   }
 }
 
@@ -161,7 +139,7 @@
     }
 
     small {
-      color: #888;
+      color: var(--text-secondary-color);
       font-size: 0.75rem;
       text-transform: uppercase;
     }
@@ -170,11 +148,12 @@
       margin: 0;
       font-size: 1rem;
       font-weight: 500;
+      color: var(--title-text-color);
     }
   }
 
   .descripcion-corta {
-    color: #666;
+    color: var(--text-secondary-color);
     font-style: italic;
     font-size: 0.9rem;
     margin: 0;

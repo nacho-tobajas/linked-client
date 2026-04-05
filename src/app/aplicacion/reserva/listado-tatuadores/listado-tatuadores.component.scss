@@ -1,12 +1,12 @@
 @import '../../../../assets/styles/variables';
 
-/* Contenedor Principal con márgenes */
+/* Contenedor Principal */
 .screen-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px 24px;
   min-height: 100vh;
-  background-color: #fafafa;
+  background-color: var(--bs-body-bg);
 }
 
 /* Encabezado */
@@ -17,21 +17,21 @@
   margin-bottom: 30px;
 
   .btn-back {
-    color: #555;
+    color: var(--text-secondary-color);
   }
 
   .title-container {
     h1 {
       font-size: 1.8rem;
       margin: 0;
-      color: #222;
+      color: var(--title-text-color);
       letter-spacing: -0.5px;
       font-weight: 700;
     }
 
     p {
       margin: 4px 0 0;
-      color: #666;
+      color: var(--text-secondary-color);
       font-size: 0.95rem;
     }
   }
@@ -54,23 +54,28 @@
     left: 16px;
     top: 50%;
     transform: translateY(-50%);
-    color: #999;
+    color: var(--text-secondary-color);
   }
 
   .search-input {
     width: 100%;
     padding: 14px 16px 14px 48px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--line-divider);
     border-radius: 30px;
     font-size: 1rem;
     outline: none;
     transition: all 0.2s;
-    background: #fff;
+    background: var(--card-background-color);
+    color: var(--text-color);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 
     &:focus {
       border-color: $main-color;
       box-shadow: 0 4px 12px rgba(63, 81, 181, 0.15);
+    }
+
+    &::placeholder {
+      color: var(--text-secondary-color);
     }
   }
 }
@@ -85,8 +90,8 @@
 
 /* Tarjeta Individual */
 .tatuador-card {
-  background: #fff;
-  border: 1px solid #eee;
+  background: var(--card-background-color);
+  border: 1px solid var(--line-divider);
   border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
@@ -101,7 +106,7 @@
 
   &.selected {
     border: 2px solid $main-color;
-    background-color: #fcfdff;
+    background-color: var(--card-background-color);
   }
 
   /* Parte Superior (Avatar) */
@@ -109,14 +114,14 @@
     padding: 24px;
     display: flex;
     justify-content: center;
-    background: linear-gradient(to bottom, #f9f9f9 50%, #fff 50%);
+    background: linear-gradient(to bottom, var(--light-gray-background-color) 50%, var(--card-background-color) 50%);
 
     .avatar {
       width: 90px;
       height: 90px;
       border-radius: 50%;
       object-fit: cover;
-      border: 4px solid #fff;
+      border: 4px solid var(--card-background-color);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
   }
@@ -130,13 +135,13 @@
     h3 {
       margin: 0 0 1px;
       font-size: 1.2rem;
-      color: #333;
+      color: var(--title-text-color);
     }
 
     .username {
       margin: 0 0 12px 0;
       font-size: 0.9rem;
-      color: #888;
+      color: var(--text-secondary-color);
       font-weight: 500;
     }
   }
@@ -146,7 +151,7 @@
     justify-content: center;
     gap: 15px;
     margin-bottom: 16px;
-    color: #666;
+    color: var(--text-color);
     font-size: 0.85rem;
 
     .meta-item {
@@ -158,12 +163,11 @@
         font-size: 18px;
         width: 18px;
         height: 18px;
-        color: #888;
+        color: var(--text-secondary-color);
       }
     }
   }
 
-  // especialidades 
   .chips-wrapper {
     display: flex;
     justify-content: center;
@@ -171,8 +175,8 @@
     gap: 6px;
 
     .chip {
-      background: #f0f0f0;
-      color: #555;
+      background: var(--light-gray-background-color);
+      color: var(--text-color);
       font-size: 0.75rem;
       padding: 4px 10px;
       border-radius: 12px;
@@ -180,7 +184,7 @@
     }
 
     .chip-more {
-      background: #e8eaf6;
+      background: rgba($main-color, 0.15);
       color: $main-color;
       font-size: 0.75rem;
       padding: 4px 8px;
@@ -192,7 +196,7 @@
   /* Botones abajo */
   .card-actions {
     padding: 16px;
-    border-top: 1px solid #f0f0f0;
+    border-top: 1px solid var(--line-divider);
     display: flex;
     gap: 10px;
 
@@ -208,12 +212,12 @@
 
     .btn-secondary {
       background: transparent;
-      border: 1px solid #ddd;
-      color: #555;
+      border: 1px solid var(--line-divider);
+      color: var(--text-color);
 
       &:hover {
-        border-color: #333;
-        color: #333;
+        border-color: var(--text-color);
+        color: var(--title-text-color);
       }
     }
 
@@ -233,7 +237,7 @@
 .empty-state {
   text-align: center;
   padding: 60px;
-  color: #888;
+  color: var(--text-secondary-color);
 
   mat-icon {
     font-size: 48px;
@@ -251,20 +255,17 @@
     padding: 16px 12px;
   }
 
-  // Forzar 1 sola columna 
   .tatuadores-grid {
     grid-template-columns: 1fr;
     gap: 16px;
   }
 
-  // Transformar la Tarjeta en un Item de Lista 
   .tatuador-card {
     flex-direction: row;
     flex-wrap: wrap;
     align-items: flex-start;
     padding: 16px;
 
-    /* AJUSTE DE LA FOTO (A la izquierda y chica) */
     .card-top {
       background: none;
       padding: 0;
@@ -280,7 +281,6 @@
       }
     }
 
-    /* AJUSTE DEL CONTENIDO (A la derecha y alineado a la izq) */
     .card-content {
       padding: 0;
       text-align: left;
@@ -311,12 +311,11 @@
       }
     }
 
-    /* AJUSTE DE BOTONES (Abajo y ancho completo) */
     .card-actions {
       width: 100%;
       margin-top: 16px;
       padding: 12px 0 0 0;
-      border-top: 1px dashed #eee;
+      border-top: 1px dashed var(--line-divider);
 
       button {
         padding: 8px;

@@ -1,25 +1,23 @@
-@import "src/assets/styles/_variables.scss"; // Asegúrate de tener tus colores aquí
+@import "src/assets/styles/_variables.scss";
 
-// Contenedor principal para centrar todo en pantalla
 .login-container {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  /* Alinea el contenido arriba */
   padding-top: 10vh;
   min-height: 100vh;
-  background-color: #f5f7fa; // Un gris muy suave de fondo
+  background-color: var(--bs-body-bg);
   padding: 20px;
 }
 
 .login-card {
   width: 100%;
-  max-width: 420px; // Un ancho estándar cómodo
+  max-width: 420px;
   padding: 2.5rem 2rem;
   border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); // Sombra suave y difusa
-  background: #fff;
-  text-align: center; // Centra textos por defecto
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  background: var(--card-background-color);
+  text-align: center;
 
   // --- Header ---
   .card-header {
@@ -28,7 +26,7 @@
     .icon-circle {
       width: 60px;
       height: 60px;
-      background-color: rgba($main-color, 0.1); // Color primario suave
+      background-color: rgba($main-color, 0.1);
       color: $main-color;
       border-radius: 50%;
       display: flex;
@@ -46,12 +44,12 @@
     h2 {
       font-size: 1.8rem;
       font-weight: 700;
-      color: #333;
+      color: var(--title-text-color);
       margin: 0 0 0.5rem 0;
     }
 
     .subtitle {
-      color: #666;
+      color: var(--text-secondary-color);
       font-size: 0.95rem;
       margin: 0;
     }
@@ -60,17 +58,16 @@
   // --- Campos del Formulario ---
   .form-group {
     margin-bottom: 1rem;
-    text-align: left; // Los inputs se ven mejor alineados a la izquierda
+    text-align: left;
   }
 
   .full-width {
     width: 100%;
   }
 
-  // Ajuste de iconos dentro de los inputs
   ::ng-deep .mat-form-field-prefix .mat-icon {
     margin-right: 8px;
-    color: #999;
+    color: var(--text-secondary-color);
   }
 
   // --- Links y Acciones ---
@@ -97,7 +94,7 @@
     display: flex;
     justify-content: center;
     margin-bottom: 1.5rem;
-    transform: scale(0.9); // Ajuste visual si el captcha es muy ancho
+    transform: scale(0.9);
     transform-origin: center;
   }
 
@@ -108,7 +105,7 @@
     font-weight: 600;
     letter-spacing: 1px;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba($main-color, 0.3); // Sombra de color
+    box-shadow: 0 4px 12px rgba($main-color, 0.3);
     margin-bottom: 1.5rem;
 
     &:disabled {
@@ -118,10 +115,10 @@
 
   // --- Footer ---
   .card-footer {
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--line-divider);
     padding-top: 1.5rem;
     font-size: 0.9rem;
-    color: #666;
+    color: var(--text-secondary-color);
 
     a {
       color: $main-color;
@@ -136,21 +133,19 @@
   }
 }
 
-// Responsive para móviles
 @media (max-width: 480px) {
   .login-container {
     padding: 15px;
-    background-color: #fff; // En móvil a veces queda mejor todo blanco
+    background-color: var(--card-background-color);
   }
 
   .login-card {
-    box-shadow: none; // Quitamos sombra para diseño "plano" en móvil
+    box-shadow: none;
     padding: 1rem 0;
     max-width: 100%;
   }
 }
 
-// Fixes para navegadores específicos (quitar iconos raros en passwords)
 input[type="password"]::-ms-reveal,
 input[type="password"]::-ms-clear,
 input[type="password"]::-webkit-contacts-auto-fill-button,

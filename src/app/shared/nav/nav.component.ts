@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LoginService } from '../../services/auth/login.service';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ProximamenteService } from 'src/app/services/proximamente.service';
 import { HelpDialogComponent } from 'src/app/components/help-dialog/help-dialog.component';
@@ -23,6 +23,7 @@ export class NavComponent implements OnInit, OnDestroy {
   userLoginOn: boolean = false;
   username: string | null = null;
   userRol: string | null = null;
+  currentUrl: string = '';
   private subscriptions: Subscription = new Subscription();
 
   constructor(
@@ -39,7 +40,20 @@ export class NavComponent implements OnInit, OnDestroy {
     this.menuOpen = !this.menuOpen; // Cambia el estado
   }
 
+  get isHomePage(): boolean {
+    return this.currentUrl === '/inicio' || this.currentUrl === '/';
+  }
+
   ngOnInit(): void {
+    this.currentUrl = this.router.url;
+    this.subscriptions.add(
+      this.router.events.subscribe(event => {
+        if (event instanceof NavigationEnd) {
+          this.currentUrl = event.urlAfterRedirects;
+        }
+      })
+    );
+
     this.subscriptions.add(
       this.loginService.userLoginOn.subscribe({
         next: (userLoginOn) => {

@@ -3,22 +3,22 @@ import { Subject, takeUntil } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, RouterLink } from '@angular/router';
+import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { DetalleTrabajoComponent } from 'src/app/aplicacion/trabajos/detalle-trabajo/detalle-trabajo.component';
 import { SubirTrabajoComponent } from 'src/app/aplicacion/trabajos/subir-trabajo/subir-trabajo/subir-trabajo.component';
 import { Trabajo } from 'src/app/models/trabajos/trabajos.model';
 import { LoginService } from 'src/app/services/auth/login.service';
 import { TrabajosService } from 'src/app/services/trabajos/trabajos.service';
-import { NgIf, NgFor } from '@angular/common';
+import { NewsService, NewsArticle } from 'src/app/services/news/news.service';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
-import { MatDivider } from '@angular/material/divider';
 import { PostTrabajoComponent } from '../../components/post-trabajo/post-trabajo.component';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  imports: [NgIf, RouterLink, MatTooltip, MatIcon, MatDivider, NgFor, PostTrabajoComponent]
+  imports: [NgIf, NgFor, RouterLink, MatTooltip, MatIcon, DatePipe, PostTrabajoComponent]
 })
 
 export class HomeComponent implements OnInit, OnDestroy {
@@ -27,6 +27,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   userRol: string | null = null;
   feed: Trabajo[] = [];
   misLikes: Set<number> = new Set();
+  newsArticles: NewsArticle[] = [];
+  newsLoading = true;
+  brokenImages = new Set<string>();
 
   private destroy$ = new Subject<void>();
 
@@ -34,6 +37,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private router: Router,
     private loginService: LoginService,
     private trabajosService: TrabajosService,
+    private newsService: NewsService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
   ) { }
@@ -55,6 +59,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       .subscribe(rol => { this.userRol = rol; });
 
     this.cargarFeed();
+    this.cargarNoticias();
   }
 
   ngOnDestroy(): void {
@@ -77,6 +82,18 @@ export class HomeComponent implements OnInit, OnDestroy {
       // Opcional: Recargar likes o feed al volver si hubo cambios drásticos
       // this.cargarMisLikes(); 
     });
+  }
+
+  cargarNoticias(): void {
+    this.newsLoading = true;
+    this.newsService.getTattooNews().subscribe({
+      next: (res) => { this.newsArticles = res.articles; this.newsLoading = false; },
+      error: () => { this.newsLoading = false; }
+    });
+  }
+
+  onNewsImgError(url: string): void {
+    this.brokenImages.add(url);
   }
 
   cargarFeed() {

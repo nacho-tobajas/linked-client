@@ -13,6 +13,7 @@ export interface InstagramSyncResult {
   message: string;
   synced: number;
   skipped: number;
+  deleted: number;
 }
 
 @Injectable({
@@ -25,8 +26,8 @@ export class InstagramService {
   constructor(private http: HttpClient) { }
 
   /** Redirige el navegador al flujo OAuth de Meta (NO es una llamada HTTP interna) */
-  connectInstagram(tatuadorId: number): void {
-    window.location.href = `${this.apiUrl}/auth?tatuadorId=${tatuadorId}`;
+  connectInstagram(tatuadorId: number, token: string): void {
+    window.location.href = `${this.apiUrl}/auth?tatuadorId=${tatuadorId}&token=${encodeURIComponent(token)}`;
   }
 
   /** Obtiene el estado de vinculación de Instagram del tatuador autenticado */

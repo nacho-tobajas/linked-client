@@ -22,6 +22,7 @@ import { MisReservasComponent } from './aplicacion/mis-reservas/mis-reservas.com
 import { AgendaComponent } from './aplicacion/agenda/agenda.component';
 import { PortfolioComponent } from './aplicacion/trabajos/portfolio/portfolio/portfolio.component';
 import { TatuajesFavoritosComponent } from './aplicacion/tatuajes-favoritos/tatuajes-favoritos.component';
+import { MiPortfolioComponent } from './aplicacion/trabajos/mi-portfolio/mi-portfolio.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/inicio', pathMatch: 'full' },
@@ -46,6 +47,7 @@ const routes: Routes = [
     component: MisReservasComponent
   },
   { path: 'mis-favoritos', component: TatuajesFavoritosComponent },
+  { path: 'mi-portfolio', component: MiPortfolioComponent },
   { path: 'perfil-publico/:id', component: PortfolioComponent },
   { path: '**', redirectTo: '/inicio', pathMatch: 'full' }, //redireccionar a inicio si no hay match
   // Carga diferida (lazy loading) para el flujo de prereserva
