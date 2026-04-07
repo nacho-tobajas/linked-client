@@ -1,6 +1,8 @@
+@use 'sass:color';
+
 //colores principales
 $main-color: #393e31;
-$main-color-hover: lighten($main-color, 10%);
+$main-color-hover: color.adjust($main-color, $lightness: 10%);
 $secondary-light-color: #4a513e;
 $main-header-color: #393e31;
 $side-nav-primary-color: #414e3b;

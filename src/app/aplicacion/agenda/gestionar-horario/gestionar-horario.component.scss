@@ -1,4 +1,4 @@
-@import '../../../../assets/styles/_variables';
+@use '../../../../assets/styles/_variables' as *;
 
 :host {
   display: block;
@@ -161,9 +161,13 @@ mat-dialog-actions {
 .dia-inputs {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
   width: 100%;
   min-width: 0;
+
+  @media (min-width: 900px) {
+    gap: 6px;
+  }
 }
 
 mat-form-field {

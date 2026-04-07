@@ -1,4 +1,5 @@
-@import "src/assets/styles/_variables.scss";
+@use 'sass:color';
+@use "src/assets/styles/_variables.scss" as *;
 
 .login-container {
   display: flex;
@@ -84,7 +85,7 @@
       transition: color 0.2s;
 
       &:hover {
-        color: darken($main-color, 15%);
+        color: color.adjust($main-color, $lightness: -15%);
         text-decoration: underline;
       }
     }

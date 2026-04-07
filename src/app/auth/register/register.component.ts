@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { RegisterService } from 'src/app/services/auth/register.service';
@@ -12,15 +12,20 @@ import { MatIcon } from '@angular/material/icon';
 import { MatFormField, MatLabel, MatPrefix, MatSuffix, MatError } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
-import { NgIf } from '@angular/common';
+import { NgIf, NgFor } from '@angular/common';
 import { MatIconButton, MatButton } from '@angular/material/button';
 import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatTooltip } from '@angular/material/tooltip';
+import { GeocodingService, GeoResult } from 'src/app/services/geocoding/geocoding.service';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-register',
     templateUrl: './register.component.html',
     styleUrls: ['./register.component.scss'],
-    imports: [FormsModule, ReactiveFormsModule, MatCard, MatIcon, MatCardContent, MatFormField, MatLabel, MatPrefix, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgIf, MatError, MatIconButton, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatCardActions, MatButton]
+    imports: [FormsModule, ReactiveFormsModule, MatCard, MatIcon, MatCardContent, MatFormField, MatLabel, MatPrefix, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgIf, NgFor, MatError, MatIconButton, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatCardActions, MatButton, MatProgressSpinner, MatTooltip, MatAutocompleteModule]
 })
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
@@ -28,19 +33,28 @@ export class RegisterComponent implements OnInit {
   today: Date = new Date();
   hide = true;
 
+  geocodedLat: number | null = null;
+  geocodedLng: number | null = null;
+  geocodedDisplayName: string | null = null;
+  isGeocoding = false;
+  isGPSLocating = false;
+  locationSuggestions: GeoResult[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
     private registerService: RegisterService,
     private dialog: MatDialog,
     private encryptionService: EncryptionService,
-    private router: Router
+    private router: Router,
+    private geocodingService: GeocodingService,
+    private ngZone: NgZone,
   ) {
     this.registerForm = this.formBuilder.group(
       {
         username: ['', [Validators.required]],
         realname: [''],
         surname: [''],
+        localidad: [''],
         email: ['', [Validators.required, Validators.email]],
         password: [
           '',
@@ -59,7 +73,66 @@ export class RegisterComponent implements OnInit {
     this.user = new User();
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.registerForm.get('localidad')!.valueChanges.pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      filter((q): q is string => typeof q === 'string' && q.length >= 3),
+      switchMap(q => this.geocodingService.suggestions(q))
+    ).subscribe(results => {
+      this.locationSuggestions = results;
+    });
+  }
+
+  onLocationSelected(event: MatAutocompleteSelectedEvent): void {
+    const selected = this.locationSuggestions.find(s => s.displayName === event.option.value);
+    if (selected) {
+      this.geocodedLat = selected.lat;
+      this.geocodedLng = selected.lng;
+      this.geocodedDisplayName = selected.displayName;
+    }
+    this.locationSuggestions = [];
+  }
+
+  verificarLocalidad(): void {
+    const query = this.registerForm.get('localidad')?.value?.trim();
+    if (!query) return;
+    this.isGeocoding = true;
+    this.geocodingService.geocode(query).subscribe(result => {
+      this.isGeocoding = false;
+      if (result) {
+        this.geocodedLat = result.lat;
+        this.geocodedLng = result.lng;
+        this.geocodedDisplayName = result.displayName;
+      } else {
+        this.geocodedLat = null;
+        this.geocodedLng = null;
+        this.geocodedDisplayName = null;
+      }
+    });
+  }
+
+  usarGPS(): void {
+    if (!navigator.geolocation) return;
+    this.isGPSLocating = true;
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        this.geocodingService.reverseGeocode(pos.coords.latitude, pos.coords.longitude).subscribe(result => {
+          this.ngZone.run(() => {
+            this.isGPSLocating = false;
+            if (result) {
+              this.geocodedLat = result.lat;
+              this.geocodedLng = result.lng;
+              this.geocodedDisplayName = result.displayName;
+              this.registerForm.patchValue({ localidad: result.displayName }, { emitEvent: false });
+            }
+          });
+        });
+      },
+      () => { this.ngZone.run(() => { this.isGPSLocating = false; }); },
+      { enableHighAccuracy: true, timeout: 8000 }
+    );
+  }
 
   async register() {
     this.user.surname = this.registerForm.controls['surname'].value;
@@ -74,6 +147,9 @@ export class RegisterComponent implements OnInit {
     this.user.password = await this.encryptionService.encrypt(this.registerForm.controls['password'].value);
     this.user.birth_date = this.registerForm.controls['birth_date'].value;
     this.user.email = this.registerForm.controls['email'].value;
+    this.user.localidad = this.registerForm.controls['localidad'].value || undefined;
+    this.user.lat = this.geocodedLat ?? undefined;
+    this.user.lng = this.geocodedLng ?? undefined;
     this.registerService.register(this.user).subscribe(
       (data) => {
         this.showSuccessDialog();

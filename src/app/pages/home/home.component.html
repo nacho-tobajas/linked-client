@@ -1,5 +1,4 @@
 <div class="home-container">
-
   <!-- ═══════════════════════════════════════════════════════
        HERO
   ═══════════════════════════════════════════════════════ -->
@@ -22,8 +21,12 @@
         Gestioná tu arte, tu agenda y tus publicaciones.
       </p>
       <div *ngIf="!userLoginOn" class="hero-actions">
-        <button class="hero-btn-primary" routerLink="/register">Registrarse</button>
-        <button class="hero-btn-secondary" routerLink="/login">Iniciar sesión</button>
+        <button class="hero-btn-primary" routerLink="/register">
+          Registrarse
+        </button>
+        <button class="hero-btn-secondary" routerLink="/login">
+          Iniciar sesión
+        </button>
       </div>
     </div>
   </section>
@@ -32,94 +35,62 @@
        CONTENIDO
   ═══════════════════════════════════════════════════════ -->
   <div class="content-wrapper">
-
     <!-- Acciones rápidas -->
     <div class="quick-actions" *ngIf="userLoginOn">
       <ng-container *ngIf="userRol === 'Cliente'">
-        <button class="action-card" routerLink="/reserva/listado" matTooltip="Nueva Reserva">
-          <div class="action-icon"><mat-icon>add_circle_outline</mat-icon></div>
-          <span>Reservar</span>
+        <button
+          class="action-card"
+          routerLink="/buscar"
+          matTooltip="Buscar tatuador por estilo"
+        >
+          <div class="action-icon"><mat-icon>travel_explore</mat-icon></div>
+          <span>Buscar Tatuador</span>
         </button>
-        <button class="action-card" routerLink="/mis-reservas" matTooltip="Ver mis turnos">
+        <button
+          class="action-card"
+          routerLink="/mis-reservas"
+          matTooltip="Ver mis turnos"
+        >
           <div class="action-icon"><mat-icon>calendar_today</mat-icon></div>
           <span>Mis Turnos</span>
         </button>
-        <button class="action-card" routerLink="/mis-favoritos">
+        <button
+          class="action-card"
+          routerLink="/mis-favoritos"
+          matTooltip="Ver mis tatuajes favoritos"
+        >
           <div class="action-icon"><mat-icon>favorite</mat-icon></div>
           <span>Favoritos</span>
         </button>
       </ng-container>
 
       <ng-container *ngIf="userRol === 'Tatuador'">
-        <button class="action-card" routerLink="/gestionar-agenda">
+        <button
+          class="action-card"
+          routerLink="/gestionar-agenda"
+          matTooltip="Gestionar mi agenda"
+        >
           <div class="action-icon"><mat-icon>event_note</mat-icon></div>
           <span>Mi Agenda</span>
         </button>
-        <button class="action-card" (click)="abrirSubirTrabajo()">
+        <button
+          class="action-card"
+          (click)="abrirSubirTrabajo()"
+          matTooltip="Subir una nueva publicación"
+        >
           <div class="action-icon"><mat-icon>add_a_photo</mat-icon></div>
           <span>Subir Foto</span>
         </button>
-        <button class="action-card" routerLink="/mi-portfolio">
+        <button
+          class="action-card"
+          routerLink="/mi-portfolio"
+          matTooltip="Ver mis publicaciones"
+        >
           <div class="action-icon"><mat-icon>grid_view</mat-icon></div>
           <span>Mis Publicaciones</span>
         </button>
       </ng-container>
     </div>
-
-    <!-- ══════════ NOTICIAS ══════════ -->
-    <section class="news-section" *ngIf="newsLoading || newsArticles.length > 0">
-      <div class="section-header">
-        <mat-icon>newspaper</mat-icon>
-        <h2>Noticias del mundo del tatuaje</h2>
-      </div>
-
-      <!-- Skeleton loader -->
-      <div class="news-grid" *ngIf="newsLoading">
-        <div class="news-card news-skeleton" *ngFor="let i of [1,2,3]">
-          <div class="news-img-container skeleton-block"></div>
-          <div class="news-body">
-            <div class="skeleton-line short"></div>
-            <div class="skeleton-line"></div>
-            <div class="skeleton-line"></div>
-            <div class="skeleton-line medium"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Artículos -->
-      <div class="news-grid" *ngIf="!newsLoading">
-        <a
-          *ngFor="let article of newsArticles"
-          [href]="article.url"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="news-card"
-        >
-          <div class="news-img-container">
-            <img
-              *ngIf="article.urlToImage && !brokenImages.has(article.urlToImage)"
-              [src]="article.urlToImage"
-              [alt]="article.title"
-              class="news-img"
-              loading="lazy"
-              (error)="onNewsImgError(article.urlToImage!)"
-            />
-            <div
-              *ngIf="!article.urlToImage || brokenImages.has(article.urlToImage!)"
-              class="news-img-placeholder"
-            >
-              <mat-icon>article</mat-icon>
-            </div>
-          </div>
-          <div class="news-body">
-            <span class="news-source">{{ article.source }}</span>
-            <h3 class="news-title">{{ article.title }}</h3>
-            <p class="news-desc" *ngIf="article.description">{{ article.description }}</p>
-            <span class="news-date">{{ article.publishedAt | date:'dd MMM yyyy' }}</span>
-          </div>
-        </a>
-      </div>
-    </section>
 
     <!-- ══════════ FEED ══════════ -->
     <section class="feed-section">
@@ -144,6 +115,5 @@
         <p>Aún no hay publicaciones para mostrar.</p>
       </div>
     </section>
-
   </div>
 </div>

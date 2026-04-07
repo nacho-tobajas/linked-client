@@ -94,6 +94,46 @@
                 <input matInput formControlName="surname" />
               </mat-form-field>
             </div>
+
+            <div class="location-row mt-2">
+              <mat-form-field appearance="outline" class="location-input">
+                <mat-label>Dirección o localidad</mat-label>
+                <mat-icon matPrefix>place</mat-icon>
+                <input
+                  matInput
+                  formControlName="localidad"
+                  placeholder="Ej: Tucuman 2850, Rosario, Santa Fe"
+                  [matAutocomplete]="locationAuto"
+                  autocomplete="off"
+                />
+                <mat-autocomplete
+                  #locationAuto="matAutocomplete"
+                  (optionSelected)="onLocationSelected($event)"
+                >
+                  <mat-option *ngFor="let s of locationSuggestions" [value]="s.displayName">
+                    <mat-icon style="font-size:16px;vertical-align:middle;margin-right:6px">place</mat-icon>
+                    {{ s.displayName }}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+
+              <button
+                mat-icon-button
+                type="button"
+                (click)="usarGPS()"
+                [disabled]="isGPSLocating"
+                matTooltip="Usar mi ubicación GPS"
+              >
+                <mat-spinner *ngIf="isGPSLocating" diameter="18"></mat-spinner>
+                <mat-icon *ngIf="!isGPSLocating">my_location</mat-icon>
+              </button>
+            </div>
+
+            <div *ngIf="geocodedDisplayName && geocodedLat" class="location-verified">
+              <mat-icon>check_circle</mat-icon>
+              {{ geocodedDisplayName.split(',').slice(0, 2).join(',') }}
+            </div>
+
           </mat-expansion-panel>
         </mat-accordion>
 

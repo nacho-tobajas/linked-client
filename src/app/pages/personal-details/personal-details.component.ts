@@ -5,7 +5,8 @@ import { LoginService } from 'src/app/services/auth/login.service';
 import { FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatePipe, NgIf, NgFor } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { forkJoin, Subscription } from 'rxjs';
+import { forkJoin, Subscription, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
 import { Especialidad } from 'src/app/aplicacion/gestion-sistema/especialidades/especialidades.model';
 import { TatuadorService } from 'src/app/services/user/tatuador.service';
 import { TatuadorComponent } from './tatuador/tatuador.component';
@@ -14,11 +15,17 @@ import { MatDivider } from '@angular/material/divider';
 import { MatChip, MatChipsModule } from '@angular/material/chips';
 import { MatIcon } from '@angular/material/icon';
 import { MatIconButton, MatButton } from '@angular/material/button';
-import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { MatFormField, MatHint, MatLabel, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatTooltip } from '@angular/material/tooltip';
 import { ServerUrlPipe } from '../../pipes/server-url.pipe';
 import { InstagramService, InstagramStatus } from '../../services/instagram/instagram.service';
+import { GeocodingService, GeoResult } from '../../services/geocoding/geocoding.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 
 @Component({
@@ -26,7 +33,7 @@ import { InstagramService, InstagramStatus } from '../../services/instagram/inst
     templateUrl: './personal-details.component.html',
     styleUrls: ['./personal-details.component.scss'],
     providers: [DatePipe],
-    imports: [MatChipsModule, NgIf, MatCard, MatCardHeader, MatCardAvatar, MatCardTitle, MatCardSubtitle, MatDivider, MatCardContent, NgFor, MatChip, MatCardActions, MatIcon, RouterLink, MatIconButton, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, TatuadorComponent, MatButton, DatePipe, ServerUrlPipe]
+    imports: [MatChipsModule, NgIf, NgFor, MatCard, MatCardHeader, MatCardAvatar, MatCardTitle, MatCardSubtitle, MatDivider, MatCardContent, MatChip, MatCardActions, MatIcon, RouterLink, MatIconButton, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatHint, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, TatuadorComponent, MatButton, DatePipe, ServerUrlPipe, MatSnackBarModule, MatProgressSpinner, MatTooltip, MatAutocompleteModule]
 })
 export class PersonalDetailsComponent implements OnInit, OnDestroy {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
@@ -60,8 +67,18 @@ export class PersonalDetailsComponent implements OnInit, OnDestroy {
     username: this.formBuilder.control<string | null>(null, Validators.required),
     email: this.formBuilder.control<string | null>(null, Validators.required),
     birth_date: this.formBuilder.control<Date | null>(null, Validators.required),
-    profileImage: this.formBuilder.control<File | null>(null) // campo para subir foto
+    profileImage: this.formBuilder.control<File | null>(null),
+    localidad: this.formBuilder.control<string | null>(null),
+    instagram_handle: this.formBuilder.control<string | null>(null),
   });
+
+  // Coordenadas geocodificadas, no en el formulario reactive sino como propiedades
+  geocodedLat: number | null = null;
+  geocodedLng: number | null = null;
+  geocodedDisplayName: string | null = null;
+  isGeocoding = false;
+  isGPSLocating = false;
+  locationSuggestions: GeoResult[] = [];
 
   constructor(
     private userService: UserService,
@@ -70,13 +87,25 @@ export class PersonalDetailsComponent implements OnInit, OnDestroy {
     private loginService: LoginService,
     private router: Router,
     private route: ActivatedRoute,
-    private instagramService: InstagramService
+    private instagramService: InstagramService,
+    private geocodingService: GeocodingService,
+    private snackBar: MatSnackBar,
   ) {}
 
   ngOnInit(): void {
     this.loadUserSession();
     this.watchLoginState();
     this.handleInstagramCallback();
+    this.subscriptions.add(
+      this.registerForm.get('localidad')!.valueChanges.pipe(
+        debounceTime(400),
+        distinctUntilChanged(),
+        filter((q): q is string => typeof q === 'string' && q.length >= 3),
+        switchMap(q => this.geocodingService.suggestions(q))
+      ).subscribe(results => {
+        this.locationSuggestions = results;
+      })
+    );
   }
 
   // ----------------------------------------------------------
@@ -206,7 +235,13 @@ export class PersonalDetailsComponent implements OnInit, OnDestroy {
           username: data.username ?? '',
           email: data.email ?? '',
           birth_date: data.birth_date ? new Date(data.birth_date) : null,
-        });
+          localidad: data.localidad ?? '',
+          instagram_handle: data.instagram_handle ?? '',
+        }, { emitEvent: false });
+        // Restaurar coordenadas previas si existen
+        this.geocodedLat = data.lat ?? null;
+        this.geocodedLng = data.lng ?? null;
+        this.geocodedDisplayName = data.localidad ?? null;
         this.loadUserRol();
         this.loadEspecialidades();
       },
@@ -244,6 +279,68 @@ export class PersonalDetailsComponent implements OnInit, OnDestroy {
         },
         error: (err) => console.error('Error al obtener el rol', err),
       })
+    );
+  }
+
+  /* ── Geocodificación ── */
+
+  onLocationSelected(event: MatAutocompleteSelectedEvent): void {
+    const selected = this.locationSuggestions.find(s => s.displayName === event.option.value);
+    if (selected) {
+      this.geocodedLat = selected.lat;
+      this.geocodedLng = selected.lng;
+      this.geocodedDisplayName = selected.displayName;
+    }
+    this.locationSuggestions = [];
+  }
+
+  verificarLocalidad(): void {
+    const query = this.registerForm.get('localidad')?.value?.trim();
+    if (!query) return;
+    this.isGeocoding = true;
+    this.geocodingService.geocode(query).subscribe(result => {
+      this.isGeocoding = false;
+      if (result) {
+        this.geocodedLat = result.lat;
+        this.geocodedLng = result.lng;
+        this.geocodedDisplayName = result.displayName;
+        this.snackBar.open(`Ubicación encontrada: ${result.displayName.split(',').slice(0, 2).join(',')}`, 'OK', { duration: 4000 });
+      } else {
+        this.geocodedLat = null;
+        this.geocodedLng = null;
+        this.geocodedDisplayName = null;
+        this.snackBar.open('No se encontró esa localidad. Intentá con un nombre más específico.', 'Cerrar', { duration: 4000 });
+      }
+    });
+  }
+
+  usarGPS(): void {
+    if (!navigator.geolocation) {
+      this.snackBar.open('Tu navegador no soporta geolocalización.', 'Cerrar', { duration: 3000 });
+      return;
+    }
+    this.isGPSLocating = true;
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        this.geocodingService.reverseGeocode(pos.coords.latitude, pos.coords.longitude).subscribe(result => {
+          this.isGPSLocating = false;
+          if (result) {
+            this.geocodedLat = result.lat;
+            this.geocodedLng = result.lng;
+            this.geocodedDisplayName = result.displayName;
+            this.registerForm.patchValue({ localidad: result.displayName }, { emitEvent: false });
+            this.snackBar.open(`Ubicación detectada: ${result.displayName.split(',').slice(0, 2).join(',')}`, 'OK', { duration: 4000 });
+          } else {
+            this.isGPSLocating = false;
+            this.snackBar.open('No se pudo determinar tu ubicación.', 'Cerrar', { duration: 3000 });
+          }
+        });
+      },
+      () => {
+        this.isGPSLocating = false;
+        this.snackBar.open('No se pudo obtener el GPS. Verificá los permisos del navegador.', 'Cerrar', { duration: 4000 });
+      },
+      { enableHighAccuracy: true, timeout: 8000 }
     );
   }
 
@@ -312,8 +409,8 @@ export class PersonalDetailsComponent implements OnInit, OnDestroy {
   const formValues = this.registerForm.value;
 
   let tatuadorData: { estudio?: string | null, fecha_inicio_actividad?: Date | null } = {
-    estudio: undefined,
-    fecha_inicio_actividad: undefined
+    estudio: this.user?.estudio ?? null,
+    fecha_inicio_actividad: this.user?.fecha_inicio_actividad ?? null,
     };
 
     if (this.userRol === 'Tatuador' && this.tatuadorComponentRef) {
@@ -329,8 +426,12 @@ export class PersonalDetailsComponent implements OnInit, OnDestroy {
     birth_date: formValues.birth_date
       ? new Date(formValues.birth_date)
       : undefined,
-    estudio: tatuadorData.estudio ?? undefined ,
-    fecha_inicio_actividad: tatuadorData.fecha_inicio_actividad ? new Date(tatuadorData.fecha_inicio_actividad) : undefined
+    estudio: tatuadorData.estudio ?? undefined,
+    fecha_inicio_actividad: tatuadorData.fecha_inicio_actividad ? new Date(tatuadorData.fecha_inicio_actividad) : undefined,
+    localidad: formValues.localidad ?? undefined,
+    lat: this.geocodedLat ?? undefined,
+    lng: this.geocodedLng ?? undefined,
+    instagram_handle: formValues.instagram_handle ?? undefined,
   };
 
     requests.push(this.userService.updateUser(this.userId, updatedUser));

@@ -7,15 +7,17 @@ import { AgendaService } from '../../agenda/agenda.service';
 import { SolicitarTurnoDto, TurnosService } from 'src/app/services/turnos/turnos.service';
 import { ReservaStateService } from 'src/app/services/reserva/reserva-state.service';
 import { MatIconButton } from '@angular/material/button';
+import { MatRipple } from '@angular/material/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatCalendar } from '@angular/material/datepicker';
 import { FormsModule } from '@angular/forms';
+import { environment } from 'src/environments/environment';
 
 @Component({
     selector: 'app-seleccionar-horario',
     templateUrl: './seleccionar-horario.component.html',
     styleUrl: './seleccionar-horario.component.scss',
-    imports: [MatIconButton, MatIcon, NgIf, MatCalendar, NgFor, FormsModule]
+    imports: [MatIconButton, MatRipple, MatIcon, NgIf, MatCalendar, NgFor, FormsModule]
 })
 export class SeleccionarHorarioComponent {
 
@@ -68,16 +70,29 @@ export class SeleccionarHorarioComponent {
       console.error('No se proporcionó ID de tatuador');
       this.router.navigate(['/reserva/listado']);
     }
+
+    const imgs = this.reservaStateService.getImagenes();
+    if (imgs.length > 0) {
+      this.selectedFiles = [...imgs];
+      imgs.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.previewImages.push(e.target.result);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
   }
 
-  onDateSelected(date: Date): void {
+  onDateSelected(date: Date | null): void {
+    if (!date) return;
     this.selectedDate = date;
     this.horarios = []; // Limpiar
     this.selectedTime = ''; // Resetear
     this.isLoadingHorarios = true;
     this.errorHorarios = null;
 
-    if (!this.tatuadorId) return; 
+    if (!this.tatuadorId) return;
 
     this.agendaService.getHorariosDisponibles(this.tatuadorId, date).subscribe({
       next: (slots) => {
@@ -185,7 +200,7 @@ export class SeleccionarHorarioComponent {
         
         // Guardamos en el servicio de estado
         this.reservaStateService.setDatos(datosParaConfirmar);
-                
+        this.reservaStateService.clearImagenes();
 
         this.router.navigate(['/reserva/confirmacion']);
       },
@@ -197,7 +212,13 @@ export class SeleccionarHorarioComponent {
     });
   }
 
+  getPhotoUrl(photo?: string): string {
+    if (!photo) return 'assets/images/default-profile.jpg';
+    if (photo.startsWith('http')) return photo;
+    return environment.urlImg + photo;
+  }
+
   goBack(): void {
-    this.location.back(); 
+    this.location.back();
   }
 }

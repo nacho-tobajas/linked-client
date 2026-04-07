@@ -4,69 +4,86 @@ import { TrabajosService } from 'src/app/services/trabajos/trabajos.service';
 import { PostTrabajoComponent } from 'src/app/components/post-trabajo/post-trabajo.component';
 import { DetalleTrabajoComponent } from '../trabajos/detalle-trabajo/detalle-trabajo.component';
 import { MatDialog } from '@angular/material/dialog';
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NgFor, NgIf } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-tatuajes-favoritos',
-  imports: [NgIf, NgFor, PostTrabajoComponent],
+  imports: [NgIf, NgFor, PostTrabajoComponent, MatIcon],
   templateUrl: './tatuajes-favoritos.component.html',
   styleUrl: './tatuajes-favoritos.component.scss'
 })
 export class TatuajesFavoritosComponent {
 
+  trabajosFavoritos: Trabajo[] = [];
+  favorites: Set<number> = new Set();
+  isLoading = true;
+
+  get uniqueArtistsCount(): number {
+    const ids = this.trabajosFavoritos
+      .map(t => t.tatuador?.idUser)
+      .filter((id): id is number => id !== undefined);
+    return new Set(ids).size;
+  }
+
   constructor(
     private trabajosService: TrabajosService,
     private dialog: MatDialog,
-  ) { }
-
-  trabajosFavoritos: Trabajo[] = [];
-  favorites: Set<number> = new Set();
+  ) {}
 
   ngOnInit(): void {
     this.cargarMisLikes();
   }
 
-  async cargarMisLikes() {
-    await this.trabajosService.getMisLikesIds().subscribe({
+  cargarMisLikes(): void {
+    this.isLoading = true;
+    this.trabajosService.getMisLikesIds().subscribe({
       next: (ids) => {
         this.favorites = new Set(ids);
+        const idArray = Array.from(ids);
 
-        this.favorites.forEach(async id => {
-          await this.trabajosService.getTrabajoById(id).subscribe({
+        if (idArray.length === 0) {
+          this.isLoading = false;
+          return;
+        }
+
+        let loaded = 0;
+        idArray.forEach(id => {
+          this.trabajosService.getTrabajoById(id).subscribe({
             next: (trabajo) => {
               if (!this.trabajosFavoritos.some(t => t.id === trabajo.id)) {
                 this.trabajosFavoritos.push(trabajo);
               }
+              loaded++;
+              if (loaded === idArray.length) this.isLoading = false;
             },
-            error: () => console.error(`Error al cargar trabajo con ID ${id}`)
+            error: () => {
+              loaded++;
+              if (loaded === idArray.length) this.isLoading = false;
+            }
           });
-
         });
-      }
+      },
+      error: () => { this.isLoading = false; }
     });
   }
 
-  onToggleLike(trabajoId: number) {
+  onToggleLike(trabajoId: number): void {
     const trabajo = this.trabajosFavoritos.find(t => t.id === trabajoId);
     if (!trabajo) return;
 
     if (!trabajo.favoritos) trabajo.favoritos = [];
 
-    const yaTieneLike = this.favorites.has(trabajoId);
-
-    if (yaTieneLike) {
+    if (this.favorites.has(trabajoId)) {
       this.favorites.delete(trabajoId);
-      trabajo.favoritos.pop();
+      this.trabajosFavoritos = this.trabajosFavoritos.filter(t => t.id !== trabajoId);
 
       this.trabajosService.quitarLike(trabajoId).subscribe({
         error: () => {
           this.favorites.add(trabajoId);
-          trabajo.favoritos?.push({});
-          console.error("Error al quitar like");
+          this.trabajosFavoritos.push(trabajo);
         }
       });
-
     } else {
       this.favorites.add(trabajoId);
       trabajo.favoritos.push({});
@@ -74,27 +91,17 @@ export class TatuajesFavoritosComponent {
         error: () => {
           this.favorites.delete(trabajoId);
           trabajo.favoritos?.pop();
-          console.error("Error al dar like");
         }
       });
     }
   }
 
-  abrirDetalle(trabajo: Trabajo) {
-    const dialogRef = this.dialog.open(DetalleTrabajoComponent, {
+  abrirDetalle(trabajo: Trabajo): void {
+    this.dialog.open(DetalleTrabajoComponent, {
       panelClass: 'custom-modal-panel',
       maxWidth: '100vw',
       maxHeight: '90vh',
-      data: {
-        trabajo: trabajo,
-        isLiked: this.favorites.has(trabajo.id)
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(() => {
-      // Opcional: Recargar likes o feed al volver si hubo cambios drásticos
-      // this.cargarMisLikes(); 
+      data: { trabajo, isLiked: this.favorites.has(trabajo.id) }
     });
   }
-
 }

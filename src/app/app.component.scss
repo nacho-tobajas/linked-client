@@ -1,5 +1,5 @@
 // Prebuilt theme eliminado — se usa el tema custom definido en styles.scss
-@import "src/assets/styles/_variables.scss";
+@use "src/assets/styles/_variables.scss" as *;
 
 
 :host {

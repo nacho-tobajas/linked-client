@@ -3,7 +3,6 @@ import { NgIf, NgFor } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
-import { MatIconButton } from '@angular/material/button';
 
 import { User } from 'src/app/models/user.model';
 import { Trabajo } from 'src/app/models/trabajos/trabajos.model';
@@ -16,7 +15,7 @@ import { DetalleTrabajoComponent } from '../detalle-trabajo/detalle-trabajo.comp
 
 @Component({
   selector: 'app-mi-portfolio',
-  imports: [NgIf, NgFor, MatIcon, MatIconButton, ServerUrlPipe, PostTileComponent],
+  imports: [NgIf, NgFor, MatIcon, ServerUrlPipe, PostTileComponent],
   templateUrl: './mi-portfolio.component.html',
   styleUrl: './mi-portfolio.component.scss'
 })

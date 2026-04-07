@@ -14,4 +14,7 @@ export class User {
   status?: boolean;
   modificationuser?: string;
   modificationtimestamp?: Date;
+  localidad?: string;
+  lat?: number;
+  lng?: number;
 }

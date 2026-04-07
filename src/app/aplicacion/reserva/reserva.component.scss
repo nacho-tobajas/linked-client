@@ -1,10 +1,10 @@
-@import "src/assets/styles/_variables.scss";
+@use "src/assets/styles/_variables.scss" as *;
 
 // Contenedor Principal (Layout Base)
 .mobile-container {
   width: 100%;
   min-height: 100vh;
-  background: #fafafa;
+  background: var(--body-background-color);
   position: relative;
   margin: 0 auto;
   box-sizing: border-box;
@@ -65,7 +65,7 @@
     max-width: 100%;
     border-radius: 0;
     box-shadow: none;
-    background: #fafafa;
+    background: var(--body-background-color);
   }
 
   .screen-content {

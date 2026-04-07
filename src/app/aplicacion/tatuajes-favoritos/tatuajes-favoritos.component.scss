@@ -1,34 +1,226 @@
-.favs-container {
-  padding: 20px;
+@use '../../../assets/styles/variables' as *;
+
+/* ============================================================
+   CONTENEDOR
+   ============================================================ */
+.favs-screen {
   max-width: 1000px;
   margin: 0 auto;
+  padding: 0 0 56px;
+  box-sizing: border-box;
 }
 
+/* ============================================================
+   HERO HEADER
+   ============================================================ */
+.favs-hero {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(140deg, #1a1d18 0%, #2d322a 50%, #3d4437 100%);
+  padding: 36px 24px 28px;
+  margin-bottom: 24px;
+
+  @media (min-width: 600px) {
+    padding: 44px 32px 32px;
+    margin-bottom: 28px;
+  }
+}
+
+.favs-hero-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.hero-shape {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+
+  &.s1 {
+    width: 280px;
+    height: 280px;
+    top: -120px;
+    right: -60px;
+  }
+
+  &.s2 {
+    width: 180px;
+    height: 180px;
+    bottom: -80px;
+    left: -40px;
+  }
+}
+
+.favs-hero-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.favs-hero-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  mat-icon {
+    font-size: 26px;
+    width: 26px;
+    height: 26px;
+    color: #ff6b8a;
+  }
+}
+
+.favs-hero-title {
+  margin: 0 0 4px;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.4px;
+
+  @media (min-width: 600px) {
+    font-size: 2rem;
+  }
+}
+
+.favs-hero-sub {
+  margin: 0;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ── Stats ── */
+.favs-stats {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.stat-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+
+  mat-icon {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  span {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+  }
+}
+
+/* ============================================================
+   GRID
+   ============================================================ */
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 16px;
-  padding-bottom: 40px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  padding: 0 4px;
+
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 600px) {
+    gap: 6px;
+    padding: 0 16px;
+  }
 }
 
-.empty-page {
+/* ============================================================
+   SKELETON
+   ============================================================ */
+.skeleton-card {
+  aspect-ratio: 4 / 5;
+  border-radius: 8px;
+  background: var(--line-divider);
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+/* ============================================================
+   ESTADO VACÍO
+   ============================================================ */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 64px 24px 40px;
   text-align: center;
-  padding: 40px;
-  color: #777;
 }
 
-.feed-section {
-  h3 {
-    margin-bottom: 15px;
-    font-weight: 500;
-  }
+.empty-icon-wrap {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: var(--light-gray-background-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  border: 2px dashed var(--line-divider);
 
-  .feed-placeholder {
-    background: #f9f9f9;
-    border-radius: 8px;
-    padding: 40px;
-    text-align: center;
-    color: #999;
-    border: 2px dashed #eee;
+  mat-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+    color: var(--text-secondary-color);
+    opacity: 0.5;
   }
+}
+
+.empty-title {
+  margin: 0 0 10px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--title-text-color);
+}
+
+.empty-desc {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary-color);
+  max-width: 300px;
+  line-height: 1.6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.inline-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  color: #e53935;
+  vertical-align: middle;
 }

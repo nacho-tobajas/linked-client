@@ -25,7 +25,8 @@ export class SoporteComponent implements OnInit {
   }
   openCreateDialog(): void {
     const dialogRef = this.dialog.open(SupportTicketCreateComponent, {
-      width: '400px',
+      width: '680px',
+      maxWidth: '96vw',
       disableClose: true,
     });
 

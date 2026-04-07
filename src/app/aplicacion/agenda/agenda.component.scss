@@ -1,26 +1,157 @@
+:host {
+  display: block;
+  width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.gestionar-agenda-container {
+  width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
 .header-agenda {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
-  padding-left: 8%;
-  padding-right: 7%;
+  padding: 0 1rem;
+  gap: 0.75rem;
 
   h2 {
     margin: 0;
+    font-size: 1.1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-
   button[mat-raised-button] {
-    margin-right: 1.5em;
+    flex-shrink: 0;
 
     mat-icon {
-      margin-right: 8px;
+      margin-right: 6px;
     }
+  }
+
+  @media (min-width: 600px) {
+    padding: 0 2rem;
+
+    h2 { font-size: 1.3rem; }
+  }
+
+  @media (min-width: 900px) {
+    padding-left: 8%;
+    padding-right: 7%;
+
+    button[mat-raised-button] { margin-right: 1.5em; }
   }
 }
 
+.turnos-section {
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
 .filtro-crud {
-  margin-top: 4vh;
-  margin-bottom: 4vh;
+  margin-top: 3vh;
+  margin-bottom: 3vh;
+  width: 100%;
+  box-sizing: border-box;
+
+  mat-accordion {
+    width: 100%;
+    display: block;
+  }
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 4px 0;
+}
+
+.filter-field {
+  flex: 1;
+  min-width: 160px;
+}
+
+.filter-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  justify-content: flex-end;
+  padding-bottom: 8px;
+}
+
+/* ============================================================
+   TABLA DE TURNOS
+   ============================================================ */
+.tabla-crud {
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: auto;   /* scroll horizontal si la tabla no cabe */
+  -webkit-overflow-scrolling: touch;
+
+  table {
+    width: 100%;
+    min-width: 320px;  /* evita colapso total en pantallas muy pequeñas */
+  }
+
+  mat-paginator {
+    width: 100%;
+    overflow-x: auto;
+  }
+}
+
+/* ============================================================
+   CHIPS DE ESTADO
+   ============================================================ */
+.status-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-pendiente   { background: #fff3e0; color: #e65100; }
+.status-confirmada  { background: #e8f5e9; color: #2e7d32; }
+.status-completada  { background: #e3f2fd; color: #1565c0; }
+.status-rechazada   { background: #fce4ec; color: #c62828; }
+
+/* ============================================================
+   ESTADOS CARGA / ERROR
+   ============================================================ */
+.loading-spinner,
+.error-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 2rem 1rem;
+  color: var(--text-secondary-color);
+}
+
+.no-data-message {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--text-secondary-color);
+  font-style: italic;
+}
+
+/* ============================================================
+   DARK MODE
+   ============================================================ */
+:host-context(.dark-theme) {
+  .status-pendiente  { background: rgba(230, 81, 0, 0.15);  color: #ffb74d; }
+  .status-confirmada { background: rgba(46, 125, 50, 0.15); color: #81c784; }
+  .status-completada { background: rgba(21, 101, 192, 0.15);color: #64b5f6; }
+  .status-rechazada  { background: rgba(198, 40, 40, 0.15); color: #ef9a9a; }
 }
