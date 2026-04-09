@@ -21,12 +21,12 @@
   background: var(--card-background-color);
   z-index: 10;
 
-  .cliente-info {
+  .persona-info {
     display: flex;
     align-items: center;
     gap: 16px;
 
-    .avatar-cliente {
+    .avatar-persona {
       width: 56px;
       height: 56px;
       border-radius: 50%;
@@ -48,8 +48,8 @@
     }
   }
 
-  // Chips de Estado
   .estado-badge {
+    flex-shrink: 0;
     padding: 6px 16px;
     border-radius: 20px;
     font-weight: 600;
@@ -57,31 +57,34 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
 
-    &.status-pendiente {
-      background-color: #fff8e1;
-      color: #f57f17;
-      border: 1px solid #ffe0b2;
-    }
-
-    &.status-confirmada {
-      background-color: #e8f5e9;
-      color: #2e7d32;
-      border: 1px solid #c8e6c9;
-    }
-
+    &.status-pendiente  { background-color: #fff8e1; color: #f57f17; border: 1px solid #ffe0b2; }
+    &.status-confirmada { background-color: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+    &.status-completada { background-color: #e0f7fa; color: #006064; border: 1px solid #b2ebf2; }
+    &.status-propuesta  { background-color: #ede7f6; color: #512da8; border: 1px solid #d1c4e9; }
     &.status-rechazada,
-    &.status-cancelada {
-      background-color: #ffebee;
-      color: #c62828;
-      border: 1px solid #ffcdd2;
-    }
-
-    &.status-completada {
-      background-color: #e0f7fa;
-      color: #006064;
-      border: 1px solid #b2ebf2;
-    }
+    &.status-cancelada  { background-color: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
   }
+}
+
+// MENSAJE DE ESTADO (solo cliente)
+.status-message {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+
+  mat-icon { flex-shrink: 0; }
+  p { margin: 0; }
+
+  &.info-pendiente  { background: #fff8e1; color: #f57f17; }
+  &.info-confirmada { background: #e8f5e9; color: #2e7d32; }
+  &.info-completada { background: #e0f7fa; color: #006064; }
+  &.info-propuesta  { background: #ede7f6; color: #512da8; }
+  &.info-cancelada,
+  &.info-rechazada  { background: #ffebee; color: #c62828; }
 }
 
 // PESTAÑAS

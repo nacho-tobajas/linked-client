@@ -1,5 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { firstValueFrom, Observable, Subscription } from 'rxjs';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { LoginService } from './services/auth/login.service';
 import { LoadingService } from './services/loading.service';
 import { ThemeService } from './core/services/theme.service';
@@ -19,19 +21,31 @@ export class AppComponent implements OnInit, OnDestroy {
   userLoginOn: boolean = false;
   userIsAdmin: boolean = false;
   userId: number | null = null;
+  showShell: boolean = true;
 
   private authSub?: Subscription;
+  private routeSub?: Subscription;
+
+  private readonly AUTH_ROUTES = ['/login', '/register', '/forgotPass', '/reset-password'];
 
   constructor(
     private loginService: LoginService,
     private themeService: ThemeService,
     private loadingService: LoadingService,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router,
   ) {
     this.isLoading$ = this.loadingService.loading$;
   }
 
   ngOnInit(): void {
+    this.routeSub = this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd)
+    ).subscribe((e) => {
+      const url = (e as NavigationEnd).urlAfterRedirects;
+      this.showShell = !this.AUTH_ROUTES.some(r => url.startsWith(r));
+    });
+
     this.authSub = this.loginService.userLoginOn.subscribe(async (isLoggedIn) => {
       this.userLoginOn = isLoggedIn;
 
@@ -68,5 +82,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.authSub?.unsubscribe();
+    this.routeSub?.unsubscribe();
   }
 }

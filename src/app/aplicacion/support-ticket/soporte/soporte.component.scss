@@ -1,67 +1,297 @@
 @use "src/assets/styles/_variables.scss" as *;
 
-.container {
-  margin-top: 1.5em;
+/* ── Page layout ── */
+.soporte-page {
+  min-height: 100vh;
+  background: var(--body-background-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 16px 60px;
+}
+
+/* ── Hero ── */
+.soporte-hero {
   text-align: center;
-  background-color: #fff;
-  padding: 40px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  max-width: 400px;
-  width: 90%;
+  margin-bottom: 36px;
 
-  .titulo-soporte {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5em;
-    margin-bottom: 1em;
-
-    h2 {
-      font-size: 2em;
-      color: $secondary-light-color;
-      font-weight: bold;
-      margin: 0;
-    }
-
-    .icon {
-      font-size: 2em;
-      color: $secondary-light-color;
-    }
+  .hero-icon {
+    font-size: 52px;
+    width: 52px;
+    height: 52px;
+    color: $section-title-main-color;
+    margin-bottom: 12px;
   }
 
-  p {
-    color: #666;
+  .hero-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--title-text-color);
+    margin: 0 0 8px;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+    color: var(--text-secondary-color);
+    margin: 0;
+  }
+}
+
+/* ── Card wrapper ── */
+.soporte-card-wrap {
+  width: 100%;
+  max-width: 680px;
+}
+
+.soporte-card {
+  background: var(--card-background-color);
+  border: 1px solid var(--line-divider);
+  border-radius: 16px !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08) !important;
+  overflow: hidden;
+}
+
+/* ── Content ── */
+mat-card-content {
+  padding: 28px 28px 12px !important;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── Two-column row ── */
+.form-row-two {
+  display: flex;
+  gap: 16px;
+
+  .form-field {
+    flex: 1;
+    min-width: 0;
+  }
+
+  @media (max-width: 520px) {
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+.form-field-full {
+  width: 100%;
+}
+
+/* ── Screenshot ── */
+.screenshot-section {
+  margin-top: 4px;
+  margin-bottom: 20px;
+}
+
+.screenshot-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--title-text-color);
+  margin: 0 0 10px;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: $section-title-main-color;
+  }
+}
+
+.optional-tag {
+  font-weight: 400;
+  color: var(--text-secondary-color);
+  font-size: 0.8rem;
+}
+
+.screenshot-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 2px dashed var(--line-divider);
+  border-radius: 12px;
+  padding: 28px 20px;
+  cursor: pointer;
+  background: var(--light-gray-background-color);
+  transition: border-color 0.2s, background 0.2s;
+  color: var(--text-secondary-color);
+  font-size: 0.88rem;
+
+  mat-icon {
+    font-size: 34px;
+    width: 34px;
+    height: 34px;
+    opacity: 0.45;
+  }
+
+  &:hover {
+    border-color: $section-title-main-color;
+    background: rgba(93, 106, 88, 0.05);
+  }
+}
+
+.screenshot-preview-wrap {
+  position: relative;
+  display: inline-block;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--line-divider);
+
+  .screenshot-preview {
+    display: block;
+    max-width: 100%;
+    max-height: 220px;
+    object-fit: contain;
+    background: var(--light-gray-background-color);
+  }
+
+  .remove-screenshot {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+
+    mat-icon {
+      font-size: 17px;
+      width: 17px;
+      height: 17px;
+    }
+  }
+}
+
+.screenshot-error {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #c62828;
+  font-size: 0.82rem;
+  margin: 6px 0 0;
+
+  mat-icon {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+  }
+}
+
+/* ── Info técnica ── */
+.tech-info-section {
+  background: var(--light-gray-background-color);
+  border: 1px solid var(--line-divider);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 8px;
+}
+
+.tech-info-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 10px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary-color);
+
+  mat-icon {
     font-size: 16px;
-    margin: 10px 0 20px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.tech-info-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  align-items: flex-start;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.tech-key {
+  font-weight: 600;
+  color: var(--text-secondary-color);
+  flex-shrink: 0;
+  width: 80px;
+}
+
+.tech-value {
+  color: var(--text-color);
+  word-break: break-all;
+  white-space: pre-wrap;
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+/* ── Actions ── */
+.card-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px 28px 24px !important;
+}
+
+.btn-send {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0 24px;
+  height: 44px;
+  background-color: $main-color !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
   }
 
-  .ticket-container {
-    display: flex;
-    justify-content: center;
+  &:disabled {
+    opacity: 0.5;
+  }
+}
 
-    .add-btn {
-      display: flex;
-      flex-direction: row-reverse;
-      gap: 0.5em;
-      margin-top: 1.5em;
-      padding: 0.8em 1.2em;
-      font-size: 1em;
-      color: #fff;
-      background-color: $main-color;
-      border-radius: 8px;
-      text-transform: uppercase;
-      font-weight: bold;
-      transition: background-color 0.3s ease;
+/* ── Mobile ── */
+@media (max-width: 600px) {
+  .soporte-page {
+    padding: 24px 12px 48px;
+  }
 
-      &:hover {
-        background-color: $main-color-hover;
-      }
+  .soporte-hero {
+    margin-bottom: 24px;
 
-      .mat-icon {
-        font-size: 1.2em;
-        margin: 0;
-      }
+    .hero-title {
+      font-size: 1.5rem;
+    }
+  }
+
+  mat-card-content {
+    padding: 20px 16px 8px !important;
+  }
+
+  .card-actions {
+    padding: 12px 16px 20px !important;
+    justify-content: stretch;
+
+    .btn-send {
+      width: 100%;
+      justify-content: center;
     }
   }
 }

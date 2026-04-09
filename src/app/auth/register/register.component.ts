@@ -1,5 +1,5 @@
 import { Component, NgZone, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { RegisterService } from 'src/app/services/auth/register.service';
 import { Validators } from '@angular/forms';
@@ -7,25 +7,27 @@ import { ErrorDialogComponent } from 'src/app/components/error-dialog/error-dial
 import { User } from '../auth.models';
 import { EncryptionService } from 'src/app/services/auth/encryption.service';
 import { Router } from '@angular/router';
-import { MatCard, MatCardContent, MatCardActions } from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
 import { MatFormField, MatLabel, MatPrefix, MatSuffix, MatError } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
 import { NgIf, NgFor } from '@angular/common';
 import { MatIconButton, MatButton } from '@angular/material/button';
-import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTooltip } from '@angular/material/tooltip';
 import { GeocodingService, GeoResult } from 'src/app/services/geocoding/geocoding.service';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
+import { MatChipsModule } from '@angular/material/chips';
+import { catchError, debounceTime, distinctUntilChanged, filter, map, switchMap } from 'rxjs/operators';
+import { Observable, of, timer } from 'rxjs';
+import { EspecialidadesService } from 'src/app/aplicacion/gestion-sistema/especialidades/especialidades.service';
+import { Especialidad } from 'src/app/aplicacion/gestion-sistema/especialidades/especialidades.model';
 
 @Component({
     selector: 'app-register',
     templateUrl: './register.component.html',
     styleUrls: ['./register.component.scss'],
-    imports: [FormsModule, ReactiveFormsModule, MatCard, MatIcon, MatCardContent, MatFormField, MatLabel, MatPrefix, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgIf, NgFor, MatError, MatIconButton, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatCardActions, MatButton, MatProgressSpinner, MatTooltip, MatAutocompleteModule]
+    imports: [FormsModule, ReactiveFormsModule, MatIcon, MatFormField, MatLabel, MatPrefix, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgIf, NgFor, MatError, MatIconButton, MatButton, MatProgressSpinner, MatTooltip, MatAutocompleteModule, MatChipsModule]
 })
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
@@ -33,12 +35,17 @@ export class RegisterComponent implements OnInit {
   today: Date = new Date();
   hide = true;
 
+  accountType: 'cliente' | 'tatuador' = 'cliente';
+
   geocodedLat: number | null = null;
   geocodedLng: number | null = null;
   geocodedDisplayName: string | null = null;
   isGeocoding = false;
   isGPSLocating = false;
   locationSuggestions: GeoResult[] = [];
+
+  especialidades: Especialidad[] = [];
+  especialidadesSeleccionadas: Especialidad[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -48,14 +55,15 @@ export class RegisterComponent implements OnInit {
     private router: Router,
     private geocodingService: GeocodingService,
     private ngZone: NgZone,
+    private especialidadesService: EspecialidadesService,
   ) {
     this.registerForm = this.formBuilder.group(
       {
-        username: ['', [Validators.required]],
+        username: ['', [Validators.required], [this.usernameAvailabilityValidator()]],
         realname: [''],
         surname: [''],
         localidad: [''],
-        email: ['', [Validators.required, Validators.email]],
+        email: ['', [Validators.required, Validators.email], [this.emailAvailabilityValidator()]],
         password: [
           '',
           [
@@ -67,6 +75,7 @@ export class RegisterComponent implements OnInit {
         ],
         password2: ['', [Validators.required, this.passwordMatchValidator()]],
         birth_date: ['', [Validators.required]],
+        estudio: [''],
       }
     );
 
@@ -74,6 +83,10 @@ export class RegisterComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.especialidadesService.getAllEspecialidades().subscribe(data => {
+      this.especialidades = data.filter(e => e.status);
+    });
+
     this.registerForm.get('localidad')!.valueChanges.pipe(
       debounceTime(400),
       distinctUntilChanged(),
@@ -82,6 +95,34 @@ export class RegisterComponent implements OnInit {
     ).subscribe(results => {
       this.locationSuggestions = results;
     });
+
+    this.registerForm.get('password')!.valueChanges.subscribe(() => {
+      const p2 = this.registerForm.get('password2');
+      if (p2?.value) {
+        p2.markAsTouched();
+        p2.updateValueAndValidity({ emitEvent: false });
+      }
+    });
+  }
+
+  setAccountType(type: 'cliente' | 'tatuador'): void {
+    this.accountType = type;
+    if (type === 'cliente') {
+      this.especialidadesSeleccionadas = [];
+    }
+  }
+
+  toggleEspecialidad(esp: Especialidad): void {
+    const idx = this.especialidadesSeleccionadas.findIndex(e => e.id === esp.id);
+    if (idx >= 0) {
+      this.especialidadesSeleccionadas.splice(idx, 1);
+    } else {
+      this.especialidadesSeleccionadas.push(esp);
+    }
+  }
+
+  isEspecialidadSelected(esp: Especialidad): boolean {
+    return this.especialidadesSeleccionadas.some(e => e.id === esp.id);
   }
 
   onLocationSelected(event: MatAutocompleteSelectedEvent): void {
@@ -150,19 +191,37 @@ export class RegisterComponent implements OnInit {
     this.user.localidad = this.registerForm.controls['localidad'].value || undefined;
     this.user.lat = this.geocodedLat ?? undefined;
     this.user.lng = this.geocodedLng ?? undefined;
-    this.registerService.register(this.user).subscribe(
-      (data) => {
-        this.showSuccessDialog();
-        setTimeout(() => {
-          this.router.navigate(['/login']);
-          this.dialog.closeAll();
-        }, 2500);
-      },
-      (error) => {
-        console.error('Error al registrar: ', error);
-        this.showErrorDialog(error.error.error.message || 'Error desconocido');
-      }
-    );
+
+    if (this.accountType === 'tatuador') {
+      this.user.estudio = this.registerForm.controls['estudio'].value || undefined;
+      this.user.especialidadIds = this.especialidadesSeleccionadas.map(e => e.id);
+      this.registerService.registerTatuador(this.user).subscribe(
+        () => {
+          this.showSuccessDialogTatuador();
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+            this.dialog.closeAll();
+          }, 3000);
+        },
+        (error) => {
+          this.showErrorDialog(error.error?.error?.message || 'Error desconocido');
+        }
+      );
+    } else {
+      this.registerService.register(this.user).subscribe(
+        () => {
+          this.showSuccessDialog();
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+            this.dialog.closeAll();
+          }, 2500);
+        },
+        (error) => {
+          console.error('Error al registrar: ', error);
+          this.showErrorDialog(error.error?.error?.message || 'Error desconocido');
+        }
+      );
+    }
   }
 
   private showErrorDialog(errorMessage: string): void {
@@ -177,32 +236,32 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  private showSuccessDialogTatuador(): void {
+    this.dialog.open(ErrorDialogComponent, {
+      data: { message: 'Solicitud enviada. Tu cuenta está pendiente de aprobación.', type: 'success' },
+    });
+  }
+
   passwordMatchValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      if (!(control instanceof FormGroup)) return null;
-
-      const passwordControl = control.get('password');
-      const confirmPasswordControl = control.get('password2');
-
-      if (!passwordControl || !confirmPasswordControl) return null;
-
-      const password = passwordControl.value;
-      const confirm = confirmPasswordControl.value;
-
-      const currentErrors = confirmPasswordControl.errors ? { ...confirmPasswordControl.errors } : {};
-
-      if (password && confirm && password !== confirm) {
-        currentErrors['passwordsMismatch'] = true;
-        confirmPasswordControl.setErrors(currentErrors);
-      } else {
-        if (currentErrors['passwordsMismatch']) {
-          delete currentErrors['passwordsMismatch'];
-          confirmPasswordControl.setErrors(Object.keys(currentErrors).length ? currentErrors : null);
-        }
+      const parent = control.parent as FormGroup;
+      if (!parent) return null;
+      const password = parent.get('password')?.value;
+      if (control.value && password !== control.value) {
+        return { passwordsMismatch: true };
       }
-
       return null;
     };
+  }
+
+  get passwordStrength(): number {
+    const v: string = this.registerForm.get('password')?.value || '';
+    let score = 0;
+    if (v.length >= 1) score++;
+    if (v.length >= 8) score++;
+    if (/[A-Z]/.test(v)) score++;
+    if (/[0-9]/.test(v)) score++;
+    return score;
   }
 
   get password2() {
@@ -210,6 +269,14 @@ export class RegisterComponent implements OnInit {
   }
   get password() {
     return this.registerForm.get('password');
+  }
+  get passwordHasUpperCaseCheck(): boolean {
+    const v = this.registerForm.get('password')?.value || '';
+    return /[A-Z]/.test(v);
+  }
+  get passwordHasNumberCheck(): boolean {
+    const v = this.registerForm.get('password')?.value || '';
+    return /[0-9]/.test(v);
   }
 
   onConfirmBlur() {
@@ -220,16 +287,10 @@ export class RegisterComponent implements OnInit {
   passwordHasNumber(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const password = control.value;
-      const hasNumber = /\d/.test(password); // Verifica si tiene al menos un número
-
-
+      const hasNumber = /\d/.test(password);
       if (password && !hasNumber) {
-        return {
-          noNumber: 'La contraseña debe contener al menos un número.',
-        };
+        return { noNumber: 'La contraseña debe contener al menos un número.' };
       }
-
-
       return null;
     };
   }
@@ -237,31 +298,11 @@ export class RegisterComponent implements OnInit {
   passwordHasUpperCase(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const password = control.value;
-      const hasUpperCase = /[A-Z]/.test(password); // Verifica si tiene al menos una mayúscula
-
+      const hasUpperCase = /[A-Z]/.test(password);
       if (password && !hasUpperCase) {
-        return {
-          noUpperCase:
-            'La contraseña debe contener al menos una letra mayúscula.',
-        };
+        return { noUpperCase: 'La contraseña debe contener al menos una letra mayúscula.' };
       }
-
       return null;
-    };
-  }
-
-  emailValidator(): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      const email = control.value;
-
-      if (!email) {
-        return null; // No validamos si está vacío, se usa Validators.required aparte
-      }
-
-      // Expresión regular simple para validar emails
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-      return emailRegex.test(email) ? null : { invalidEmail: true };
     };
   }
 
@@ -269,8 +310,30 @@ export class RegisterComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
+  usernameAvailabilityValidator(): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      if (!control.value || control.value.length < 3) return of(null);
+      return timer(500).pipe(
+        switchMap(() => this.registerService.checkAvailability('username', control.value)),
+        map(res => res.available ? null : { usernameTaken: true }),
+        catchError(() => of(null))
+      );
+    };
+  }
+
+  emailAvailabilityValidator(): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      if (!control.value) return of(null);
+      return timer(500).pipe(
+        switchMap(() => this.registerService.checkAvailability('email', control.value)),
+        map(res => res.available ? null : { emailTaken: true }),
+        catchError(() => of(null))
+      );
+    };
+  }
+
   onDateInput(event: any) {
-    let value: string = event.target.value.replace(/\D/g, ''); // solo números
+    let value: string = event.target.value.replace(/\D/g, '');
     if (value.length >= 2) {
       value = value.slice(0, 2) + '/' + value.slice(2);
     }

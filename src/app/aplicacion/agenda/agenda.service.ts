@@ -24,10 +24,16 @@ export class AgendaService {
   // Metodos del cliente
 
   getHorariosDisponibles(tatuadorId: number, fecha: Date): Observable<string[]> {
-    // Formatear la fecha a 'YYYY-MM-DD', que es lo que espera el backend
     const fechaISO = fecha.toISOString().split('T')[0];
-    let params = new HttpParams().set('fecha', fechaISO);
+    const params = new HttpParams().set('fecha', fechaISO);
     return this.http.get<string[]>(`${this.apiUrl}/${tatuadorId}/slots-dia`, { params });
+  }
+
+  getFechasBloqueadas(tatuadorId: number, inicio: Date, fin: Date): Observable<string[]> {
+    const params = new HttpParams()
+      .set('inicio', inicio.toISOString().split('T')[0])
+      .set('fin',    fin.toISOString().split('T')[0]);
+    return this.http.get<string[]>(`${this.apiUrl}/${tatuadorId}/fechas-bloqueadas`, { params });
   }
   
 }

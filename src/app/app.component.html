@@ -1,4 +1,4 @@
-<app-header></app-header>
+<app-header *ngIf="showShell"></app-header>
 
 <div class="main-container">
   <app-sweitemmenu *ngIf="userLoginOn && userIsAdmin"></app-sweitemmenu>
@@ -7,4 +7,4 @@
     <router-outlet></router-outlet>
   </div>
 </div>
-<app-footer></app-footer>
+<app-footer *ngIf="showShell"></app-footer>

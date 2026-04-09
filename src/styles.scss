@@ -842,6 +842,12 @@ body {
   --mat-datepicker-calendar-date-today-outline-color: #2E7D32;
 }
 
+// ─── Centrado vertical en todos los form fields ──────────────────────────────
+.mat-mdc-form-field {
+  --mat-form-field-container-height: 48px;
+  --mat-form-field-container-vertical-padding: 12px;
+}
+
 /* ============================================================
    DIÁLOGO GESTIONAR HORARIO
    panelClass aplicado al .cdk-overlay-pane — control de ancho

@@ -17,4 +17,6 @@ export class User {
   localidad?: string;
   lat?: number;
   lng?: number;
+  estudio?: string;
+  especialidadIds?: number[];
 }

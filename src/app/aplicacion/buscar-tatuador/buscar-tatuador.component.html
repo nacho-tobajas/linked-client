@@ -71,8 +71,21 @@
             class="location-text-input"
             placeholder="Ingresá una ciudad o dirección"
             [(ngModel)]="locationText"
+            (input)="onLocationInput($event)"
             (keyup.enter)="geocodificarUbicacion()"
+            [matAutocomplete]="autoLocation"
           />
+          <mat-autocomplete
+            #autoLocation
+            (optionSelected)="onLocationSelected($event)"
+          >
+            <mat-option
+              *ngFor="let s of locationSuggestions"
+              [value]="s.displayName"
+            >
+              {{ s.displayName }}
+            </mat-option>
+          </mat-autocomplete>
           <button
             mat-icon-button
             class="btn-geocode"

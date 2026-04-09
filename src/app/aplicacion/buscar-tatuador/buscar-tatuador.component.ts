@@ -9,7 +9,8 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
 import * as L from 'leaflet';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -17,6 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { FormsModule } from '@angular/forms';
 
 import { TatuadorService } from 'src/app/services/user/tatuador.service';
@@ -25,6 +27,7 @@ import {
   TatuadorUbicacion,
 } from 'src/app/services/busqueda/busqueda-estilo.service';
 import { ReservaStateService } from 'src/app/services/reserva/reserva-state.service';
+import { GeocodingService, GeoResult } from 'src/app/services/geocoding/geocoding.service';
 import { ServerUrlPipe } from 'src/app/pipes/server-url.pipe';
 import { environment } from 'src/environments/environment';
 
@@ -48,6 +51,7 @@ L.Icon.Default.mergeOptions({
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatSliderModule,
+    MatAutocompleteModule,
     ServerUrlPipe,
   ],
 })
@@ -71,6 +75,10 @@ export class BuscarTatuadorComponent implements OnInit, AfterViewInit, OnDestroy
   isGeocoding = false;
   errorMsg: string | null = null;
 
+  locationSuggestions: GeoResult[] = [];
+  private locationInput$ = new Subject<string>();
+  private subscriptions = new Subscription();
+
   /* ── Mapa ── */
   private map!: L.Map;
   private userMarker?: L.Marker;
@@ -81,13 +89,24 @@ export class BuscarTatuadorComponent implements OnInit, AfterViewInit, OnDestroy
     private tatuadorService: TatuadorService,
     private busquedaService: BusquedaEstiloService,
     private reservaStateService: ReservaStateService,
+    private geocodingService: GeocodingService,
     private snackBar: MatSnackBar,
     private router: Router,
     private ngZone: NgZone,
-    private http: HttpClient,
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.subscriptions.add(
+      this.locationInput$.pipe(
+        debounceTime(350),
+        distinctUntilChanged(),
+        filter(q => q.length >= 3),
+        switchMap(q => this.geocodingService.suggestions(q))
+      ).subscribe(results => {
+        this.locationSuggestions = results;
+      })
+    );
+  }
 
   ngAfterViewInit(): void {
     this.initMap();
@@ -96,6 +115,7 @@ export class BuscarTatuadorComponent implements OnInit, AfterViewInit, OnDestroy
 
   ngOnDestroy(): void {
     if (this.map) this.map.remove();
+    this.subscriptions.unsubscribe();
   }
 
   /* ──────────────────────────────
@@ -192,24 +212,47 @@ export class BuscarTatuadorComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   /* ──────────────────────────────
+     AUTOCOMPLETADO
+  ────────────────────────────── */
+  onLocationInput(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.locationInput$.next(value);
+    if (!value || value.length < 3) {
+      this.locationSuggestions = [];
+    }
+  }
+
+  onLocationSelected(event: MatAutocompleteSelectedEvent): void {
+    const selected = this.locationSuggestions.find(s => s.displayName === event.option.value);
+    if (selected) {
+      this.userLat = selected.lat;
+      this.userLng = selected.lng;
+      this.locationText = selected.displayName;
+      this.locationSuggestions = [];
+      this.centrarMapaEnUsuario();
+      this.aplicarFiltros();
+    }
+  }
+
+  /* ──────────────────────────────
      GEOCODIFICACIÓN MANUAL
   ────────────────────────────── */
   geocodificarUbicacion(): void {
     const q = this.locationText.trim();
     if (!q) return;
     this.isGeocoding = true;
+    this.locationSuggestions = [];
 
-    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=1`;
-    this.http.get<any[]>(url).subscribe({
-      next: (data) => {
-        if (data.length > 0) {
-          this.userLat = parseFloat(data[0].lat);
-          this.userLng = parseFloat(data[0].lon);
-          this.isGeocoding = false;
+    this.geocodingService.geocode(q).subscribe({
+      next: (result) => {
+        this.isGeocoding = false;
+        if (result) {
+          this.userLat = result.lat;
+          this.userLng = result.lng;
+          this.locationText = result.displayName;
           this.centrarMapaEnUsuario();
           this.aplicarFiltros();
         } else {
-          this.isGeocoding = false;
           this.snackBar.open('No se encontró la ubicación. Intentá con otro nombre.', 'Cerrar', { duration: 3500 });
         }
       },
@@ -288,14 +331,12 @@ export class BuscarTatuadorComponent implements OnInit, AfterViewInit, OnDestroy
   aplicarFiltros(): void {
     let resultado = [...this.todosLosTatuadores];
 
-    // Filtrar por estilos
     if (this.estilosSeleccionados.size > 0) {
       resultado = resultado.filter(t =>
         t.especialidades.some(e => this.estilosSeleccionados.has(e.nombre))
       );
     }
 
-    // Filtrar y ordenar por distancia
     if (this.userLat && this.userLng) {
       resultado = resultado
         .map(t => ({
@@ -338,7 +379,6 @@ export class BuscarTatuadorComponent implements OnInit, AfterViewInit, OnDestroy
             instagram_handle: t.instagram_handle ?? undefined,
           }));
 
-        // Recopilar estilos únicos disponibles
         const estilosSet = new Set<string>();
         this.todosLosTatuadores.forEach(t =>
           t.especialidades.forEach(e => estilosSet.add(e.nombre))

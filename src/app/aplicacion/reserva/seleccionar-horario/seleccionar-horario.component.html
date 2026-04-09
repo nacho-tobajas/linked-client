@@ -16,6 +16,8 @@
       </div>
       <mat-calendar
         [minDate]="minDate"
+        [maxDate]="maxDate"
+        [dateFilter]="dateFilter"
         (selectedChange)="onDateSelected($event)"
         [selected]="selectedDate"
       >

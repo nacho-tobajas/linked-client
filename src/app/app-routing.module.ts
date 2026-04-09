@@ -27,6 +27,7 @@ import { BuscarTatuadorComponent } from './aplicacion/buscar-tatuador/buscar-tat
 import { TerminosComponent } from './pages/terminos/terminos.component';
 import { PrivacidadComponent } from './pages/privacidad/privacidad.component';
 import { ContactoComponent } from './pages/contacto/contacto.component';
+import { SolicitudesTatuadorComponent } from './aplicacion/solicitudes-tatuador/solicitudes-tatuador.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/inicio', pathMatch: 'full' },
@@ -41,6 +42,7 @@ const routes: Routes = [
   { path: 'info', component: PersonalDetailsComponent },
   { path: 'support-ticket', component: SupportTicketComponent, canActivate: [adminModGuard] },
   { path: 'especialidades', component: EspecialidadesComponent, canActivate: [adminModGuard] },
+  { path: 'solicitudes-tatuador', component: SolicitudesTatuadorComponent, canActivate: [adminGuard] },
   { path: 'gestionar-agenda', component: AgendaComponent, canActivate: [ /* AuthGuard de Tatuador */] },
   {
     path: 'reserva',

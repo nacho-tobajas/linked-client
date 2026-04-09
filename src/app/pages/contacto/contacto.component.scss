@@ -97,54 +97,186 @@
 }
 
 /* ── Sección CTA soporte ── */
+.support-cta-section {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background: rgba(93, 106, 88, 0.08);
+  border: 1px solid rgba(93, 106, 88, 0.25);
+  border-left: 4px solid $section-title-main-color;
+  border-radius: 14px;
+  padding: 28px 32px;
+  flex-wrap: wrap;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 22px 20px;
+    gap: 16px;
+  }
+}
+
+.support-cta-icon {
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  background: rgba(93, 106, 88, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    fill: $section-title-main-color;
+  }
+
+  @media (max-width: 600px) {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+.support-cta-body {
+  flex: 1;
+  min-width: 0;
+
+  h2 {
+    margin: 0 0 6px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--title-text-color);
+    border: none !important;
+    padding: 0 !important;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.92rem;
+    color: var(--text-secondary-color);
+    line-height: 1.6;
+  }
+}
+
 .cta-button {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-top: 16px;
-  padding: 12px 28px;
+  flex-shrink: 0;
+  padding: 12px 24px;
   background: $section-title-main-color;
   color: #fff;
   border-radius: 10px;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   font-weight: 600;
   text-decoration: none;
+  white-space: nowrap;
   transition: opacity 0.2s, transform 0.15s;
+
+  svg {
+    fill: #fff;
+    flex-shrink: 0;
+  }
 
   &:hover {
     opacity: 0.88;
     transform: translateY(-1px);
   }
+
+  @media (max-width: 600px) {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
-/* ── Redes sociales ── */
-.social-links {
+/* ── Sección CTA Instagram ── */
+.instagram-cta-section {
+  margin-top: 24px;
   display: flex;
-  gap: 12px;
+  align-items: center;
+  gap: 24px;
+  background: rgba(225, 48, 108, 0.05);
+  border: 1px solid rgba(225, 48, 108, 0.2);
+  border-left: 4px solid #e1306c;
+  border-radius: 14px;
+  padding: 28px 32px;
   flex-wrap: wrap;
-  margin-top: 14px;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 22px 20px;
+    gap: 16px;
+  }
 }
 
-.social-link {
+.instagram-cta-icon {
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  background: rgba(225, 48, 108, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    fill: #e1306c;
+  }
+
+  @media (max-width: 600px) {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+.instagram-cta-body {
+  flex: 1;
+  min-width: 0;
+
+  h2 {
+    margin: 0 0 6px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--title-text-color);
+    border: none !important;
+    padding: 0 !important;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.92rem;
+    color: var(--text-secondary-color);
+    line-height: 1.6;
+  }
+}
+
+.instagram-cta-button {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 20px;
+  flex-shrink: 0;
+  padding: 12px 24px;
+  background: #e1306c;
+  color: #fff;
   border-radius: 10px;
-  border: 1px solid var(--line-divider);
-  text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   font-weight: 600;
-  color: var(--text-color);
-  transition: background 0.15s, border-color 0.15s;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 0.2s, transform 0.15s;
 
   svg {
-    width: 20px;
-    height: 20px;
-    fill: currentColor;
+    fill: #fff;
     flex-shrink: 0;
   }
 
-  &.instagram { color: #e1306c; border-color: rgba(225, 48, 108, 0.3); }
-  &.instagram:hover { background: rgba(225, 48, 108, 0.06); border-color: #e1306c; }
+  &:hover {
+    opacity: 0.88;
+    transform: translateY(-1px);
+  }
+
+  @media (max-width: 600px) {
+    width: 100%;
+    justify-content: center;
+  }
 }

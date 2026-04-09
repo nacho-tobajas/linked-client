@@ -249,7 +249,7 @@ export class AgendaComponent implements OnInit, OnDestroy {
   verDetalleTurno(turno: TurnoSesion): void {
     const dialogRef = this.dialog.open(AgendaDetalleComponent, {
       width: '600px',
-      data: { turno: turno }
+      data: { turno, modo: 'tatuador' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
