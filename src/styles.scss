@@ -824,6 +824,7 @@ $mi-dark-tema: mat.m2-define-dark-theme((color: (primary: $mi-primary,
 html,
 body {
   height: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -831,6 +832,10 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   background-color: var(--body-background-color);
   color: var(--text-color);
+}
+
+html {
+  background-color: var(--body-background-color);
 }
 
 :root {
@@ -952,4 +957,22 @@ body {
 .leaflet-popup-content-wrapper {
   border-radius: 10px !important;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* ============================================================
+   DIÁLOGO DETALLE TRABAJO — bottom sheet en mobile
+   ============================================================ */
+.custom-modal-panel {
+  @media (max-width: 768px) {
+    width: 90vw !important;
+    max-width: 90vw !important;
+    height: 90vh !important;
+    max-height: 90vh !important;
+    margin: 0 !important;
+
+    .mat-mdc-dialog-surface {
+      border-radius: 20px !important;
+      height: 100% !important;
+    }
+  }
 }

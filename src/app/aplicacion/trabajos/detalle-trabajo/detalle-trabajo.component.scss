@@ -13,10 +13,31 @@
 
   @media (max-width: 768px) {
     flex-direction: column;
-    height: 92vh;
-    max-height: none;
-    border-radius: 16px;
+    height: 100%;
+    max-height: 100%;
     overflow: hidden;
+  }
+}
+
+/* ── Handle visual ── */
+.drag-handle {
+  display: none;
+
+  @media (max-width: 768px) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    padding: 10px 0 6px;
+    background-color: var(--card-background-color);
+
+    &::after {
+      content: '';
+      width: 36px;
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(128, 128, 128, 0.3);
+    }
   }
 }
 
@@ -34,7 +55,7 @@
   overflow: hidden;
 
   @media (max-width: 768px) {
-    flex: 0 0 52%;
+    flex: 0 0 44%;
     min-height: 0;
   }
 
@@ -101,6 +122,36 @@
   }
 }
 
+/* ── Botón cerrar sobre imagen (mobile) ── */
+.mobile-close-btn {
+  display: none;
+
+  @media (max-width: 768px) {
+    display: flex !important;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    padding: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(4px);
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      color: #fff !important;
+      line-height: 18px;
+    }
+  }
+}
+
 /* ============================================================
    COLUMNA DERECHA — INFORMACIÓN
    ============================================================ */
@@ -132,6 +183,12 @@
   justify-content: space-between;
   align-items: center;
   flex-shrink: 0;
+
+  .header-close-btn {
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
 
   .author-info {
     display: flex;

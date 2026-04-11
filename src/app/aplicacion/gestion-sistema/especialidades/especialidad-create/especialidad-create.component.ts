@@ -9,13 +9,14 @@ import { MatFormField, MatLabel, MatSuffix, MatError } from '@angular/material/f
 import { MatInput } from '@angular/material/input';
 import { NgIf } from '@angular/common';
 import { MatIconButton, MatButton } from '@angular/material/button';
+import { NoDoubleSubmitDirective } from 'src/app/shared/directives/no-double-submit.directive';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'app-especialidad-create',
     templateUrl: './especialidad-create.component.html',
     styleUrl: './especialidad-create.component.scss',
-    imports: [MatCard, MatCardHeader, MatCardTitle, MatCardContent, FormsModule, MatFormField, MatLabel, MatInput, NgIf, MatIconButton, MatSuffix, MatIcon, MatError, MatCardActions, MatButton]
+    imports: [MatCard, MatCardHeader, MatCardTitle, MatCardContent, FormsModule, MatFormField, MatLabel, MatInput, NgIf, MatIconButton, MatSuffix, MatIcon, MatError, MatCardActions, MatButton, NoDoubleSubmitDirective]
 })
 export class EspecialidadCreateComponent {
 especialidad: Especialidad = {

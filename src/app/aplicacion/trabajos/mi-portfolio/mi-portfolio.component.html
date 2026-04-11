@@ -39,6 +39,7 @@
       <div *ngIf="instagramStatus.connected" class="instagram-sync-area">
         <button
           class="btn-instagram-sync"
+          appNoDoubleSubmit
           (click)="syncInstagram()"
           [disabled]="instagramLoading"
         >

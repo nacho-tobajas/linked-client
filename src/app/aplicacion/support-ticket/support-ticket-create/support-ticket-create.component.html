@@ -96,7 +96,7 @@
 
   <mat-card-actions class="dialog-actions">
     <button mat-stroked-button type="button" (click)="cancel()">Cancelar</button>
-    <button mat-raised-button class="create-button" type="button"
+    <button mat-raised-button class="create-button" type="button" appNoDoubleSubmit
       [disabled]="!isFormValid()"
       (click)="createSupportTicket()">
       <mat-icon>send</mat-icon>

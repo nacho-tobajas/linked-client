@@ -62,7 +62,7 @@
 
 <mat-dialog-actions align="end">
   <button mat-stroked-button (click)="onCancel()">Cancelar</button>
-  <button mat-raised-button class="create-button" (click)="onSubmit()" [disabled]="horarioForm.invalid || isSaving || !horarioForm.dirty">
+  <button mat-raised-button class="create-button" appNoDoubleSubmit (click)="onSubmit()" [disabled]="horarioForm.invalid || isSaving || !horarioForm.dirty">
     <mat-icon *ngIf="!isSaving">save</mat-icon>
     <mat-progress-spinner *ngIf="isSaving" diameter="20" mode="indeterminate"></mat-progress-spinner>
     {{ isSaving ? 'Guardando...' : 'Guardar Horario' }}

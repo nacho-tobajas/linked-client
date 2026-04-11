@@ -45,7 +45,7 @@
     <button mat-stroked-button type="button" color="secondary" (click)="cancel()">
       Cancelar
     </button>
-    <button mat-flat-button type="submit" class="create-button" [disabled]="especialidadesForm.invalid"
+    <button mat-flat-button type="submit" class="create-button" appNoDoubleSubmit [disabled]="especialidadesForm.invalid"
       (click)="createEspecialidad()">
       Crear
     </button>

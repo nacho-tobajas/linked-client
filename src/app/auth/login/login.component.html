@@ -63,7 +63,7 @@
           </re-captcha>
         </div>
 
-        <button mat-raised-button type="submit" class="btn-primary"
+        <button mat-raised-button type="submit" class="btn-primary" appNoDoubleSubmit
                 [disabled]="!captchaValid || loginForm.invalid">
           Iniciar sesión
         </button>

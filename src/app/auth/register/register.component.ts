@@ -8,7 +8,7 @@ import { User } from '../auth.models';
 import { EncryptionService } from 'src/app/services/auth/encryption.service';
 import { Router } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
-import { MatFormField, MatLabel, MatPrefix, MatSuffix, MatError } from '@angular/material/form-field';
+import { MatFormField, MatPrefix, MatSuffix, MatError } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
 import { NgIf, NgFor } from '@angular/common';
@@ -22,12 +22,14 @@ import { catchError, debounceTime, distinctUntilChanged, filter, map, switchMap 
 import { Observable, of, timer } from 'rxjs';
 import { EspecialidadesService } from 'src/app/aplicacion/gestion-sistema/especialidades/especialidades.service';
 import { Especialidad } from 'src/app/aplicacion/gestion-sistema/especialidades/especialidades.model';
+import { RecaptchaComponent } from 'ng-recaptcha-angular19';
+import { NoDoubleSubmitDirective } from 'src/app/shared/directives/no-double-submit.directive';
 
 @Component({
     selector: 'app-register',
     templateUrl: './register.component.html',
     styleUrls: ['./register.component.scss'],
-    imports: [FormsModule, ReactiveFormsModule, MatIcon, MatFormField, MatLabel, MatPrefix, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgIf, NgFor, MatError, MatIconButton, MatButton, MatProgressSpinner, MatTooltip, MatAutocompleteModule, MatChipsModule]
+    imports: [FormsModule, ReactiveFormsModule, MatIcon, MatFormField, MatPrefix, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgIf, NgFor, MatError, MatIconButton, MatButton, MatProgressSpinner, MatTooltip, MatAutocompleteModule, MatChipsModule, RecaptchaComponent, NoDoubleSubmitDirective]
 })
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
@@ -36,6 +38,8 @@ export class RegisterComponent implements OnInit {
   hide = true;
 
   accountType: 'cliente' | 'tatuador' = 'cliente';
+  captchaValid = false;
+  captchaToken: string | null = null;
 
   geocodedLat: number | null = null;
   geocodedLng: number | null = null;
@@ -70,7 +74,8 @@ export class RegisterComponent implements OnInit {
             Validators.required,
             Validators.minLength(8),
             this.passwordHasUpperCase(),
-            this.passwordHasNumber()
+            this.passwordHasNumber(),
+            this.passwordHasLowerCase()
           ],
         ],
         password2: ['', [Validators.required, this.passwordMatchValidator()]],
@@ -107,8 +112,19 @@ export class RegisterComponent implements OnInit {
 
   setAccountType(type: 'cliente' | 'tatuador'): void {
     this.accountType = type;
-    if (type === 'cliente') {
+    const tatuadorFields = ['realname', 'surname', 'localidad', 'estudio'];
+
+    if (type === 'tatuador') {
+      tatuadorFields.forEach(field => {
+        this.registerForm.get(field)!.setValidators(Validators.required);
+        this.registerForm.get(field)!.updateValueAndValidity();
+      });
+    } else {
       this.especialidadesSeleccionadas = [];
+      tatuadorFields.forEach(field => {
+        this.registerForm.get(field)!.clearValidators();
+        this.registerForm.get(field)!.updateValueAndValidity();
+      });
     }
   }
 
@@ -257,8 +273,8 @@ export class RegisterComponent implements OnInit {
   get passwordStrength(): number {
     const v: string = this.registerForm.get('password')?.value || '';
     let score = 0;
-    if (v.length >= 1) score++;
     if (v.length >= 8) score++;
+    if (/[a-z]/.test(v)) score++;
     if (/[A-Z]/.test(v)) score++;
     if (/[0-9]/.test(v)) score++;
     return score;
@@ -273,6 +289,10 @@ export class RegisterComponent implements OnInit {
   get passwordHasUpperCaseCheck(): boolean {
     const v = this.registerForm.get('password')?.value || '';
     return /[A-Z]/.test(v);
+  }
+  get passwordHasLowerCaseCheck(): boolean {
+    const v = this.registerForm.get('password')?.value || '';
+    return /[a-z]/.test(v);
   }
   get passwordHasNumberCheck(): boolean {
     const v = this.registerForm.get('password')?.value || '';
@@ -298,12 +318,26 @@ export class RegisterComponent implements OnInit {
   passwordHasUpperCase(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const password = control.value;
-      const hasUpperCase = /[A-Z]/.test(password);
-      if (password && !hasUpperCase) {
-        return { noUpperCase: 'La contraseña debe contener al menos una letra mayúscula.' };
+      if (password && !/[A-Z]/.test(password)) {
+        return { noUpperCase: true };
       }
       return null;
     };
+  }
+
+  passwordHasLowerCase(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const password = control.value;
+      if (password && !/[a-z]/.test(password)) {
+        return { noLowerCase: true };
+      }
+      return null;
+    };
+  }
+
+  onCaptchaResolved(token: string | null) {
+    this.captchaToken = token;
+    this.captchaValid = !!token;
   }
 
   goToLogin() {

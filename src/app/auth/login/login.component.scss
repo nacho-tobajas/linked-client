@@ -199,14 +199,14 @@
 
 .forgot-link {
   font-size: 0.8rem;
-  color: $main-color;
+  color: #2e7d32;
   text-decoration: none;
   font-weight: 500;
   transition: opacity 0.2s;
 
   &:hover { opacity: 0.7; text-decoration: underline; }
 
-  :root.dark-theme & { color: #a0ad95; }
+  :root.dark-theme & { color: #81c784; }
 }
 
 .field {
@@ -226,13 +226,31 @@
 .captcha-wrap {
   display: flex;
   justify-content: center;
-  margin: 20px 0 24px;
-  transform: scale(0.92);
-  transform-origin: center left;
+  margin: 0 0 18px;
+
+  ::ng-deep re-captcha > div {
+    border-radius: 8px;
+    border: 1.5px solid var(--line-divider);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    transition: border-color 0.2s;
+
+    &:hover {
+      border-color: #2e7d32;
+    }
+  }
+
+  // Dark mode: invierte el widget para que no quede un bloque blanco
+  :root.dark-theme & {
+    ::ng-deep re-captcha > div {
+      filter: invert(0.88) hue-rotate(180deg) brightness(0.85);
+      border-color: var(--line-divider);
+    }
+  }
 
   @media (max-width: 380px) {
-    transform: scale(0.8);
-    transform-origin: left center;
+    transform: scale(0.85);
+    transform-origin: center top;
+    margin-bottom: -11px;
   }
 }
 
@@ -245,11 +263,13 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   border-radius: 8px;
-  box-shadow: 0 4px 14px rgba($main-color, 0.35);
+  --mdc-protected-button-container-color: #2e7d32;
+  --mdc-protected-button-label-text-color: #ffffff;
+  box-shadow: 0 4px 14px rgba(46, 125, 50, 0.35);
   transition: box-shadow 0.2s, transform 0.1s;
 
   &:not(:disabled):hover {
-    box-shadow: 0 6px 20px rgba($main-color, 0.45);
+    box-shadow: 0 6px 20px rgba(46, 125, 50, 0.45);
     transform: translateY(-1px);
   }
   &:not(:disabled):active { transform: translateY(0); }
@@ -272,25 +292,25 @@
 .link-action {
   display: inline-flex;
   align-items: center;
-  color: $main-color;
+  color: #2e7d32;
   font-weight: 700;
   font-size: 0.875rem;
   text-decoration: none;
   cursor: pointer;
   padding: 3px 10px;
   border-radius: 20px;
-  border: 1.5px solid $main-color;
+  border: 1.5px solid #2e7d32;
   transition: background 0.18s, color 0.18s;
 
   &:hover {
-    background: $main-color;
+    background: #2e7d32;
     color: #fff;
   }
 
   :root.dark-theme & {
-    color: var(--title-text-color);
-    border-color: var(--title-text-color);
-    &:hover { background: var(--title-text-color); color: var(--card-background-color); }
+    color: #81c784;
+    border-color: #81c784;
+    &:hover { background: #81c784; color: #1b2e1c; }
   }
 }
 

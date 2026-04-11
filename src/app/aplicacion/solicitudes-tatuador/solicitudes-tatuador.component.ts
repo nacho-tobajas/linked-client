@@ -1,28 +1,32 @@
 import { Component, OnInit } from '@angular/core';
 import { NgFor, NgIf, DatePipe } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
-import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatButton } from '@angular/material/button';
+import { NoDoubleSubmitDirective } from 'src/app/shared/directives/no-double-submit.directive';
 import { MatDialog } from '@angular/material/dialog';
-import { MatTooltip } from '@angular/material/tooltip';
 import { SolicitudTatuadorService, SolicitudTatuador } from 'src/app/services/solicitud-tatuador/solicitud-tatuador.service';
 import { EspecialidadesService } from 'src/app/aplicacion/gestion-sistema/especialidades/especialidades.service';
 import { Especialidad } from 'src/app/aplicacion/gestion-sistema/especialidades/especialidades.model';
 import { ErrorDialogComponent } from 'src/app/components/error-dialog/error-dialog.component';
+import { UserService } from 'src/app/services/user/user.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-solicitudes-tatuador',
   templateUrl: './solicitudes-tatuador.component.html',
   styleUrls: ['./solicitudes-tatuador.component.scss'],
-  imports: [NgFor, NgIf, DatePipe, MatIcon, MatButton, MatIconButton, MatTooltip],
+  imports: [NgFor, NgIf, DatePipe, MatIcon, MatButton, NoDoubleSubmitDirective],
 })
 export class SolicitudesTatuadorComponent implements OnInit {
   solicitudes: SolicitudTatuador[] = [];
   especialidadesMap: Map<number, string> = new Map();
   loading = true;
+  private tatuadoresIds: Set<number> = new Set();
 
   constructor(
     private service: SolicitudTatuadorService,
     private espService: EspecialidadesService,
+    private userService: UserService,
     private dialog: MatDialog,
   ) {}
 
@@ -36,16 +40,31 @@ export class SolicitudesTatuadorComponent implements OnInit {
   loadSolicitudes(): void {
     this.loading = true;
     this.service.getAll().subscribe({
-      next: (data) => {
+      next: async (data) => {
         this.solicitudes = data;
+        await this.checkRolesTatuador(data.filter(s => s.status === 'pendiente'));
         this.loading = false;
       },
       error: () => { this.loading = false; }
     });
   }
 
+  private async checkRolesTatuador(pendientes: SolicitudTatuador[]): Promise<void> {
+    const allRoles = await firstValueFrom(this.userService.getRoles());
+    const tatuadorId = allRoles?.find(r => r.description === 'Tatuador')?.id;
+    if (tatuadorId == null) return;
+
+    this.tatuadoresIds.clear();
+    await Promise.all(pendientes.map(async (sol) => {
+      const roles = await firstValueFrom(this.userService.getAllUserRoles(sol.idUser));
+      if ((roles ?? []).some(r => Number(r) === Number(tatuadorId))) {
+        this.tatuadoresIds.add(sol.idUser);
+      }
+    }));
+  }
+
   get pendientes(): SolicitudTatuador[] {
-    return this.solicitudes.filter(s => s.status === 'pendiente');
+    return this.solicitudes.filter(s => s.status === 'pendiente' && !this.tatuadoresIds.has(s.idUser));
   }
 
   get procesadas(): SolicitudTatuador[] {

@@ -12,12 +12,13 @@ import { TrabajosService } from 'src/app/services/trabajos/trabajos.service';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
 import { PostTrabajoComponent } from '../../components/post-trabajo/post-trabajo.component';
+import { SolicitudesTatuadorComponent } from 'src/app/aplicacion/solicitudes-tatuador/solicitudes-tatuador.component';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  imports: [NgIf, NgFor, RouterLink, MatTooltip, MatIcon, PostTrabajoComponent]
+  imports: [NgIf, NgFor, RouterLink, MatTooltip, MatIcon, PostTrabajoComponent, SolicitudesTatuadorComponent]
 })
 
 export class HomeComponent implements OnInit, OnDestroy {

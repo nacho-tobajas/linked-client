@@ -1,5 +1,12 @@
 <app-header *ngIf="showShell"></app-header>
 
+<div *ngIf="!showShell" class="floating-auth-actions">
+  <button mat-icon-button routerLink="/inicio" aria-label="Ir al inicio">
+    <mat-icon>home</mat-icon>
+  </button>
+  <app-theme-toggle-button></app-theme-toggle-button>
+</div>
+
 <div class="main-container">
   <app-sweitemmenu *ngIf="userLoginOn && userIsAdmin"></app-sweitemmenu>
   <div class="content-container">

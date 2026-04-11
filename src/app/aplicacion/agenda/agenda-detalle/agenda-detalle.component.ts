@@ -16,6 +16,7 @@ import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field'
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { ServerUrlPipe } from 'src/app/pipes/server-url.pipe';
+import { NoDoubleSubmitDirective } from 'src/app/shared/directives/no-double-submit.directive';
 import { environment } from 'src/environments/environment';
 
 export interface AgendaDetalleData {
@@ -30,7 +31,7 @@ export interface AgendaDetalleData {
     imports: [MatDivider, MatTabGroup, MatTab, CdkScrollable, MatDialogContent,
               MatIconButton, MatTooltip, MatIcon, NgIf, NgFor,
               MatFormField, MatLabel, MatInput, FormsModule, MatSuffix,
-              MatDialogActions, MatButton, DatePipe, ServerUrlPipe]
+              MatDialogActions, MatButton, DatePipe, ServerUrlPipe, NoDoubleSubmitDirective]
 })
 export class AgendaDetalleComponent implements OnInit {
 
@@ -132,8 +133,32 @@ export class AgendaDetalleComponent implements OnInit {
     this.dialogRef.close({ action: accion, turnoId: this.data.turno.id });
   }
 
-  openImageUrl(imagePath: string): void {
-    const url = imagePath.startsWith('http') ? imagePath : `${environment.urlImg}${imagePath}`;
-    window.open(url, '_blank');
+  lightboxIndex: number | null = null;
+
+  get lightboxUrl(): string | null {
+    if (this.lightboxIndex === null) return null;
+    const img = this.data.turno.imagenes![this.lightboxIndex];
+    const path = img.image_path;
+    return path.startsWith('http') ? path : `${environment.urlImg}${path}`;
+  }
+
+  openLightbox(index: number): void {
+    this.lightboxIndex = index;
+  }
+
+  closeLightbox(): void {
+    this.lightboxIndex = null;
+  }
+
+  lightboxPrev(): void {
+    if (this.lightboxIndex === null) return;
+    const total = this.data.turno.imagenes!.length;
+    this.lightboxIndex = (this.lightboxIndex - 1 + total) % total;
+  }
+
+  lightboxNext(): void {
+    if (this.lightboxIndex === null) return;
+    const total = this.data.turno.imagenes!.length;
+    this.lightboxIndex = (this.lightboxIndex + 1) % total;
   }
 }

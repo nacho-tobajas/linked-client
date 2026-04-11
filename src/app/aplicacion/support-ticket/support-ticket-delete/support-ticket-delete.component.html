@@ -19,7 +19,7 @@
     <button mat-stroked-button color="primary" (click)="onCancel()">
       Cancelar
     </button>
-    <button mat-flat-button color="warn" (click)="deleteSupportTicket()">
+    <button mat-flat-button color="warn" appNoDoubleSubmit (click)="deleteSupportTicket()">
       Eliminar
     </button>
   </mat-card-actions>

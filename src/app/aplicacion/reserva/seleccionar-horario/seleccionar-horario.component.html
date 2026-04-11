@@ -147,6 +147,7 @@
 
       <button
         class="btn-confirm"
+        appNoDoubleSubmit
         [disabled]="!canConfirm() || isSaving"
         (click)="confirmarReserva()"
       >

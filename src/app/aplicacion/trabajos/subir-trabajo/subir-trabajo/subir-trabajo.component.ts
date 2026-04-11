@@ -10,13 +10,14 @@ import { MatFormField, MatLabel, MatHint } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
+import { NoDoubleSubmitDirective } from 'src/app/shared/directives/no-double-submit.directive';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
     selector: 'app-subir-trabajo',
     templateUrl: './subir-trabajo.component.html',
     styleUrl: './subir-trabajo.component.scss',
-    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, NgIf, NgFor, MatTooltip, MatIcon, MatFormField, MatLabel, MatInput, FormsModule, MatHint, MatDialogActions, MatButton, MatProgressSpinner]
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, NgIf, NgFor, MatTooltip, MatIcon, MatFormField, MatLabel, MatInput, FormsModule, MatHint, MatDialogActions, MatButton, MatProgressSpinner, NoDoubleSubmitDirective]
 })
 export class SubirTrabajoComponent {
   selectedFiles: File[] = [];

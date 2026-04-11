@@ -1,7 +1,15 @@
 <div class="modal-container">
 
+  <!-- Handle visual (mobile) -->
+  <div class="drag-handle"></div>
+
   <!-- COLUMNA IZQUIERDA: Imagen / Carrusel -->
   <div class="media-column">
+
+    <!-- Botón cerrar sobre la imagen (mobile) -->
+    <button class="mobile-close-btn" mat-icon-button mat-dialog-close>
+      <mat-icon>close</mat-icon>
+    </button>
 
     <div class="image-wrapper">
       <img [src]="data.trabajo.fotos[currentImageIndex].image_path | serverUrl"
@@ -38,7 +46,7 @@
           <span class="username">{{ '@' + data.trabajo.tatuador?.username }}</span>
         </div>
       </div>
-      <button mat-icon-button mat-dialog-close>
+      <button mat-icon-button mat-dialog-close class="header-close-btn">
         <mat-icon>close</mat-icon>
       </button>
     </div>
@@ -56,7 +64,7 @@
 
     <div class="modal-footer">
       <div class="actions">
-        <button mat-icon-button (click)="toggleLike()" [class.liked]="isLiked">
+        <button mat-icon-button appNoDoubleSubmit [submitDelay]="800" (click)="toggleLike()" [class.liked]="isLiked">
           <mat-icon>{{ isLiked ? 'favorite' : 'favorite_border' }}</mat-icon>
         </button>
       </div>

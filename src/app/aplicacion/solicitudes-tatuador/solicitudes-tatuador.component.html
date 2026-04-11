@@ -47,10 +47,10 @@
         </div>
       </div>
       <div class="card-actions">
-        <button mat-raised-button class="btn-aprobar" (click)="aprobar(sol)">
+        <button mat-raised-button class="btn-aprobar" appNoDoubleSubmit (click)="aprobar(sol)">
           <mat-icon>check</mat-icon> Aprobar
         </button>
-        <button mat-stroked-button class="btn-rechazar" (click)="rechazar(sol)">
+        <button mat-stroked-button class="btn-rechazar" appNoDoubleSubmit (click)="rechazar(sol)">
           <mat-icon>close</mat-icon> Rechazar
         </button>
       </div>

@@ -76,8 +76,8 @@
         <div class="section" *ngIf="data.turno.imagenes && data.turno.imagenes.length > 0">
           <h3>Referencias visuales</h3>
           <div class="galeria">
-            <div class="img-wrapper" *ngFor="let img of data.turno.imagenes">
-              <img [src]="img.image_path | serverUrl" alt="Referencia" (click)="openImageUrl(img.image_path)">
+            <div class="img-wrapper" *ngFor="let img of data.turno.imagenes; let i = index">
+              <img [src]="img.image_path | serverUrl" alt="Referencia" (click)="openLightbox(i)">
             </div>
           </div>
         </div>
@@ -112,7 +112,7 @@
             <textarea matInput [(ngModel)]="nuevoMensajeText" rows="1"
                       style="resize:none"
                       (keyup.enter)="enviarMensaje()"></textarea>
-            <button mat-icon-button matSuffix [disabled]="!nuevoMensajeText.trim()" (click)="enviarMensaje()">
+            <button mat-icon-button matSuffix appNoDoubleSubmit [submitDelay]="800" [disabled]="!nuevoMensajeText.trim()" (click)="enviarMensaje()">
               <mat-icon>send</mat-icon>
             </button>
           </mat-form-field>
@@ -131,23 +131,23 @@
     <!-- SOLO TATUADOR: gestión completa del turno -->
     <ng-container *ngIf="esTatuador">
       <ng-container *ngIf="data.turno.estado === 'Pendiente' || data.turno.estado === 'Propuesta'">
-        <button mat-stroked-button color="warn" (click)="cerrar('rechazar')">
+        <button mat-stroked-button color="warn" appNoDoubleSubmit (click)="cerrar('rechazar')">
           <mat-icon>block</mat-icon> Rechazar
         </button>
-        <button mat-raised-button color="primary" (click)="cerrar('confirmar')">
+        <button mat-raised-button color="primary" appNoDoubleSubmit (click)="cerrar('confirmar')">
           <mat-icon>check</mat-icon> Confirmar
         </button>
       </ng-container>
 
       <ng-container *ngIf="data.turno.estado === 'Confirmada'">
-        <button mat-stroked-button color="warn" (click)="cerrar('rechazar')">Cancelar</button>
-        <button mat-raised-button color="accent" (click)="cerrar('completar')">
+        <button mat-stroked-button color="warn" appNoDoubleSubmit (click)="cerrar('rechazar')">Cancelar</button>
+        <button mat-raised-button color="accent" appNoDoubleSubmit (click)="cerrar('completar')">
           <mat-icon>done_all</mat-icon> Marcar completado
         </button>
       </ng-container>
 
       <ng-container *ngIf="data.turno.estado === 'Rechazada' || data.turno.estado === 'Cancelada'">
-        <button mat-stroked-button color="primary" (click)="cerrar('restaurar')">
+        <button mat-stroked-button color="primary" appNoDoubleSubmit (click)="cerrar('restaurar')">
           <mat-icon>restore</mat-icon> Restaurar a pendiente
         </button>
       </ng-container>
@@ -156,12 +156,29 @@
     <!-- SOLO CLIENTE: puede cancelar si el turno está activo -->
     <ng-container *ngIf="!esTatuador">
       <ng-container *ngIf="data.turno.estado === 'Pendiente' || data.turno.estado === 'Confirmada'">
-        <button mat-stroked-button color="warn" (click)="cerrar('cancelar')">
+        <button mat-stroked-button color="warn" appNoDoubleSubmit (click)="cerrar('cancelar')">
           <mat-icon>cancel</mat-icon> Cancelar turno
         </button>
       </ng-container>
     </ng-container>
 
   </mat-dialog-actions>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox-overlay" *ngIf="lightboxIndex !== null" (click)="closeLightbox()">
+    <button class="lightbox-close" (click)="closeLightbox()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <button class="lightbox-nav prev" *ngIf="data.turno.imagenes!.length > 1" (click)="$event.stopPropagation(); lightboxPrev()">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <img class="lightbox-img" [src]="lightboxUrl" alt="Referencia ampliada" (click)="$event.stopPropagation()">
+    <button class="lightbox-nav next" *ngIf="data.turno.imagenes!.length > 1" (click)="$event.stopPropagation(); lightboxNext()">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+    <div class="lightbox-counter" *ngIf="data.turno.imagenes!.length > 1">
+      {{ lightboxIndex! + 1 }} / {{ data.turno.imagenes!.length }}
+    </div>
+  </div>
 
 </div>

@@ -6,9 +6,15 @@
   flex-direction: column;
   height: 80vh;
   max-height: 800px;
-  min-width: 500px;
   overflow: hidden;
   background-color: var(--card-background-color);
+  position: relative;
+
+  @media (max-width: 768px) {
+    height: 100%;
+    max-height: 100%;
+    width: 100%;
+  }
 }
 
 // HEADER
@@ -319,6 +325,90 @@
     border-radius: 24px;
     padding-left: 12px;
   }
+}
+
+// LIGHTBOX
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  background: rgba(0, 0, 0, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-img {
+  min-width: min(80%, 320px);
+  min-height: min(40vh, 280px);
+  max-width: 92%;
+  max-height: 88%;
+  object-fit: contain;
+  border-radius: 6px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+
+  @media (min-width: 768px) {
+    min-width: min(45vw, 640px);
+    min-height: min(55vh, 520px);
+    max-width: 85vw;
+    max-height: 90vh;
+  }
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  transition: background 0.2s;
+
+  mat-icon { font-size: 20px; width: 20px; height: 20px; }
+
+  &:hover { background: rgba(255, 255, 255, 0.3); }
+}
+
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  transition: background 0.2s;
+
+  mat-icon { font-size: 24px; width: 24px; height: 24px; }
+
+  &:hover { background: rgba(255, 255, 255, 0.3); }
+  &.prev { left: 12px; }
+  &.next { right: 12px; }
+}
+
+.lightbox-counter {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.85rem;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 3px 10px;
+  border-radius: 12px;
 }
 
 // PIE DE DIÁLOGO

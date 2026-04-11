@@ -97,6 +97,7 @@
           mat-raised-button
           class="btn-send"
           type="button"
+          appNoDoubleSubmit
           [disabled]="!isFormValid() || isSending"
           (click)="createSupportTicket()"
         >

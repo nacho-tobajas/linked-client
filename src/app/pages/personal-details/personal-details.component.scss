@@ -204,83 +204,60 @@
 }
 
 /* ============================================================
-   FOTO DOBLE — modo edición
+   FOTO ÚNICA — modo edición
    ============================================================ */
-.profile-picture-dual-horizontal {
+.profile-picture-edit-container {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.5em;
+  justify-content: flex-start;
   margin-bottom: 0.75rem;
+}
 
-  .profile-picture-large-container {
-    .profile-picture-large {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      object-fit: cover;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-    }
+.profile-picture-single-wrapper {
+  position: relative;
+  display: inline-flex;
+
+  .profile-picture-single {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
 
-  .profile-picture-small-container {
-    position: relative;
+  .edit-photo-btn {
+    position: absolute;
+    bottom: -2px;
+    right: -6px;
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+    padding: 0;
+    line-height: 1;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--card-background-color);
+    border-radius: 50%;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease;
 
-    .profile-picture-small {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      border: 3px solid var(--card-background-color);
-      object-fit: cover;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-    }
-
-    .edit-icon {
-      position: absolute;
-      bottom: 0;
-      right: -10px;
-      background-color: var(--card-background-color);
-      border-radius: 50%;
-      box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
-      min-width: 20px;
-      min-height: 20px;
-      font-size: 14px;
+    mat-icon {
+      font-size: 13px;
+      width: 13px;
+      height: 13px;
+      line-height: 13px;
       color: var(--text-color);
-      transition: transform 0.2s ease;
-
-      mat-icon {
-        color: var(--text-color);
-      }
-
-      &:hover {
-        transform: scale(1.1);
-      }
     }
-  }
 
-  @media (min-width: 480px) {
-    gap: 2em;
-
-    .profile-picture-large-container .profile-picture-large {
-      width: 120px;
-      height: 120px;
-    }
-    .profile-picture-small-container .profile-picture-small {
-      width: 76px;
-      height: 76px;
+    &:hover:not([disabled]) {
+      transform: scale(1.1);
     }
   }
 
   @media (min-width: 768px) {
-    gap: 3em;
-
-    .profile-picture-large-container .profile-picture-large {
-      width: 180px;
-      height: 180px;
-    }
-    .profile-picture-small-container .profile-picture-small {
-      width: 90px;
-      height: 90px;
+    .profile-picture-single {
+      width: 96px;
+      height: 96px;
     }
   }
 }
@@ -421,7 +398,7 @@
     margin-bottom: 0;
   }
 
-  .profile-picture-dual-horizontal {
+  .profile-picture-edit-container {
     margin-bottom: 0;
   }
 }
@@ -762,6 +739,77 @@
 }
 
 /* ============================================================
+   PANEL CONFIRMACIÓN CAMBIO DE CONTRASEÑA
+   ============================================================ */
+.password-confirm-panel {
+  border: 1px solid var(--line-divider);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  margin: 0.5rem 0 0;
+  font-size: 0.88rem;
+
+  .password-confirm-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+    color: var(--text-color);
+
+    .password-confirm-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  p {
+    color: var(--text-color);
+    margin-bottom: 1rem;
+  }
+
+  .password-confirm-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
+
+.btn-password-confirm {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  min-height: 44px;
+  background-color: var(--primary-color, #4a90e2);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: #fff;
+  }
+
+  &:hover:not(:disabled) {
+    opacity: 0.88;
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+/* ============================================================
    DARK MODE
    ============================================================ */
 :host-context(.dark-theme) {
@@ -828,9 +876,9 @@
     }
   }
 
-  /* Foto edit-icon */
+  /* Foto edit-icon (vista) y edit-photo-btn (edición) */
   .profile-picture-container .edit-icon,
-  .profile-picture-small-container .edit-icon {
+  .edit-photo-btn {
     background-color: var(--card-background-color);
     mat-icon {
       color: #ffffff;
@@ -888,6 +936,15 @@
     &:hover {
       background-color: rgba(255, 255, 255, 0.08);
       border-color: rgba(255, 255, 255, 0.45);
+    }
+  }
+
+  /* Panel confirmación contraseña */
+  .password-confirm-panel {
+    border-color: rgba(255, 255, 255, 0.15);
+
+    .password-confirm-header {
+      color: #ffffff;
     }
   }
 }

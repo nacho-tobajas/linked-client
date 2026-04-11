@@ -1,9 +1,51 @@
+@use 'src/assets/styles/variables' as *;
+
 .mat-mdc-card-title {
-  margin-bottom: 1em;
+  margin-bottom: 0.5em;
 }
 
 mat-card-actions {
   padding: 1rem;
   display: flex;
   gap: 1rem;
+  justify-content: flex-end;
+}
+
+
+.roles-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary-color);
+  margin: 0 0 12px;
+}
+
+.roles-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-bottom: 8px;
+}
+
+.rol-chip {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 6px;
+  border: 1.5px solid var(--line-divider);
+  background: var(--light-gray-background-color);
+  color: var(--text-color);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+
+  &:hover {
+    border-color: var(--primary-color, #2e7d32);
+  }
+
+  &.selected {
+    background: #2e7d32;
+    border-color: #2e7d32;
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.35);
+  }
 }

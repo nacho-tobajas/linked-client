@@ -4,7 +4,7 @@ import { UserService } from '../../services/user/user.service';
 import { LoginService } from 'src/app/services/auth/login.service';
 import { FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatePipe, NgIf, NgFor } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, Subscription, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
 import { Especialidad } from 'src/app/aplicacion/gestion-sistema/especialidades/especialidades.model';
@@ -23,9 +23,11 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { ServerUrlPipe } from '../../pipes/server-url.pipe';
 import { InstagramService, InstagramStatus } from '../../services/instagram/instagram.service';
 import { GeocodingService, GeoResult } from '../../services/geocoding/geocoding.service';
+import { ForgotPasswordService } from 'src/app/services/auth/forgotpass.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { NoDoubleSubmitDirective } from 'src/app/shared/directives/no-double-submit.directive';
 
 
 @Component({
@@ -33,7 +35,7 @@ import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/ma
     templateUrl: './personal-details.component.html',
     styleUrls: ['./personal-details.component.scss'],
     providers: [DatePipe],
-    imports: [MatChipsModule, NgIf, NgFor, MatCard, MatCardHeader, MatCardAvatar, MatCardTitle, MatCardSubtitle, MatDivider, MatCardContent, MatChip, MatCardActions, MatIcon, RouterLink, MatIconButton, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatHint, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, TatuadorComponent, MatButton, DatePipe, ServerUrlPipe, MatSnackBarModule, MatProgressSpinner, MatTooltip, MatAutocompleteModule]
+    imports: [MatChipsModule, NgIf, NgFor, MatCard, MatCardHeader, MatCardAvatar, MatCardTitle, MatCardSubtitle, MatDivider, MatCardContent, MatChip, MatCardActions, MatIcon, MatIconButton, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatHint, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, TatuadorComponent, MatButton, DatePipe, ServerUrlPipe, MatSnackBarModule, MatProgressSpinner, MatTooltip, MatAutocompleteModule, NoDoubleSubmitDirective]
 })
 export class PersonalDetailsComponent implements OnInit, OnDestroy {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
@@ -51,6 +53,10 @@ export class PersonalDetailsComponent implements OnInit, OnDestroy {
   today: Date = new Date();
   selectedFile: File | null = null;
   private subscriptions: Subscription = new Subscription();
+
+  // Cambio de contraseña
+  showPasswordConfirm: boolean = false;
+  passwordResetLoading: boolean = false;
 
   // Instagram
   instagramStatus: InstagramStatus = { connected: false };
@@ -89,6 +95,7 @@ export class PersonalDetailsComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private instagramService: InstagramService,
     private geocodingService: GeocodingService,
+    private forgotPasswordService: ForgotPasswordService,
     private snackBar: MatSnackBar,
   ) {}
 
@@ -106,6 +113,34 @@ export class PersonalDetailsComponent implements OnInit, OnDestroy {
         this.locationSuggestions = results;
       })
     );
+  }
+
+  // ----------------------------------------------------------
+  // Cambio de contraseña
+  // ----------------------------------------------------------
+
+  requestPasswordChange(): void {
+    this.showPasswordConfirm = true;
+  }
+
+  cancelPasswordChange(): void {
+    this.showPasswordConfirm = false;
+  }
+
+  confirmPasswordChange(): void {
+    if (!this.user?.email) return;
+    this.passwordResetLoading = true;
+    this.forgotPasswordService.forgotPassword(this.user.email).subscribe({
+      next: () => {
+        this.passwordResetLoading = false;
+        this.showPasswordConfirm = false;
+        this.snackBar.open(`Se envió un correo a ${this.user!.email} con el enlace para cambiar la contraseña.`, 'OK', { duration: 6000 });
+      },
+      error: () => {
+        this.passwordResetLoading = false;
+        this.snackBar.open('Error al enviar el correo. Intentá de nuevo.', 'Cerrar', { duration: 4000 });
+      }
+    });
   }
 
   // ----------------------------------------------------------

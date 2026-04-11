@@ -7,6 +7,7 @@ import { AgendaService } from '../../agenda/agenda.service';
 import { SolicitarTurnoDto, TurnosService } from 'src/app/services/turnos/turnos.service';
 import { ReservaStateService } from 'src/app/services/reserva/reserva-state.service';
 import { MatIconButton } from '@angular/material/button';
+import { NoDoubleSubmitDirective } from 'src/app/shared/directives/no-double-submit.directive';
 import { MatRipple } from '@angular/material/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatCalendar } from '@angular/material/datepicker';
@@ -17,7 +18,7 @@ import { environment } from 'src/environments/environment';
     selector: 'app-seleccionar-horario',
     templateUrl: './seleccionar-horario.component.html',
     styleUrl: './seleccionar-horario.component.scss',
-    imports: [MatIconButton, MatRipple, MatIcon, NgIf, MatCalendar, NgFor, FormsModule]
+    imports: [MatIconButton, MatRipple, MatIcon, NgIf, MatCalendar, NgFor, FormsModule, NoDoubleSubmitDirective]
 })
 export class SeleccionarHorarioComponent implements OnInit {
 

@@ -9,6 +9,7 @@ import { MatInput } from '@angular/material/input';
 import { MatSelect } from '@angular/material/select';
 import { MatOption } from '@angular/material/core';
 import { MatButton, MatIconButton } from '@angular/material/button';
+import { NoDoubleSubmitDirective } from 'src/app/shared/directives/no-double-submit.directive';
 import { MatIcon } from '@angular/material/icon';
 import { MatDivider } from '@angular/material/divider';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -27,7 +28,7 @@ import { UserService } from 'src/app/services/user/user.service';
     MatCard, MatCardContent, MatCardActions,
     MatFormField, MatLabel, MatHint,
     MatInput, MatSelect, MatOption,
-    MatButton, MatIconButton, MatIcon, MatDivider, MatTooltip,
+    MatButton, MatIconButton, MatIcon, MatDivider, MatTooltip, NoDoubleSubmitDirective,
   ]
 })
 export class SoporteComponent implements OnInit {

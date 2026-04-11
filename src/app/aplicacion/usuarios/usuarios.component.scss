@@ -1,3 +1,199 @@
-.filtroCrud {
-  padding: 0px 11%;
+@use "src/assets/styles/variables" as *;
+
+.usuarios-page {
+  padding: 24px 16px;
+  overflow-x: hidden;
+
+  @media (min-width: 768px) {
+    padding: 32px 5%;
+  }
+}
+
+// ── Contenedor centrado ───────────────────────────────────────────────────────
+.content-wrap {
+  margin: 0 auto;
+
+  @media (min-width: 768px) {
+    max-width: 65%;
+  }
+}
+
+// ── Título ────────────────────────────────────────────────────────────────────
+.title-crud {
+  margin-bottom: 20px;
+
+  h3 {
+    margin: 0;
+  }
+}
+
+// ── Filtros ──────────────────────────────────────────────────────────────────
+.filtros-accordion {
+  display: block;
+  margin-bottom: 0;
+  width: 100%;
+}
+
+.filtros-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 16px;
+  padding-top: 8px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.filtros-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 4px 0 8px;
+}
+
+.btn-buscar {
+  background-color: #2e7d32 !important;
+  color: #fff !important;
+}
+
+// ── Separador filtro / tabla ──────────────────────────────────────────────────
+.tabla-separador {
+  height: 1px;
+  background: var(--line-divider);
+  margin: 24px 0;
+}
+
+// ── Tabla ─────────────────────────────────────────────────────────────────────
+.tabla-wrap {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+// ── Columnas ──────────────────────────────────────────────────────────────────
+.col-center {
+  text-align: center !important;
+}
+
+.mat-column-user {
+  width: 35%;
+
+  .mat-sort-header-container {
+    justify-content: center;
+  }
+}
+
+.mat-column-roles {
+  width: 25%;
+}
+
+.mat-column-estado {
+  width: 25%;
+  white-space: nowrap;
+}
+
+.mat-column-actions {
+  width: 15%;
+}
+
+// ── Celdas ────────────────────────────────────────────────────────────────────
+.user-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  .username {
+    font-weight: 600;
+    color: var(--title-text-color);
+  }
+
+  .email {
+    font-size: 0.78rem;
+    color: var(--text-secondary-color);
+  }
+}
+
+// ── Chips de roles ────────────────────────────────────────────────────────────
+.chips-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.chips-center {
+  justify-content: center;
+}
+
+.role-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: var(--light-gray-background-color);
+  color: var(--text-color);
+  border: 1px solid var(--line-divider);
+}
+
+.no-role {
+  color: var(--text-secondary-color);
+  font-size: 0.82rem;
+}
+
+// ── Badges de estado ──────────────────────────────────────────────────────────
+.estado-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+
+  &.badge-pendiente {
+    background: rgba(251, 140, 0, 0.12);
+    color: #e65100;
+    border: 1px solid rgba(251, 140, 0, 0.35);
+  }
+
+  &.badge-tatuador {
+    background: rgba(46, 125, 50, 0.1);
+    color: #2e7d32;
+    border: 1px solid rgba(46, 125, 50, 0.3);
+  }
+}
+
+// ── Filas resaltadas ──────────────────────────────────────────────────────────
+tr.mat-mdc-row {
+  &:has(.row-pendiente) {
+    background: rgba(251, 140, 0, 0.04) !important;
+  }
+
+  &:has(.row-tatuador) {
+    background: rgba(46, 125, 50, 0.04) !important;
+  }
+}
+
+// ── Empty state ───────────────────────────────────────────────────────────────
+.empty-state {
+  text-align: center;
+  padding: 48px 0;
+  color: var(--text-secondary-color);
+
+  mat-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+    opacity: 0.35;
+    display: block;
+    margin: 0 auto 10px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+  }
 }

@@ -197,6 +197,7 @@
                 </button>
                 <button
                   class="btn-instagram-connect"
+                  appNoDoubleSubmit
                   (click)="confirmConnectInstagram()"
                 >
                   <svg
@@ -251,6 +252,7 @@
             <div class="instagram-actions">
               <button
                 class="btn-instagram-sync"
+                appNoDoubleSubmit
                 (click)="syncInstagramPosts()"
                 [disabled]="instagramLoading"
               >
@@ -259,6 +261,7 @@
               </button>
               <button
                 class="btn-instagram-disconnect"
+                appNoDoubleSubmit
                 (click)="disconnectInstagram()"
                 [disabled]="instagramLoading"
               >
@@ -279,11 +282,30 @@
         <mat-icon>edit</mat-icon>
         <span>Editar datos</span>
       </div>
-      <div class="edit-button" routerLink="/forgotPass">
+      <div class="edit-button" (click)="requestPasswordChange()">
         <mat-icon>lock</mat-icon>
         <span>Cambiar contraseña</span>
       </div>
     </mat-card-actions>
+
+    <!-- Confirmación cambio de contraseña -->
+    <div *ngIf="showPasswordConfirm" class="password-confirm-panel">
+      <div class="password-confirm-header">
+        <mat-icon class="password-confirm-icon">lock_reset</mat-icon>
+        <span>Cambiar contraseña</span>
+      </div>
+      <p>Se enviará un correo a <strong>{{ user?.email }}</strong> con un enlace para restablecer tu contraseña.</p>
+      <div class="password-confirm-actions">
+        <button class="btn-preflight-cancel" (click)="cancelPasswordChange()" [disabled]="passwordResetLoading">
+          <mat-icon>close</mat-icon>
+          Cancelar
+        </button>
+        <button class="btn-password-confirm" appNoDoubleSubmit (click)="confirmPasswordChange()" [disabled]="passwordResetLoading">
+          <mat-icon>send</mat-icon>
+          {{ passwordResetLoading ? 'Enviando...' : 'Enviar correo' }}
+        </button>
+      </div>
+    </div>
   </mat-card>
 
   <!-- ===================== MODO EDICIÓN ===================== -->
@@ -301,23 +323,16 @@
             <mat-icon>photo_camera</mat-icon>
             <span>Foto de perfil</span>
           </div>
-          <div class="profile-picture-dual-horizontal">
-            <div class="profile-picture-large-container">
+          <div class="profile-picture-edit-container">
+            <div class="profile-picture-single-wrapper">
               <img
                 [src]="previewImageUrl || (user?.profile_photo | serverUrl)"
                 alt="Foto de perfil"
-                class="profile-picture-large"
-              />
-            </div>
-            <div class="profile-picture-small-container">
-              <img
-                [src]="previewImageUrl || (user?.profile_photo | serverUrl)"
-                alt="Foto de perfil previsualización pequeña"
-                class="profile-picture-small"
+                class="profile-picture-single"
               />
               <button
                 mat-icon-button
-                class="edit-icon"
+                class="edit-photo-btn"
                 (click)="triggerFileInput()"
                 [disabled]="isPhotoBlockedByInstagram"
               >
@@ -478,6 +493,7 @@
       <button
         mat-raised-button
         class="normal-button"
+        appNoDoubleSubmit
         (click)="onUpdateProfile()"
         [disabled]="registerForm.invalid"
       >

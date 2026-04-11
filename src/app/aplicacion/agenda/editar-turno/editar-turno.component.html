@@ -55,5 +55,5 @@
 
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Cancelar</button>
-  <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="guardar()">Guardar Cambios</button>
+  <button mat-raised-button color="primary" appNoDoubleSubmit [disabled]="form.invalid" (click)="guardar()">Guardar Cambios</button>
 </mat-dialog-actions>

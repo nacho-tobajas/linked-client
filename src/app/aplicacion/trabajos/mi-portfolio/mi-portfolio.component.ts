@@ -11,11 +11,12 @@ import { TrabajosService } from 'src/app/services/trabajos/trabajos.service';
 import { InstagramService, InstagramStatus } from 'src/app/services/instagram/instagram.service';
 import { ServerUrlPipe } from 'src/app/pipes/server-url.pipe';
 import { PostTileComponent } from 'src/app/components/post-tile/post-tile.component';
+import { NoDoubleSubmitDirective } from 'src/app/shared/directives/no-double-submit.directive';
 import { DetalleTrabajoComponent } from '../detalle-trabajo/detalle-trabajo.component';
 
 @Component({
   selector: 'app-mi-portfolio',
-  imports: [NgIf, NgFor, MatIcon, ServerUrlPipe, PostTileComponent],
+  imports: [NgIf, NgFor, MatIcon, ServerUrlPipe, PostTileComponent, NoDoubleSubmitDirective],
   templateUrl: './mi-portfolio.component.html',
   styleUrl: './mi-portfolio.component.scss'
 })

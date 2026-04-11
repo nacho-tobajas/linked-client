@@ -49,6 +49,8 @@ export class MisReservasComponent implements OnInit {
   abrirDetalle(turno: TurnoSesion): void {
     const dialogRef = this.dialog.open(AgendaDetalleComponent, {
       width: '600px',
+      maxWidth: '100vw',
+      panelClass: 'custom-modal-panel',
       data: { turno, modo: 'cliente' }
     });
 

@@ -20,6 +20,9 @@
       <p class="hero-subtitle" *ngIf="userRol === 'Tatuador'">
         Gestioná tu arte, tu agenda y tus publicaciones.
       </p>
+      <p class="hero-subtitle" *ngIf="userRol === 'Administrador'">
+        Administrá usuarios, aprobá tatuadores y gestioná la plataforma.
+      </p>
       <div *ngIf="!userLoginOn" class="hero-actions">
         <button class="hero-btn-primary" routerLink="/register">
           Registrarse
@@ -64,6 +67,21 @@
         </button>
       </ng-container>
 
+      <ng-container *ngIf="userRol === 'Administrador'">
+        <button class="action-card" routerLink="/solicitudes-tatuador" matTooltip="Aprobar tatuadores">
+          <div class="action-icon"><mat-icon>how_to_reg</mat-icon></div>
+          <span>Solicitudes</span>
+        </button>
+        <button class="action-card" routerLink="/usuarios" matTooltip="Gestionar usuarios">
+          <div class="action-icon"><mat-icon>manage_accounts</mat-icon></div>
+          <span>Usuarios</span>
+        </button>
+        <button class="action-card" routerLink="/support-ticket" matTooltip="Tickets de soporte">
+          <div class="action-icon"><mat-icon>support_agent</mat-icon></div>
+          <span>Soporte</span>
+        </button>
+      </ng-container>
+
       <ng-container *ngIf="userRol === 'Tatuador'">
         <button
           class="action-card"
@@ -92,8 +110,17 @@
       </ng-container>
     </div>
 
+    <!-- ══════════ SOLICITUDES TATUADOR (solo admin) ══════════ -->
+    <section *ngIf="userRol === 'Administrador'" class="admin-section">
+      <div class="section-header">
+        <mat-icon>how_to_reg</mat-icon>
+        <h2>Solicitudes de tatuador</h2>
+      </div>
+      <app-solicitudes-tatuador></app-solicitudes-tatuador>
+    </section>
+
     <!-- ══════════ FEED ══════════ -->
-    <section class="feed-section">
+    <section class="feed-section" *ngIf="userRol !== 'Administrador'">
       <div class="section-header">
         <mat-icon>photo_library</mat-icon>
         <h2>Últimas publicaciones</h2>

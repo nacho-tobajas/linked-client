@@ -17,11 +17,21 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.floating-auth-actions {
+  position: fixed;
+  top: 8px;
+  right: 8px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  color: var(--text-color);
+}
+
 .main-container {
   display: flex;
   flex: 1; // ✅ Hace que esta parte crezca para empujar el footer abajo
   background-color: var(--body-background-color);
-  align-items: center;
+  align-items: flex-start;
 }
 
 .prueba {

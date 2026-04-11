@@ -5,11 +5,12 @@ import { ErrorDialogComponent } from 'src/app/components/error-dialog/error-dial
 import { MatCard, MatCardHeader, MatCardTitle, MatCardContent, MatCardActions } from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
+import { NoDoubleSubmitDirective } from 'src/app/shared/directives/no-double-submit.directive';
 @Component({
     selector: 'app-especialidad-delete',
     templateUrl: './especialidad-delete.component.html',
     styleUrl: './especialidad-delete.component.scss',
-    imports: [MatCard, MatCardHeader, MatCardTitle, MatIcon, MatCardContent, MatCardActions, MatButton]
+    imports: [MatCard, MatCardHeader, MatCardTitle, MatIcon, MatCardContent, MatCardActions, MatButton, NoDoubleSubmitDirective]
 })
 export class EspecialidadDeleteComponent {
   especialidadName: string = '';
