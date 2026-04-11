@@ -11,12 +11,13 @@ import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { NgIf } from '@angular/common';
 import { MatButton } from '@angular/material/button';
+import { NoDoubleSubmitDirective } from 'src/app/shared/directives/no-double-submit.directive';
 
 @Component({
     selector: 'app-forgot-pass',
     templateUrl: './forgotPass.component.html',
     styleUrls: ['./forgotPass.component.scss'],
-    imports: [FormsModule, ReactiveFormsModule, MatCard, MatCardHeader, MatCardTitle, MatCardContent, MatFormField, MatLabel, MatInput, NgIf, MatError, MatCardActions, MatButton]
+    imports: [FormsModule, ReactiveFormsModule, MatCard, MatCardHeader, MatCardTitle, MatCardContent, MatFormField, MatLabel, MatInput, NgIf, MatError, MatCardActions, MatButton, NoDoubleSubmitDirective]
 })
 export class ForgotPassComponent implements OnInit {
   forgotPassForm: FormGroup;

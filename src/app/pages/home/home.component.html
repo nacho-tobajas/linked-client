@@ -1,68 +1,146 @@
 <div class="home-container">
-  
-  <div class="welcome-section">
-    <h1>Bienvenido a Linked</h1> 
-    <p *ngIf="!userLoginOn">Explora el arte de nuestros tatuadores y agenda tu turno.</p>
-    <p *ngIf="userRol === 'Cliente'">Encuentra tu próximo tatuaje.</p>
-    <p *ngIf="userRol === 'Tatuador'">Gestiona tu arte y tu agenda.</p>
-  </div>
-
-  <div class="quick-actions" *ngIf="userLoginOn">
-    
-<ng-container *ngIf="userRol === 'Cliente'">
-        <button class="option-card" routerLink="/reserva/listado" matTooltip="Nueva Reserva">
-          <div class="icon-circle"><mat-icon>add_circle_outline</mat-icon></div>
-          <span>Reservar</span>
+  <!-- ═══════════════════════════════════════════════════════
+       HERO
+  ═══════════════════════════════════════════════════════ -->
+  <section class="hero">
+    <div class="hero-bg-shapes">
+      <span class="shape shape-1"></span>
+      <span class="shape shape-2"></span>
+      <span class="shape shape-3"></span>
+    </div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">La comunidad del tatuaje</p>
+      <h1 class="hero-title">Linked</h1>
+      <p class="hero-subtitle" *ngIf="!userLoginOn">
+        Explorá el arte de nuestros tatuadores y agendá tu próximo turno.
+      </p>
+      <p class="hero-subtitle" *ngIf="userRol === 'Cliente'">
+        Encontrá tu próximo tatuaje y reservá con los mejores artistas.
+      </p>
+      <p class="hero-subtitle" *ngIf="userRol === 'Tatuador'">
+        Gestioná tu arte, tu agenda y tus publicaciones.
+      </p>
+      <p class="hero-subtitle" *ngIf="userRol === 'Administrador'">
+        Administrá usuarios, aprobá tatuadores y gestioná la plataforma.
+      </p>
+      <div *ngIf="!userLoginOn" class="hero-actions">
+        <button class="hero-btn-primary" routerLink="/register">
+          Registrarse
         </button>
+        <button class="hero-btn-secondary" routerLink="/login">
+          Iniciar sesión
+        </button>
+      </div>
+    </div>
+  </section>
 
-        <button class="option-card" routerLink="/mis-reservas" matTooltip="Ver mis turnos">
-          <div class="icon-circle"><mat-icon>calendar_today</mat-icon></div>
+  <!-- ═══════════════════════════════════════════════════════
+       CONTENIDO
+  ═══════════════════════════════════════════════════════ -->
+  <div class="content-wrapper">
+    <!-- Acciones rápidas -->
+    <div class="quick-actions" *ngIf="userLoginOn">
+      <ng-container *ngIf="userRol === 'Cliente'">
+        <button
+          class="action-card"
+          routerLink="/buscar"
+          matTooltip="Buscar tatuador por estilo"
+        >
+          <div class="action-icon"><mat-icon>travel_explore</mat-icon></div>
+          <span>Buscar Tatuador</span>
+        </button>
+        <button
+          class="action-card"
+          routerLink="/mis-reservas"
+          matTooltip="Ver mis turnos"
+        >
+          <div class="action-icon"><mat-icon>calendar_today</mat-icon></div>
           <span>Mis Turnos</span>
         </button>
-
-        <button class="option-card" routerLink="/mis-favoritos">
-          <div class="icon-circle"><mat-icon>favorite</mat-icon></div>
+        <button
+          class="action-card"
+          routerLink="/mis-favoritos"
+          matTooltip="Ver mis tatuajes favoritos"
+        >
+          <div class="action-icon"><mat-icon>favorite</mat-icon></div>
           <span>Favoritos</span>
         </button>
-    </ng-container>
+      </ng-container>
 
-    <ng-container *ngIf="userRol === 'Tatuador'">
-        
-        <button class="option-card" routerLink="/gestionar-agenda"> <div class="icon-circle"><mat-icon>event_note</mat-icon></div>
+      <ng-container *ngIf="userRol === 'Administrador'">
+        <button class="action-card" routerLink="/solicitudes-tatuador" matTooltip="Aprobar tatuadores">
+          <div class="action-icon"><mat-icon>how_to_reg</mat-icon></div>
+          <span>Solicitudes</span>
+        </button>
+        <button class="action-card" routerLink="/usuarios" matTooltip="Gestionar usuarios">
+          <div class="action-icon"><mat-icon>manage_accounts</mat-icon></div>
+          <span>Usuarios</span>
+        </button>
+        <button class="action-card" routerLink="/support-ticket" matTooltip="Tickets de soporte">
+          <div class="action-icon"><mat-icon>support_agent</mat-icon></div>
+          <span>Soporte</span>
+        </button>
+      </ng-container>
+
+      <ng-container *ngIf="userRol === 'Tatuador'">
+        <button
+          class="action-card"
+          routerLink="/gestionar-agenda"
+          matTooltip="Gestionar mi agenda"
+        >
+          <div class="action-icon"><mat-icon>event_note</mat-icon></div>
           <span>Mi Agenda</span>
         </button>
-
-        <button class="option-card" (click)="abrirSubirTrabajo()">
-          <div class="icon-circle"><mat-icon>add_a_photo</mat-icon></div>
+        <button
+          class="action-card"
+          (click)="abrirSubirTrabajo()"
+          matTooltip="Subir una nueva publicación"
+        >
+          <div class="action-icon"><mat-icon>add_a_photo</mat-icon></div>
           <span>Subir Foto</span>
         </button>
-
-        <button class="option-card" routerLink="/perfil"> <div class="icon-circle"><mat-icon>person</mat-icon></div>
-          <span>Mi Perfil</span>
+        <button
+          class="action-card"
+          routerLink="/mi-portfolio"
+          matTooltip="Ver mis publicaciones"
+        >
+          <div class="action-icon"><mat-icon>grid_view</mat-icon></div>
+          <span>Mis Publicaciones</span>
         </button>
+      </ng-container>
+    </div>
 
-    </ng-container>
+    <!-- ══════════ SOLICITUDES TATUADOR (solo admin) ══════════ -->
+    <section *ngIf="userRol === 'Administrador'" class="admin-section">
+      <div class="section-header">
+        <mat-icon>how_to_reg</mat-icon>
+        <h2>Solicitudes de tatuador</h2>
+      </div>
+      <app-solicitudes-tatuador></app-solicitudes-tatuador>
+    </section>
 
-  </div>
-
-  <mat-divider class="section-divider"></mat-divider>
-
-  <div class="feed-section">
-      <!-- Componente con publicaciones (post-trabajo) -->
-      <div class="gallery-grid">
-          <app-post-trabajo 
-              *ngFor="let trabajo of feed"
-              [trabajo]="trabajo"
-              [isLiked]="misLikes.has(trabajo.id)"
-              [showArtistInfo]="true"
-              (toggleLike)="onToggleLike($event)"
-              (click)="abrirDetalle(trabajo)">
-          </app-post-trabajo>
+    <!-- ══════════ FEED ══════════ -->
+    <section class="feed-section" *ngIf="userRol !== 'Administrador'">
+      <div class="section-header">
+        <mat-icon>photo_library</mat-icon>
+        <h2>Últimas publicaciones</h2>
       </div>
 
-    <div *ngIf="feed.length === 0" class="empty-feed">
-        <p>Aún no hay publicaciones para mostrar.</p>
-    </div>
-  </div>
+      <div class="gallery-grid" *ngIf="feed.length > 0">
+        <app-post-trabajo
+          *ngFor="let trabajo of feed"
+          [trabajo]="trabajo"
+          [isLiked]="misLikes.has(trabajo.id)"
+          [showArtistInfo]="true"
+          (toggleLike)="onToggleLike($event)"
+          (click)="abrirDetalle(trabajo)"
+        ></app-post-trabajo>
+      </div>
 
+      <div *ngIf="feed.length === 0" class="empty-feed">
+        <mat-icon>image_not_supported</mat-icon>
+        <p>Aún no hay publicaciones para mostrar.</p>
+      </div>
+    </section>
+  </div>
 </div>

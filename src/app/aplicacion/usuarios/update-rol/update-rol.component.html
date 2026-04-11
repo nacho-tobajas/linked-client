@@ -1,36 +1,30 @@
 <mat-card class="dialog-card">
   <mat-card-header>
-    <mat-card-title>Actualizar roles</mat-card-title>
+    <mat-card-title>Actualizar roles — {{ user.username }}</mat-card-title>
   </mat-card-header>
 
   <mat-card-content>
-    <form #userForm="ngForm" class="form-grid">
-      <!-- Roles (múltiples) -->
-      <div class="row">
-        <mat-form-field appearance="outline" class="col-12">
-          <mat-label>Roles</mat-label>
-          <mat-select name="rolDescriptions" multiple required [(ngModel)]="userRoles">
-
-
-            <mat-option *ngFor="let rol of allRoles" [value]="rol.id">
-              {{ rol.description }}
-            </mat-option>
-
-          </mat-select>
-
-
-        </mat-form-field>
-      </div>
-    </form>
+    <p class="roles-label">Seleccioná los roles asignados:</p>
+    <div class="roles-chips">
+      <button
+        *ngFor="let rol of allRoles"
+        type="button"
+        class="rol-chip"
+        [class.selected]="isRolSelected(rol.id!)"
+        (click)="toggleRol(rol.id!)">
+        {{ rol.description }}
+      </button>
+    </div>
   </mat-card-content>
-
 
   <mat-card-actions class="action-buttons">
     <button mat-stroked-button color="warn" type="button" (click)="cancel()">
       Cancelar
     </button>
-    <button mat-raised-button class="normal-button" type="submit" (click)="onUpdateUser()" [disabled]="userForm.invalid">
-      Actualizar
+    <button mat-raised-button class="normal-button" type="button" appNoDoubleSubmit
+            (click)="onUpdateUser()"
+            [disabled]="saving || selectedRoleIds.length === 0">
+      {{ saving ? 'Guardando…' : 'Guardar' }}
     </button>
   </mat-card-actions>
 </mat-card>

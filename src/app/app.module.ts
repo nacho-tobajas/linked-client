@@ -1,6 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, LOCALE_ID, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -30,7 +29,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import {MatTabsModule} from '@angular/material/tabs';
+import { MatTabsModule } from '@angular/material/tabs';
 
 import { FooterComponent } from './shared/footer/footer.component';
 import { HeaderComponent } from './shared/header/header.component';
@@ -95,6 +94,8 @@ import { PostTrabajoComponent } from './components/post-trabajo/post-trabajo.com
 import { DetalleTrabajoComponent } from './aplicacion/trabajos/detalle-trabajo/detalle-trabajo.component';
 import { ServerUrlPipe } from './pipes/server-url.pipe';
 import { EditarTurnoComponent } from './aplicacion/agenda/editar-turno/editar-turno.component';
+import { BrowserModule } from '@angular/platform-browser';
+import { TatuajesFavoritosComponent } from './aplicacion/tatuajes-favoritos/tatuajes-favoritos.component';
 
 
 registerLocaleData(localeEsAr); // 👈 Esto registra el locale
@@ -190,13 +191,13 @@ registerLocaleData(localeEsAr); // 👈 Esto registra el locale
         PostTrabajoComponent,
         DetalleTrabajoComponent,
         ServerUrlPipe,
-        EditarTurnoComponent,],
+        EditarTurnoComponent,
+        TatuajesFavoritosComponent],
     providers: [
-        RegisterService,
         RegisterService,
         SweItemMenuService,
         { provide: DateAdapter, useClass: CustomDateAdapter },
-        { provide: LOCALE_ID, useValue: 'es' },
+        { provide: LOCALE_ID, useValue: 'es-AR' },
         { provide: MAT_DATE_FORMATS, useValue: CUSTOM_DATE_FORMATS },
         { provide: RECAPTCHA_V3_SITE_KEY, useValue: '6LfpC-ErAAAAAJxd1G8rldVAIzoe7ZdQY3By5j-o' },
         {
@@ -209,9 +210,12 @@ registerLocaleData(localeEsAr); // 👈 Esto registra el locale
             useClass: LoadingInterceptor,
             multi: true
         },
-        provideHttpClient(withInterceptorsFromDi()),
-        { provide: LOCALE_ID, useValue: 'es-AR' },
-        { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: HttpErrorInterceptor,
+            multi: true
+        },
+        provideHttpClient(withInterceptorsFromDi())
     ]
 })
 export class AppModule { }

@@ -19,7 +19,7 @@
     <button mat-stroked-button (click)="onCancel()">
       Cancelar
     </button>
-    <button mat-flat-button color="warn" (click)="deleteEspecialidad()">
+    <button mat-flat-button color="warn" appNoDoubleSubmit (click)="deleteEspecialidad()">
       Eliminar
     </button>
   </mat-card-actions>

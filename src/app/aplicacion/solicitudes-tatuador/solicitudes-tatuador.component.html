@@ -1,0 +1,93 @@
+<div class="page-wrapper">
+
+  <div class="page-header">
+    <h1>Solicitudes de tatuador</h1>
+    <p>Revisá y aprobá las solicitudes pendientes de registro como tatuador.</p>
+  </div>
+
+  <div class="loading-state" *ngIf="loading">
+    <mat-icon>hourglass_top</mat-icon>
+    <span>Cargando solicitudes...</span>
+  </div>
+
+  <!-- Pendientes -->
+  <section *ngIf="!loading">
+    <div class="section-title">
+      <span>Pendientes</span>
+      <span class="badge" *ngIf="pendientes.length > 0">{{ pendientes.length }}</span>
+    </div>
+
+    <div class="empty-state" *ngIf="pendientes.length === 0">
+      <mat-icon>check_circle_outline</mat-icon>
+      <p>No hay solicitudes pendientes.</p>
+    </div>
+
+    <div class="solicitud-card" *ngFor="let sol of pendientes">
+      <div class="card-main">
+        <div class="user-info">
+          <span class="username">&#64;{{ sol.user.username }}</span>
+          <span class="email">{{ sol.user.email }}</span>
+          <span class="localidad" *ngIf="sol.user.localidad">
+            <mat-icon>place</mat-icon>{{ sol.user.localidad }}
+          </span>
+        </div>
+        <div class="card-details">
+          <div class="detail-item" *ngIf="sol.estudio">
+            <mat-icon>storefront</mat-icon>
+            <span>{{ sol.estudio }}</span>
+          </div>
+          <div class="detail-item">
+            <mat-icon>brush</mat-icon>
+            <span>{{ getNombresEspecialidades(sol.especialidadesIds) }}</span>
+          </div>
+          <div class="detail-item">
+            <mat-icon>schedule</mat-icon>
+            <span>{{ sol.creationtimestamp | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-actions">
+        <button mat-raised-button class="btn-aprobar" appNoDoubleSubmit (click)="aprobar(sol)">
+          <mat-icon>check</mat-icon> Aprobar
+        </button>
+        <button mat-stroked-button class="btn-rechazar" appNoDoubleSubmit (click)="rechazar(sol)">
+          <mat-icon>close</mat-icon> Rechazar
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Procesadas -->
+  <section *ngIf="!loading && procesadas.length > 0">
+    <div class="section-title muted">
+      <span>Historial</span>
+    </div>
+
+    <div class="solicitud-card procesada" *ngFor="let sol of procesadas">
+      <div class="card-main">
+        <div class="user-info">
+          <span class="username">&#64;{{ sol.user.username }}</span>
+          <span class="email">{{ sol.user.email }}</span>
+        </div>
+        <div class="card-details">
+          <div class="detail-item" *ngIf="sol.estudio">
+            <mat-icon>storefront</mat-icon>
+            <span>{{ sol.estudio }}</span>
+          </div>
+          <div class="detail-item">
+            <mat-icon>brush</mat-icon>
+            <span>{{ getNombresEspecialidades(sol.especialidadesIds) }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-status">
+        <span class="status-badge" [class.aprobada]="sol.status === 'aprobada'" [class.rechazada]="sol.status === 'rechazada'">
+          <mat-icon>{{ sol.status === 'aprobada' ? 'check_circle' : 'cancel' }}</mat-icon>
+          {{ sol.status === 'aprobada' ? 'Aprobada' : 'Rechazada' }}
+        </span>
+        <span class="admin-label" *ngIf="sol.adminUser">por {{ sol.adminUser }}</span>
+      </div>
+    </div>
+  </section>
+
+</div>

@@ -1,31 +1,34 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, RouterLink } from '@angular/router';
+import { NgFor, NgIf } from '@angular/common';
 import { DetalleTrabajoComponent } from 'src/app/aplicacion/trabajos/detalle-trabajo/detalle-trabajo.component';
 import { SubirTrabajoComponent } from 'src/app/aplicacion/trabajos/subir-trabajo/subir-trabajo/subir-trabajo.component';
 import { Trabajo } from 'src/app/models/trabajos/trabajos.model';
 import { LoginService } from 'src/app/services/auth/login.service';
 import { TrabajosService } from 'src/app/services/trabajos/trabajos.service';
-import { NgIf, NgFor } from '@angular/common';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatIcon } from '@angular/material/icon';
-import { MatDivider } from '@angular/material/divider';
 import { PostTrabajoComponent } from '../../components/post-trabajo/post-trabajo.component';
+import { SolicitudesTatuadorComponent } from 'src/app/aplicacion/solicitudes-tatuador/solicitudes-tatuador.component';
 
 @Component({
-    selector: 'app-home',
-    templateUrl: './home.component.html',
-    styleUrls: ['./home.component.scss'],
-    imports: [NgIf, RouterLink, MatTooltip, MatIcon, MatDivider, NgFor, PostTrabajoComponent]
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss'],
+  imports: [NgIf, NgFor, RouterLink, MatTooltip, MatIcon, PostTrabajoComponent, SolicitudesTatuadorComponent]
 })
 
-export class HomeComponent {
+export class HomeComponent implements OnInit, OnDestroy {
 
-  userLoginOn: boolean = false; // Estado de login
+  userLoginOn: boolean = false;
   userRol: string | null = null;
   feed: Trabajo[] = [];
   misLikes: Set<number> = new Set();
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private router: Router,
@@ -36,37 +39,43 @@ export class HomeComponent {
   ) { }
 
   ngOnInit(): void {
-    console.log("entra")
-    this.loginService.userLoginOn.subscribe(logged => {
-      this.userLoginOn = logged;
-    this.loginService.userRol.subscribe(rol => {
-        this.userRol = rol;
-    });
-      
-      if (logged) {
-        this.cargarMisLikes();
-      } else {
-        this.misLikes.clear(); 
-      }
-    });
+    this.loginService.userLoginOn
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(logged => {
+        this.userLoginOn = logged;
+        if (logged) {
+          this.cargarMisLikes();
+        } else {
+          this.misLikes.clear();
+        }
+      });
+
+    this.loginService.userRol
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(rol => { this.userRol = rol; });
 
     this.cargarFeed();
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   abrirDetalle(trabajo: Trabajo) {
     const dialogRef = this.dialog.open(DetalleTrabajoComponent, {
-      panelClass: 'custom-modal-panel', 
-      maxWidth: '100vw', 
-      maxHeight: '90vh',      
-      data: { 
-          trabajo: trabajo,
-          isLiked: this.misLikes.has(trabajo.id)
+      panelClass: 'custom-modal-panel',
+      maxWidth: '100vw',
+      maxHeight: '90vh',
+      data: {
+        trabajo: trabajo,
+        isLiked: this.misLikes.has(trabajo.id)
       }
     });
 
     dialogRef.afterClosed().subscribe(() => {
-       // Opcional: Recargar likes o feed al volver si hubo cambios drásticos
-       // this.cargarMisLikes(); 
+      // Opcional: Recargar likes o feed al volver si hubo cambios drásticos
+      // this.cargarMisLikes(); 
     });
   }
 
@@ -87,9 +96,9 @@ export class HomeComponent {
 
   onToggleLike(trabajoId: number) {
     if (!this.userLoginOn) {
-        this.snackBar.open("Debes iniciar sesión para dar Me Gusta.", 'Cerrar', { duration: 3000 });
-        this.router.navigate(['/login']); 
-        return;
+      this.snackBar.open("Debes iniciar sesión para dar Me Gusta.", 'Cerrar', { duration: 3000 });
+      this.router.navigate(['/login']);
+      return;
     }
     const trabajo = this.feed.find(t => t.id === trabajoId);
     if (!trabajo) return;
@@ -99,27 +108,27 @@ export class HomeComponent {
     const yaTieneLike = this.misLikes.has(trabajoId);
 
     if (yaTieneLike) {
-        this.misLikes.delete(trabajoId);
-        trabajo.favoritos.pop(); 
+      this.misLikes.delete(trabajoId);
+      trabajo.favoritos.pop();
 
-        this.trabajosService.quitarLike(trabajoId).subscribe({
-            error: () => {
-                this.misLikes.add(trabajoId);
-                trabajo.favoritos?.push({}); 
-                console.error("Error al quitar like");
-            }
-        });
+      this.trabajosService.quitarLike(trabajoId).subscribe({
+        error: () => {
+          this.misLikes.add(trabajoId);
+          trabajo.favoritos?.push({});
+          console.error("Error al quitar like");
+        }
+      });
 
     } else {
-        this.misLikes.add(trabajoId);
-        trabajo.favoritos.push({});
-        this.trabajosService.darLike(trabajoId).subscribe({
-            error: () => {
-                this.misLikes.delete(trabajoId);
-                trabajo.favoritos?.pop();
-                console.error("Error al dar like");
-            }
-        });
+      this.misLikes.add(trabajoId);
+      trabajo.favoritos.push({});
+      this.trabajosService.darLike(trabajoId).subscribe({
+        error: () => {
+          this.misLikes.delete(trabajoId);
+          trabajo.favoritos?.pop();
+          console.error("Error al dar like");
+        }
+      });
     }
   }
 

@@ -59,7 +59,8 @@
       mat-raised-button
       class="create-button"
       type="submit"
-      [disabled]="selectedFiles.length === 0 || isUploading" 
+      appNoDoubleSubmit
+      [disabled]="selectedFiles.length === 0 || isUploading"
       (click)="subir()"
     >
       <ng-container *ngIf="!isUploading">

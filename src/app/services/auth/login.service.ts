@@ -58,14 +58,13 @@ export class LoginService {
 
   private updateUserId(token: string | null) {
     if (token) {
-      const decodedToken: any = jwtDecode(token);
+      interface DecodedToken { id: number; rol?: string; [key: string]: unknown; }
+      const decodedToken = jwtDecode<DecodedToken>(token);
       const userId = decodedToken?.id;
-
 
       if (typeof userId === 'number' && userId > 0) {
         this.userService.setUserId(userId);
       } else {
-        console.warn('ID de usuario inválido en el token:', userId);
         this.userService.setUserId(null);
       }
       this.currentUserRolSubject.next(decodedToken.rol || '');
@@ -97,10 +96,10 @@ export class LoginService {
     if (!token) return null;
     
     try {
-      const decoded: any = jwtDecode(token);
-      return decoded.id || null;
-    } catch (error) {
-      console.error('Error al decodificar token para obtener ID', error);
+      interface DecodedToken { id: number; [key: string]: unknown; }
+      const decoded = jwtDecode<DecodedToken>(token);
+      return decoded.id ?? null;
+    } catch {
       return null;
     }
   }

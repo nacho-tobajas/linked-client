@@ -1,127 +1,183 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil, firstValueFrom } from 'rxjs';
 import { UserService } from 'src/app/services/user/user.service';
 import { MatDialog } from '@angular/material/dialog';
 import { UpdateRolComponent } from './update-rol/update-rol.component';
 import { User } from 'src/app/models/user.model';
-import { RegisterComponent } from 'src/app/auth/register/register.component';
-import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
+import { RolApl } from 'src/app/models/rol.models';
+import { SolicitudTatuadorService, SolicitudTatuador } from 'src/app/services/solicitud-tatuador/solicitud-tatuador.service';
 import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
-import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatSelect, MatOption } from '@angular/material/select';
 import { MatInput } from '@angular/material/input';
-import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { NgFor, NgIf, NgClass } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
+import { MatSort, MatSortHeader, Sort } from '@angular/material/sort';
 
 @Component({
     selector: 'app-usuarios',
     templateUrl: './usuarios.component.html',
     styleUrls: ['./usuarios.component.scss'],
-    imports: [MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatIcon, FormsModule, MatFormField, MatLabel, MatSelect, MatOption, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatButton, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatIconButton, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow]
+    imports: [
+      MatIcon, FormsModule, MatFormField, MatLabel, MatSelect, MatOption, MatInput,
+      MatButton, MatIconButton, NgFor, NgIf, NgClass, MatTooltip, MatChipsModule,
+      MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell,
+      MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow,
+      MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle,
+      MatSort, MatSortHeader
+    ]
 })
-export class UsuariosComponent implements OnInit {
+export class UsuariosComponent implements OnInit, OnDestroy {
   usuarios: User[] = [];
   filteredUsuarios: User[] = [];
-  today: Date = new Date();
+  availableRoles: RolApl[] = [];
+  solicitudesPendientes: SolicitudTatuador[] = [];
 
-  constructor(private userService: UserService, private dialog: MatDialog) {
-  }
+  private destroy$ = new Subject<void>();
 
-  displayedColumns: string[] = ['id', 'user', 'actions'];
+  // Mapa: idUser → role IDs
+  userRolesMap: Map<number, number[]> = new Map();
 
   // Filtros
-  filterRolDesc: string = '';
+  filterRolId: number | '' = '';
   filterUsername: string = '';
-  filterEmail: string = '';
-  filterFechaNacDesde: Date | null = null;
-  filterFechaNacHasta: Date | null = null;
+  filterEstado: 'todos' | 'pendiente_tatuador' | 'tatuador_activo' = 'todos';
 
-  filterDesde = (d: Date | null): boolean => {
-    if (!d) return false;
-    return !this.filterFechaNacHasta || d <= this.filterFechaNacHasta!;
-  };
+  sortDir: 'asc' | 'desc' = 'asc';
 
-  filterHasta = (d: Date | null): boolean => {
-    if (!d) return false;
-    return !this.filterFechaNacDesde || d >= this.filterFechaNacDesde!;
-  };
+  displayedColumns: string[] = ['user', 'roles', 'estado', 'actions'];
+
+  constructor(
+    private userService: UserService,
+    private solicitudService: SolicitudTatuadorService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
-    this.loadUsuarios();
-
+    this.loadAll();
   }
 
-  getEditComponent() {
-    return UpdateRolComponent;
+  private async loadAll(): Promise<void> {
+    const [roles, sols] = await Promise.all([
+      firstValueFrom(this.userService.getRoles()),
+      firstValueFrom(this.solicitudService.getAll())
+    ]);
+    this.availableRoles = roles ?? [];
+    this.solicitudesPendientes = (sols ?? []).filter(s => s.status === 'pendiente');
+    this.loadUsuarios();
+  }
+
+  loadUsuarios(): void {
+    this.userService.getAllUsers()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(async (data) => {
+        this.usuarios = data;
+        await this.loadAllUserRoles(data);
+        this.aplicarFiltro();
+      });
+  }
+
+  private async loadAllUserRoles(users: User[]): Promise<void> {
+    await Promise.all(users.map(async (u) => {
+      try {
+        const ids = await this.userService.getAllUserRoles(u.idUser).toPromise();
+        this.userRolesMap.set(u.idUser, (ids ?? []).map(Number));
+      } catch {
+        this.userRolesMap.set(u.idUser, []);
+      }
+    }));
+  }
+
+  getRolesDesc(idUser: number): string[] {
+    const ids = this.userRolesMap.get(idUser) ?? [];
+    return ids.map(id => {
+      const rol = this.availableRoles.find(r => Number(r.id) === id);
+      return rol?.description ?? `#${id}`;
+    });
+  }
+
+  isPendienteTatuador(idUser: number): boolean {
+    return this.solicitudesPendientes.some(s => s.idUser === idUser);
+  }
+
+  isTatuadorActivo(idUser: number): boolean {
+    return this.getRolesDesc(idUser).includes('Tatuador');
+  }
+
+  getEstadoBadge(idUser: number): { label: string; css: string } | null {
+    if (this.isTatuadorActivo(idUser)) {
+      return { label: 'Tatuador activo', css: 'badge-tatuador' };
+    }
+    if (this.isPendienteTatuador(idUser)) {
+      return { label: 'Rol pendiente: Tatuador', css: 'badge-pendiente' };
+    }
+    return null;
+  }
+
+  onSortChange(event: Sort): void {
+    this.sortDir = event.direction === 'desc' ? 'desc' : 'asc';
+    this.aplicarFiltro();
+  }
+
+  aplicarFiltro(): void {
+    this.filteredUsuarios = this.usuarios.filter((u) => {
+      const coincideNombre = !this.filterUsername ||
+        u.username?.toLowerCase().includes(this.filterUsername.toLowerCase());
+
+      const coincideRol = this.filterRolId === '' ||
+        (this.userRolesMap.get(u.idUser) ?? []).includes(Number(this.filterRolId));
+
+      let coincideEstado = true;
+      if (this.filterEstado === 'pendiente_tatuador') {
+        coincideEstado = this.isPendienteTatuador(u.idUser) && !this.isTatuadorActivo(u.idUser);
+      } else if (this.filterEstado === 'tatuador_activo') {
+        coincideEstado = this.isTatuadorActivo(u.idUser);
+      }
+
+      return coincideNombre && coincideRol && coincideEstado;
+    });
+
+    this.filteredUsuarios.sort((a, b) => {
+      const cmp = (a.username ?? '').toLowerCase().localeCompare((b.username ?? '').toLowerCase());
+      return this.sortDir === 'asc' ? cmp : -cmp;
+    });
+  }
+
+  resetFiltro(): void {
+    this.filterUsername = '';
+    this.filterRolId = '';
+    this.filterEstado = 'todos';
+    this.sortDir = 'asc';
+    this.aplicarFiltro();
   }
 
   openEditDialog(id: number): void {
     this.userService.getUser(id).subscribe((user) => {
       const dialogRef = this.dialog.open(UpdateRolComponent, {
-        width: '400px',
+        width: '420px',
         disableClose: true,
-        data: { user },
+        data: {
+          user,
+          allRoles: this.availableRoles,
+          selectedRoleIds: [...(this.userRolesMap.get(id) ?? [])]
+        },
       });
 
       dialogRef.afterClosed().subscribe((result) => {
         if (result) {
-          this.loadUsuarios(); // Carga o actualiza la lista de Usuarios
+          this.loadUsuarios();
         }
       });
     });
   }
 
-  aplicarFiltro(): void {
-    if (this.filterFechaNacDesde && this.filterFechaNacHasta && this.filterFechaNacDesde > this.filterFechaNacHasta) {
-      alert('La fecha "desde" no puede ser mayor que la fecha "hasta".');
-      return;
-    }
-
-    this.filteredUsuarios = this.usuarios.filter((usuario: User) => {
-      const coincideRol =
-        !this.filterRolDesc || usuario.rolDesc?.toLowerCase() === this.filterRolDesc.toLowerCase();
-
-      const coincideNombre =
-        !this.filterUsername || usuario.username?.toLowerCase().includes(this.filterUsername.toLowerCase());
-
-      const coincideEmail =
-        !this.filterEmail || usuario.email?.toLowerCase().includes(this.filterEmail.toLowerCase());
-
-      const fechaNacimiento = usuario.birth_date ? new Date(usuario.birth_date) : null;
-      const coincideFecha =
-        (!this.filterFechaNacDesde || (fechaNacimiento && fechaNacimiento >= this.filterFechaNacDesde)) &&
-        (!this.filterFechaNacHasta || (fechaNacimiento && fechaNacimiento <= this.filterFechaNacHasta));
-
-      return coincideRol && coincideNombre && coincideEmail && coincideFecha;
-    });
-  }
-
-  resetFiltro(): void {
-    this.filterRolDesc = '';
-    this.filterUsername = '';
-    this.filterEmail = '';
-    this.filterFechaNacDesde = null;
-    this.filterFechaNacHasta = null;
-    this.filteredUsuarios = [...this.usuarios];
-  }
-
-
-  loadUsuarios(): void {
-    this.userService.getAllUsers().subscribe((data) => {
-      this.usuarios = data;
-      this.filteredUsuarios = [...data];
-    });
-  }
-
-  onDateInput(event: any) {
-    let value: string = event.target.value.replace(/\D/g, ''); // solo números
-    if (value.length >= 2) {
-      value = value.slice(0, 2) + '/' + value.slice(2);
-    }
-    if (value.length >= 5) {
-      value = value.slice(0, 5) + '/' + value.slice(5, 9);
-    }
-    event.target.value = value;
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

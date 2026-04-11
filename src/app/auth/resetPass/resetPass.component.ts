@@ -13,13 +13,14 @@ import { MatInput } from '@angular/material/input';
 import { NgIf } from '@angular/common';
 import { MatIconButton, MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
+import { NoDoubleSubmitDirective } from 'src/app/shared/directives/no-double-submit.directive';
 
 
 @Component({
     selector: 'app-reset-pass',
     templateUrl: './resetPass.component.html',
     styleUrls: ['./resetPass.component.scss'],
-    imports: [FormsModule, ReactiveFormsModule, MatCard, MatCardHeader, MatCardTitle, MatCardContent, MatFormField, MatLabel, MatInput, NgIf, MatError, MatIconButton, MatSuffix, MatIcon, MatCardActions, MatButton]
+    imports: [FormsModule, ReactiveFormsModule, MatCard, MatCardHeader, MatCardTitle, MatCardContent, MatFormField, MatLabel, MatInput, NgIf, MatError, MatIconButton, MatSuffix, MatIcon, MatCardActions, MatButton, NoDoubleSubmitDirective]
 })
 export class ResetPassComponent implements OnInit {
   ResetPassForm: FormGroup;
@@ -51,9 +52,9 @@ export class ResetPassComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  resetPass(){
+  async resetPass(){
     this.token = this.tokenControl?.value;
-    this.password = this.encryptionService.encrypt(this.newPasswordControl?.value);
+    this.password = await this.encryptionService.encrypt(this.newPasswordControl?.value);
 
     if (this.ResetPassForm.valid) {
       this.resetPasswordService.resetPassword(this.token, this.password).subscribe({

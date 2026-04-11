@@ -15,12 +15,13 @@ import { FormsModule } from '@angular/forms';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatSelect, MatOption } from '@angular/material/select';
 import { MatButton } from '@angular/material/button';
+import { NoDoubleSubmitDirective } from 'src/app/shared/directives/no-double-submit.directive';
 
 @Component({
     selector: 'app-support-ticket-update',
     templateUrl: './support-ticket-update.component.html',
     styleUrls: ['./support-ticket-update.component.scss'],
-    imports: [MatCard, MatCardHeader, MatCardTitle, MatCardSubtitle, MatCardContent, FormsModule, MatFormField, MatLabel, MatSelect, MatOption, MatCardActions, MatButton]
+    imports: [MatCard, MatCardHeader, MatCardTitle, MatCardSubtitle, MatCardContent, FormsModule, MatFormField, MatLabel, MatSelect, MatOption, MatCardActions, MatButton, NoDoubleSubmitDirective]
 })
 export class SupportTicketUpdateComponent {
   supportTicket: SupportTicket;

@@ -1,28 +1,63 @@
-/* Contenedor Principal Flex */
+@use '../../../../assets/styles/variables' as *;
+
+/* ============================================================
+   CONTENEDOR PRINCIPAL
+   ============================================================ */
 .modal-container {
   display: flex;
   width: 100%;
   height: 85vh;
   max-height: 900px;
-  background-color: #fff;
+  background-color: var(--card-background-color);
   overflow: hidden;
 
   @media (max-width: 768px) {
     flex-direction: column;
     height: 100%;
-    overflow-y: auto;
+    max-height: 100%;
+    overflow: hidden;
   }
 }
 
-/* --- COLUMNA IZQUIERDA (IMAGEN) --- */
+/* ── Handle visual ── */
+.drag-handle {
+  display: none;
+
+  @media (max-width: 768px) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    padding: 10px 0 6px;
+    background-color: var(--card-background-color);
+
+    &::after {
+      content: '';
+      width: 36px;
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(128, 128, 128, 0.3);
+    }
+  }
+}
+
+/* ============================================================
+   COLUMNA IZQUIERDA — IMAGEN
+   ============================================================ */
 .media-column {
   flex: 1;
-  background-color: #000;
+  background-color: #0a0a0a;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   min-height: 300px;
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    flex: 0 0 44%;
+    min-height: 0;
+  }
 
   .image-wrapper {
     width: 100%;
@@ -39,13 +74,16 @@
   }
 }
 
-// Carrusel
+/* ============================================================
+   CARRUSEL
+   ============================================================ */
 .nav-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(4px);
+  color: #fff;
   border: none;
   border-radius: 50%;
   width: 40px;
@@ -54,23 +92,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background 0.2s;
+  z-index: 5;
 
-  &:hover {
-    background: rgba(255, 255, 255, 0.4);
-  }
-
-  &.prev {
-    left: 10px;
-  }
-
-  &.next {
-    right: 10px;
-  }
+  &:hover { background: rgba(0, 0, 0, 0.6); }
+  &.prev  { left: 12px; }
+  &.next  { right: 12px; }
 }
 
 .dots-indicator {
   position: absolute;
-  bottom: 15px;
+  bottom: 14px;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -80,37 +112,83 @@
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.45);
+    transition: transform 0.2s, background 0.2s;
 
     &.active {
-      background: white;
-      transform: scale(1.2);
+      background: #fff;
+      transform: scale(1.3);
     }
   }
 }
 
-
-// Columna derecha informacion
-.info-column {
-  width: 300px;
-  min-width: 300px;
-  display: flex;
-  flex-direction: column;
-  border-left: 1px solid #eee;
+/* ── Botón cerrar sobre imagen (mobile) ── */
+.mobile-close-btn {
+  display: none;
 
   @media (max-width: 768px) {
-    width: 100%;
-    min-height: auto;
-    border-left: none;
+    display: flex !important;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    padding: 0;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(4px);
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      color: #fff !important;
+      line-height: 18px;
+    }
   }
 }
 
-// Header
+/* ============================================================
+   COLUMNA DERECHA — INFORMACIÓN
+   ============================================================ */
+.info-column {
+  width: 310px;
+  min-width: 310px;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--line-divider);
+  background-color: var(--card-background-color);
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    min-width: unset;
+    flex: 1;
+    border-left: none;
+    border-top: 1px solid var(--line-divider);
+    overflow-y: auto;
+  }
+}
+
+/* ============================================================
+   CABECERA — AUTOR
+   ============================================================ */
 .modal-header {
-  padding: 16px;
+  padding: 14px 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
+
+  .header-close-btn {
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
 
   .author-info {
     display: flex;
@@ -118,147 +196,156 @@
     gap: 12px;
     cursor: pointer;
 
-    &:hover .username {
-      text-decoration: underline;
+    &:hover .realname {
+      color: $section-title-main-color;
     }
 
     .avatar {
-      width: 40px;
-      height: 40px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
-      border: 1px solid #eee;
+      object-fit: cover;
+      border: 2px solid var(--line-divider);
+      flex-shrink: 0;
     }
 
     .names {
       display: flex;
       flex-direction: column;
+      min-width: 0;
     }
 
     .realname {
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
+      color: var(--title-text-color);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: color 0.15s;
     }
 
     .username {
-      font-size: 0.8rem;
-      color: #777;
+      font-size: 0.78rem;
+      color: var(--text-secondary-color);
     }
   }
 }
 
-// Body
+/* ============================================================
+   CUERPO — DESCRIPCIÓN
+   ============================================================ */
 .modal-body {
   flex: 1;
   overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 
-  padding: 20px;
+  .description-card {
+    background: var(--light-gray-background-color);
+    border-radius: 10px;
+    padding: 14px 16px;
+    border: 1px solid var(--line-divider);
 
-  .description {
-    font-size: 0.95rem;
-    line-height: 1.6;
-    color: #333;
-    white-space: pre-wrap;
+    .description {
+      margin: 0;
+      font-size: 0.92rem;
+      line-height: 1.65;
+      color: var(--text-color);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
   }
 
   .date {
     font-size: 0.75rem;
-    color: #999;
-    margin-top: 10px;
+    color: var(--text-secondary-color);
+    margin: 0;
+    padding-left: 2px;
   }
 }
 
-/* Footer (Likes) */
+/* ============================================================
+   PIE — LIKES
+   ============================================================ */
 .modal-footer {
-  padding: 12px 16px;
-  background-color: #fff;
-  /* Fijo abajo */
+  padding: 10px 16px 12px;
+  border-top: 1px solid var(--line-divider);
+  background-color: var(--card-background-color);
+  flex-shrink: 0;
 
   .actions {
     display: flex;
-    gap: 8px;
-    margin-bottom: 8px;
+    gap: 6px;
+    margin-bottom: 4px;
 
-    button.liked {
-      color: #e91e63;
-      animation: pulse 0.3s;
+    button {
+      color: var(--text-secondary-color);
+      transition: color 0.2s, transform 0.15s;
+
+      &.liked {
+        color: #e91e63;
+        animation: pulse 0.3s;
+      }
+
+      mat-icon {
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
+      }
     }
   }
 
   .likes-info {
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
+    color: var(--text-color);
+    padding-left: 6px;
   }
 }
 
-@keyframes pulse {
-  50% {
-    transform: scale(1.2);
-  }
-}
-
-@media (max-width: 768px) {
-
+/* ============================================================
+   DARK MODE
+   ============================================================ */
+:host-context(.dark-theme) {
   .modal-container {
-    flex-direction: column;
-    /* Apilar verticalmente */
-
-    /* 👇 EL CAMBIO PARA QUE SEA "FLOTANTE" */
-    width: 90vw;
-    /* 90% del ancho de la pantalla */
-    height: 85vh;
-    /* 85% del alto de la pantalla */
-    max-height: none;
-    /* Quitamos el límite de px */
-
-    margin: auto;
-    /* Centrar en el espacio del dialog */
-    border-radius: 16px;
-    /* Bordes redondeados */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    /* Sombra profunda */
-    overflow: hidden;
-    /* Para que el contenido no se salga de los bordes redondos */
+    background-color: var(--card-background-color);
   }
 
-  .photo-column {
-    /* La foto ocupa la mitad superior (ajustable) */
-    flex: 0 0 45%;
-    height: 45%;
+  .media-column {
     background-color: #111;
-    /* Fondo oscuro elegante */
   }
 
   .info-column {
-    /* La info ocupa el resto y hace scroll si es necesario */
-    flex: 1;
-    width: 100%;
-    height: 55%;
-    border-left: none;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    /* Importante para contener el scroll interno */
+    background-color: var(--card-background-color);
+    border-color: var(--line-divider);
   }
 
-  /* Ajustes internos para que el scroll funcione bien en la tarjeta */
-  .header {
-    flex: 0 0 auto;
-    /* Fijo */
-    padding: 12px 16px;
+  .modal-body .description-card {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: var(--line-divider);
+
+    .description {
+      color: var(--text-color);
+    }
   }
 
-  .description-box {
-    flex: 1;
-    /* Ocupa el espacio libre */
-    overflow-y: auto;
-    /* Scroll solo aquí dentro */
-    padding: 10px 16px;
+  .modal-footer {
+    background-color: var(--card-background-color);
+    border-color: var(--line-divider);
+
+    button { color: var(--text-secondary-color); }
   }
 
-  .actions-footer {
-    flex: 0 0 auto;
-    /* Fijo abajo */
-    padding: 10px 16px;
-    background: #fff;
+  .nav-btn {
+    background: rgba(255, 255, 255, 0.12);
+    &:hover { background: rgba(255, 255, 255, 0.25); }
   }
+}
+
+/* ============================================================
+   ANIMACIÓN LIKE
+   ============================================================ */
+@keyframes pulse {
+  50% { transform: scale(1.3); }
 }

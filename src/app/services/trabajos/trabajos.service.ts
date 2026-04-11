@@ -8,11 +8,11 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class TrabajosService {
-private apiUrl = `${environment.urlApi}trabajos`;
+  private apiUrl = `${environment.urlApi}trabajos`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-    getFeed(): Observable<Trabajo[]> {
+  getFeed(): Observable<Trabajo[]> {
     return this.http.get<Trabajo[]>(`${this.apiUrl}/feed`);
   }
 
@@ -21,10 +21,10 @@ private apiUrl = `${environment.urlApi}trabajos`;
     const formData = new FormData();
 
     formData.append('descripcion', descripcion);
-    
+
     if (files && files.length > 0) {
       files.forEach(file => {
-        formData.append('imagen', file, file.name); 
+        formData.append('imagen', file, file.name);
       });
     }
 
@@ -47,5 +47,9 @@ private apiUrl = `${environment.urlApi}trabajos`;
 
   getMisLikesIds(): Observable<number[]> {
     return this.http.get<number[]>(`${this.apiUrl}/mis-favoritos/ids`);
+  }
+
+  getTrabajoById(trabajoId: number): Observable<Trabajo> {
+    return this.http.get<Trabajo>(`${this.apiUrl}/${trabajoId}`);
   }
 }

@@ -13,12 +13,13 @@ import { MatSelect, MatOption } from '@angular/material/select';
 import { NgIf, NgFor, DatePipe } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatButton } from '@angular/material/button';
+import { NoDoubleSubmitDirective } from 'src/app/shared/directives/no-double-submit.directive';
 
 @Component({
     selector: 'app-editar-turno',
     templateUrl: './editar-turno.component.html',
     styleUrl: './editar-turno.component.scss',
-    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatSelect, NgIf, MatOption, MatProgressSpinner, NgFor, MatError, MatDialogActions, MatButton, MatDialogClose, DatePipe]
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatSelect, NgIf, MatOption, MatProgressSpinner, NgFor, MatError, MatDialogActions, MatButton, MatDialogClose, DatePipe, NoDoubleSubmitDirective]
 })
 export class EditarTurnoComponent {
 form: FormGroup;

@@ -4,7 +4,8 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ReservaStateService {
-private datosReserva: any = {};
+  private datosReserva: any = {};
+  private imagenesReferencia: File[] = [];
 
   setDatos(datos: any): void {
     this.datosReserva = datos;
@@ -12,11 +13,23 @@ private datosReserva: any = {};
 
   getDatos(): any {
     const datos = this.datosReserva;
-    this.clear(); // Limpiamos para que no queden datos viejos
+    this.clear();
     return datos;
   }
 
   clear(): void {
     this.datosReserva = {};
+  }
+
+  setImagenes(files: File[]): void {
+    this.imagenesReferencia = [...files];
+  }
+
+  getImagenes(): File[] {
+    return this.imagenesReferencia;
+  }
+
+  clearImagenes(): void {
+    this.imagenesReferencia = [];
   }
 }

@@ -1,67 +1,74 @@
 <div class="modal-container">
 
+  <!-- Handle visual (mobile) -->
+  <div class="drag-handle"></div>
+
+  <!-- COLUMNA IZQUIERDA: Imagen / Carrusel -->
   <div class="media-column">
-    
+
+    <!-- Botón cerrar sobre la imagen (mobile) -->
+    <button class="mobile-close-btn" mat-icon-button mat-dialog-close>
+      <mat-icon>close</mat-icon>
+    </button>
+
     <div class="image-wrapper">
-      <img [src]="data.trabajo.fotos[currentImageIndex].image_path | serverUrl" 
-           class="main-image" 
+      <img [src]="data.trabajo.fotos[currentImageIndex].image_path | serverUrl"
+           class="main-image"
            alt="Detalle trabajo">
     </div>
 
     <ng-container *ngIf="data.trabajo.fotos.length > 1">
-        <button class="nav-btn prev" (click)="prevImage()">
-            <mat-icon>chevron_left</mat-icon>
-        </button>
-        <button class="nav-btn next" (click)="nextImage()">
-            <mat-icon>chevron_right</mat-icon>
-        </button>
-        <div class="dots-indicator">
-            <span *ngFor="let foto of data.trabajo.fotos; let i = index" 
-                  class="dot" 
-                  [class.active]="i === currentImageIndex"></span>
-        </div>
+      <button class="nav-btn prev" (click)="prevImage()">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <button class="nav-btn next" (click)="nextImage()">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+      <div class="dots-indicator">
+        <span *ngFor="let foto of data.trabajo.fotos; let i = index"
+              class="dot"
+              [class.active]="i === currentImageIndex"></span>
+      </div>
     </ng-container>
 
   </div>
 
+  <!-- COLUMNA DERECHA: Información -->
   <div class="info-column">
-    
-    <div class="modal-header">
-        <div class="author-info" (click)="irAlPerfil()">
-            <img [src]="data.trabajo.tatuador?.profile_photo | serverUrl" 
-             class="avatar" 
-             alt="Avatar">
 
-            <div class="names">
-                <span class="realname">{{ data.trabajo.tatuador?.realname }}</span>
-                <span class="username">{{ data.trabajo.tatuador?.username }}</span>
-            </div>
+    <div class="modal-header">
+      <div class="author-info" (click)="irAlPerfil()">
+        <img [src]="data.trabajo.tatuador?.profile_photo | serverUrl"
+             class="avatar"
+             alt="Avatar">
+        <div class="names">
+          <span class="realname">{{ data.trabajo.tatuador?.realname }}</span>
+          <span class="username">{{ '@' + data.trabajo.tatuador?.username }}</span>
         </div>
-        <button mat-icon-button mat-dialog-close>
-            <mat-icon>close</mat-icon>
-        </button>
+      </div>
+      <button mat-icon-button mat-dialog-close class="header-close-btn">
+        <mat-icon>close</mat-icon>
+      </button>
     </div>
 
     <mat-divider></mat-divider>
 
     <div class="modal-body">
-        <p class="description">
-            {{ data.trabajo.descripcion || 'Sin descripción.' }}
-        </p>
-        <p class="date">Publicado el {{ data.trabajo.creationtimestamp | date:'longDate' }}</p>
+      <div class="description-card">
+        <p class="description">{{ data.trabajo.descripcion || 'Sin descripción.' }}</p>
+      </div>
+      <p class="date">Publicado el {{ data.trabajo.creationtimestamp | date:'longDate' }}</p>
     </div>
 
     <mat-divider></mat-divider>
 
     <div class="modal-footer">
-        <div class="actions">
-            <button mat-icon-button (click)="toggleLike()" [class.liked]="isLiked">
-                <mat-icon>{{ isLiked ? 'favorite' : 'favorite_border' }}</mat-icon>
-            </button>
-        </div>
-        <div class="likes-info">
-            <strong>{{ likesCount }} Me gusta</strong>
-        </div>
+      <div class="actions">
+        <button mat-icon-button appNoDoubleSubmit [submitDelay]="800" (click)="toggleLike()" [class.liked]="isLiked">
+          <mat-icon>{{ isLiked ? 'favorite' : 'favorite_border' }}</mat-icon>
+        </button>
+      </div>
+      <div class="likes-info">{{ likesCount }} Me gusta</div>
     </div>
 
   </div>

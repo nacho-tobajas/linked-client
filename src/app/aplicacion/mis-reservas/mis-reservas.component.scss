@@ -1,6 +1,6 @@
 .screen-container {
-  padding: 20px;
-  max-width: 1200px;
+  padding: 12px 20px 20px;
+  max-width: 1440px;
   margin: 0 auto;
 }
 
@@ -8,11 +8,12 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
 
   h2 {
     margin: 0;
     font-weight: 500;
+    color: var(--title-text-color);
   }
 }
 
@@ -24,8 +25,11 @@
   align-items: center;
   justify-content: center;
   padding: 60px 0;
-  color: #666;
+  color: var(--text-secondary-color);
   gap: 16px;
+  text-align: center;
+
+  p { max-width: 320px; line-height: 1.5; }
 }
 
 .empty-icon {
@@ -35,12 +39,26 @@
   opacity: 0.3;
 }
 
-/* --- Grilla de Tarjetas --- */
+/* --- Grilla --- */
 .reservas-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 24px;
-  padding-top: 24px;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  padding-top: 12px;
+
+  @media (min-width: 480px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  @media (min-width: 960px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  @media (min-width: 1280px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 .reserva-card {
@@ -50,100 +68,78 @@
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
   }
 }
 
-/* --- Cabecera Visual de la Tarjeta --- */
+/* --- Cabecera de tarjeta --- */
 .card-header-visual {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 16px;
-  background-color: #fafafa;
-  border-bottom: 1px solid #eee;
-  border-left: 6px solid #ccc; // Color default
+  gap: 12px;
+  padding: 14px 16px;
+  background-color: var(--light-gray-background-color);
+  border-bottom: 1px solid var(--line-divider);
+  border-left: 5px solid var(--line-divider);
 
-  // Colores de borde según estado
-  &.border-pendiente {
-    border-left-color: #f57f17;
-  }
-
-  &.border-confirmada {
-    border-left-color: #2e7d32;
-  }
-
+  &.border-pendiente  { border-left-color: #f57f17; }
+  &.border-confirmada { border-left-color: #2e7d32; }
+  &.border-completada { border-left-color: #006064; }
+  &.border-propuesta  { border-left-color: #512da8; }
   &.border-rechazada,
-  &.border-cancelada {
-    border-left-color: #c62828;
-  }
-
-  &.border-completada {
-    border-left-color: #006064;
-  }
+  &.border-cancelada  { border-left-color: #c62828; }
 
   .fecha-box {
     display: flex;
     flex-direction: column;
     align-items: center;
     line-height: 1;
-    margin-right: 16px;
+    min-width: 36px;
 
-    .dia {
-      font-size: 1.8rem;
-      font-weight: bold;
-      color: #333;
-    }
-
-    .mes {
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: #777;
-    }
+    .dia  { font-size: 1.6rem; font-weight: bold; color: var(--title-text-color); line-height: 1.1; }
+    .mes  { font-size: 0.7rem; font-weight: 600; color: var(--text-secondary-color); text-transform: uppercase; }
+    .anio { font-size: 0.65rem; color: var(--text-secondary-color); }
   }
 
   .hora-box {
     display: flex;
     align-items: center;
-    gap: 4px;
-    color: #555;
-    font-size: 0.9rem;
-    margin-right: auto; // Empuja el estado a la derecha
+    gap: 6px;
+    color: var(--text-color);
+    font-size: 0.85rem;
+    flex: 1;
 
-    mat-icon {
-      font-size: 18px;
-      width: 18px;
-      height: 18px;
+    mat-icon { font-size: 18px; width: 18px; height: 18px; color: var(--text-secondary-color); }
+
+    .hora-detalle {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+
+      small { font-size: 0.7rem; color: var(--text-secondary-color); }
     }
   }
 
   .estado-chip {
-    padding: 4px 10px;
+    flex-shrink: 0;
+    padding: 3px 9px;
     border-radius: 12px;
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     font-weight: bold;
     text-transform: uppercase;
     color: white;
+    white-space: nowrap;
 
-    &.bg-pendiente {
-      background-color: #f57f17;
-    }
-
-    &.bg-confirmada {
-      background-color: #2e7d32;
-    }
-
+    &.bg-pendiente  { background-color: #f57f17; }
+    &.bg-confirmada { background-color: #2e7d32; }
+    &.bg-completada { background-color: #006064; }
+    &.bg-propuesta  { background-color: #512da8; }
     &.bg-rechazada,
-    &.bg-cancelada {
-      background-color: #c62828;
-    }
-
-    &.bg-completada {
-      background-color: #006064;
-    }
+    &.bg-cancelada  { background-color: #c62828; }
   }
 }
 
+/* --- Cuerpo de tarjeta --- */
 .card-body {
   padding: 16px;
 
@@ -154,30 +150,70 @@
     margin-bottom: 12px;
 
     .avatar-small {
-      width: 40px;
-      height: 40px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       object-fit: cover;
+      border: 2px solid var(--line-divider);
+      flex-shrink: 0;
     }
 
     small {
-      color: #888;
-      font-size: 0.75rem;
+      display: block;
+      color: var(--text-secondary-color);
+      font-size: 0.7rem;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     h4 {
-      margin: 0;
-      font-size: 1rem;
+      margin: 2px 0 0;
+      font-size: 0.95rem;
       font-weight: 500;
+      color: var(--title-text-color);
+    }
+
+    .estudio {
+      font-size: 0.8rem;
+      color: var(--text-secondary-color);
+      font-style: italic;
+    }
+
+    &.sin-asignar {
+      color: var(--text-secondary-color);
+      font-size: 0.85rem;
+      gap: 8px;
+
+      mat-icon { font-size: 20px; width: 20px; height: 20px; opacity: 0.5; }
     }
   }
 
   .descripcion-corta {
-    color: #666;
+    color: var(--text-secondary-color);
     font-style: italic;
-    font-size: 0.9rem;
-    margin: 0;
+    font-size: 0.875rem;
+    margin: 0 0 10px;
     line-height: 1.4;
   }
+
+  .indicadores {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+
+    .indicador {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.75rem;
+      color: var(--text-secondary-color);
+
+      mat-icon { font-size: 14px; width: 14px; height: 14px; }
+    }
+  }
+}
+
+/* Responsive mobile */
+@media (max-width: 479px) {
+  .screen-container { padding: 10px 12px 16px; }
 }

@@ -24,8 +24,12 @@ export class User {
   profile_photo?: string;
   estudio?: string;
   fecha_inicio_actividad?: Date;
-  antiguedad?: number; 
+  antiguedad?: number;
   especialidades?: Especialidad[];
+  localidad?: string;
+  lat?: number;
+  lng?: number;
+  instagram_handle?: string;
 
 }
 

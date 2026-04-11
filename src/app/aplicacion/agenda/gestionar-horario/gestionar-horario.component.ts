@@ -9,6 +9,7 @@ import { NgIf, NgFor } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
+import { NoDoubleSubmitDirective } from 'src/app/shared/directives/no-double-submit.directive';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -17,7 +18,7 @@ import { MatInput } from '@angular/material/input';
     selector: 'app-gestionar-horario',
     templateUrl: './gestionar-horario.component.html',
     styleUrl: './gestionar-horario.component.scss',
-    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, NgIf, MatProgressSpinner, MatIcon, MatButton, FormsModule, ReactiveFormsModule, NgFor, MatSlideToggle, MatFormField, MatLabel, MatInput, MatError, MatDialogActions]
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, NgIf, MatProgressSpinner, MatIcon, MatButton, FormsModule, ReactiveFormsModule, NgFor, MatSlideToggle, MatFormField, MatLabel, MatInput, MatError, MatDialogActions, NoDoubleSubmitDirective]
 })
 export class GestionarHorarioComponent {
 horarioForm: FormGroup;

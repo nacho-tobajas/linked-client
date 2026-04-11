@@ -21,6 +21,13 @@ import { EspecialidadesComponent } from './aplicacion/gestion-sistema/especialid
 import { MisReservasComponent } from './aplicacion/mis-reservas/mis-reservas.component';
 import { AgendaComponent } from './aplicacion/agenda/agenda.component';
 import { PortfolioComponent } from './aplicacion/trabajos/portfolio/portfolio/portfolio.component';
+import { TatuajesFavoritosComponent } from './aplicacion/tatuajes-favoritos/tatuajes-favoritos.component';
+import { MiPortfolioComponent } from './aplicacion/trabajos/mi-portfolio/mi-portfolio.component';
+import { BuscarTatuadorComponent } from './aplicacion/buscar-tatuador/buscar-tatuador.component';
+import { TerminosComponent } from './pages/terminos/terminos.component';
+import { PrivacidadComponent } from './pages/privacidad/privacidad.component';
+import { ContactoComponent } from './pages/contacto/contacto.component';
+import { SolicitudesTatuadorComponent } from './aplicacion/solicitudes-tatuador/solicitudes-tatuador.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/inicio', pathMatch: 'full' },
@@ -35,7 +42,8 @@ const routes: Routes = [
   { path: 'info', component: PersonalDetailsComponent },
   { path: 'support-ticket', component: SupportTicketComponent, canActivate: [adminModGuard] },
   { path: 'especialidades', component: EspecialidadesComponent, canActivate: [adminModGuard] },
-  { path: 'gestionar-agenda', component: AgendaComponent, canActivate: [ /* AuthGuard de Tatuador */ ] },
+  { path: 'solicitudes-tatuador', component: SolicitudesTatuadorComponent, canActivate: [adminGuard] },
+  { path: 'gestionar-agenda', component: AgendaComponent, canActivate: [ /* AuthGuard de Tatuador */] },
   {
     path: 'reserva',
     loadChildren: () => import('./aplicacion/reserva/reserva-routing.module.js').then(m => m.ReservaRoutingModule)
@@ -44,7 +52,13 @@ const routes: Routes = [
     path: 'mis-reservas',
     component: MisReservasComponent
   },
+  { path: 'mis-favoritos', component: TatuajesFavoritosComponent },
+  { path: 'buscar', component: BuscarTatuadorComponent },
+  { path: 'mi-portfolio', component: MiPortfolioComponent },
   { path: 'perfil-publico/:id', component: PortfolioComponent },
+  { path: 'terminos', component: TerminosComponent },
+  { path: 'privacidad', component: PrivacidadComponent },
+  { path: 'contacto', component: ContactoComponent },
   { path: '**', redirectTo: '/inicio', pathMatch: 'full' }, //redireccionar a inicio si no hay match
   // Carga diferida (lazy loading) para el flujo de prereserva
 

@@ -1,100 +1,121 @@
 <div class="detail-container">
-  
+
+  <!-- HEADER -->
   <div class="dialog-header">
-    <div class="cliente-info">
-      <img [src]="environmentImg + data.turno.cliente?.profile_photo || '../../../assets/images/default-profile.jpg'" 
-           class="avatar-cliente" alt="Avatar">
+
+    <!-- Vista Tatuador: muestra info del cliente -->
+    <div class="persona-info" *ngIf="esTatuador">
+      <img [src]="data.turno.cliente?.profile_photo | serverUrl" class="avatar-persona" alt="Cliente">
       <div>
         <h2>{{ data.turno.cliente?.realname }} {{ data.turno.cliente?.surname }}</h2>
-        <p class="subtitle">{{ data.turno.cliente?.username }}</p>
+        <p class="subtitle">&#64;{{ data.turno.cliente?.username }}</p>
       </div>
     </div>
+
+    <!-- Vista Cliente: muestra info del tatuador -->
+    <div class="persona-info" *ngIf="!esTatuador">
+      <img [src]="tatuador?.profile_photo | serverUrl" class="avatar-persona" alt="Tatuador">
+      <div>
+        <h2>{{ tatuador?.realname }} {{ tatuador?.surname }}</h2>
+        <p class="subtitle">{{ tatuador?.estudio || 'Artista tatuador' }}</p>
+      </div>
+    </div>
+
+    <span class="estado-badge status-{{ data.turno.estado.toLowerCase() }}">
+      {{ data.turno.estado }}
+    </span>
   </div>
 
   <mat-divider></mat-divider>
 
   <mat-tab-group dynamicHeight class="dialog-tabs full-height-tabs">
-    
-    <!-- Tab de detalles del turno -->
+
+    <!-- TAB: Detalles -->
     <mat-tab label="Detalles">
       <mat-dialog-content class="content-scroll">
-          
-          <div class="info-grid relative-container">
-          
-          <button mat-icon-button class="floating-edit-btn" 
-                  (click)="abrirEdicion()" 
+
+        <!-- Mensaje de estado para el cliente -->
+        <div class="status-message {{ statusInfo.clase }}" *ngIf="!esTatuador">
+          <mat-icon>{{ statusInfo.icon }}</mat-icon>
+          <p>{{ statusInfo.mensaje }}</p>
+        </div>
+
+        <!-- Info de fecha/hora -->
+        <div class="info-grid relative-container">
+
+          <button mat-icon-button class="floating-edit-btn"
+                  *ngIf="esTatuador"
+                  (click)="abrirEdicion()"
                   matTooltip="Editar fecha/hora">
-              <mat-icon>edit</mat-icon>
+            <mat-icon>edit</mat-icon>
           </button>
 
           <div class="info-item">
-             <mat-icon>calendar_today</mat-icon>
-             <span>{{ data.turno.fecha_hora_inicio | date:'EEEE dd MMMM yyyy' }}</span>
+            <mat-icon>calendar_today</mat-icon>
+            <span>{{ data.turno.fecha_hora_inicio | date:'EEEE dd MMMM yyyy' }}</span>
           </div>
           <div class="info-item">
-             <mat-icon>schedule</mat-icon>
-             <span>{{ data.turno.fecha_hora_inicio | date:'HH:mm' }} - {{ data.turno.fecha_hora_fin | date:'HH:mm' }}</span>
+            <mat-icon>schedule</mat-icon>
+            <span>{{ data.turno.fecha_hora_inicio | date:'HH:mm' }} — {{ data.turno.fecha_hora_fin | date:'HH:mm' }}</span>
           </div>
-          <div class="info-item">
-             <mat-icon>email</mat-icon>
-             <span>{{ data.turno.cliente?.email }}</span>
+          <div class="info-item" *ngIf="esTatuador">
+            <mat-icon>email</mat-icon>
+            <span>{{ data.turno.cliente?.email }}</span>
           </div>
+        </div>
 
-          </div>
+        <!-- Descripción -->
+        <div class="section">
+          <h3>{{ esTatuador ? 'Idea del cliente' : 'Tu descripción' }}</h3>
+          <p class="descripcion-text">
+            {{ data.turno.descripcion_cliente || 'Sin descripción.' }}
+          </p>
+        </div>
 
-          <div class="section">
-            <h3>La Idea del Cliente</h3>
-            <p class="descripcion-text">
-              {{ data.turno.descripcion_cliente || 'Sin descripción.' }}
-            </p>
-          </div>
-
-          <div class="section" *ngIf="data.turno.imagenes && data.turno.imagenes.length > 0">
-            <h3>Referencias Visuales</h3>
-            <div class="galeria">
-               <div class="img-wrapper" *ngFor="let img of data.turno.imagenes">
-                 <img [src]="environmentImg + img.image_path" alt="Referencia" (click)="openImageUrl(img.image_path)">
-               </div>
+        <!-- Imágenes de referencia -->
+        <div class="section" *ngIf="data.turno.imagenes && data.turno.imagenes.length > 0">
+          <h3>Referencias visuales</h3>
+          <div class="galeria">
+            <div class="img-wrapper" *ngFor="let img of data.turno.imagenes; let i = index">
+              <img [src]="img.image_path | serverUrl" alt="Referencia" (click)="openLightbox(i)">
             </div>
           </div>
+        </div>
 
       </mat-dialog-content>
     </mat-tab>
-    
-    <!-- Tab de mensajeria -->
+
+    <!-- TAB: Mensajes -->
     <mat-tab label="Mensajes">
       <div class="chat-layout">
-        
+
         <div class="messages-list" #messagesContainer>
-          
-          <div class="message-bubble" 
+          <div class="message-bubble"
                *ngFor="let msg of mensajes"
-               [class.own-message]="msg.usuarioEnvia.id === currentUserId">
-            
+               [class.own-message]="msg.usuarioEnvia?.id === currentUserId">
             <div class="msg-header">
               <strong>{{ msg.usuarioEnvia?.realname }}</strong>
-              <small>{{ msg.timestamp | date:'short' }}</small>
+              <small>{{ msg.timestamp | date:'dd/MM HH:mm' }}</small>
             </div>
-            <div class="msg-body">
-              {{ msg.mensaje }}
-            </div>
+            <div class="msg-body">{{ msg.mensaje }}</div>
           </div>
-          
+
           <div *ngIf="mensajes.length === 0" class="no-messages">
             No hay mensajes para este turno.
           </div>
         </div>
 
-        <div class="chat-input-area" *ngIf="data.turno.estado !== 'Completada' && data.turno.estado !== 'Cancelada'">
-            <mat-form-field appearance="outline" class="full-width no-bottom-padding">
-              <mat-label>Escribir respuesta...</mat-label>
-              <textarea matInput [(ngModel)]="nuevoMensajeText" rows="1" 
-                        style="resize:none"
-                        (keyup.enter)="enviarMensaje()"></textarea>
-              <button mat-icon-button matSuffix [disabled]="!nuevoMensajeText.trim()" (click)="enviarMensaje()">
-                <mat-icon>send</mat-icon>
-              </button>
-            </mat-form-field>
+        <div class="chat-input-area"
+             *ngIf="data.turno.estado !== 'Completada' && data.turno.estado !== 'Cancelada' && data.turno.estado !== 'Rechazada'">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Escribir mensaje...</mat-label>
+            <textarea matInput [(ngModel)]="nuevoMensajeText" rows="1"
+                      style="resize:none"
+                      (keyup.enter)="enviarMensaje()"></textarea>
+            <button mat-icon-button matSuffix appNoDoubleSubmit [submitDelay]="800" [disabled]="!nuevoMensajeText.trim()" (click)="enviarMensaje()">
+              <mat-icon>send</mat-icon>
+            </button>
+          </mat-form-field>
         </div>
 
       </div>
@@ -107,30 +128,57 @@
   <mat-dialog-actions align="end">
     <button mat-button (click)="cerrar(null)">Cerrar</button>
 
-    <ng-container *ngIf="data.turno.estado === 'Pendiente'">
-      <button mat-stroked-button color="warn" (click)="cerrar('rechazar')">
-        <mat-icon>block</mat-icon> Rechazar
-      </button>
-      <button mat-raised-button color="primary" (click)="cerrar('confirmar')">
-        <mat-icon>check</mat-icon> Confirmar Turno
-      </button>
-    </ng-container>
-
-    <ng-container *ngIf="data.turno.estado === 'Confirmada'">
-      <button mat-stroked-button color="warn" (click)="cerrar('rechazar')">Cancelarlo</button>
-      <button mat-raised-button color="accent" (click)="cerrar('completar')">
-        <mat-icon>done_all</mat-icon> Marcar Completado
-      </button>
-    </ng-container>
-
-    <ng-container *ngIf="data.turno.estado === 'Rechazada' || data.turno.estado === 'Cancelada'">
-        <span class="text-muted" style="margin-right: 10px; font-size: 0.8rem;">
-            ¿Fue un error?
-        </span>
-        <button mat-stroked-button color="primary" (click)="cerrar('restaurar')">
-            <mat-icon>restore</mat-icon> Restaurar a Pendiente
+    <!-- SOLO TATUADOR: gestión completa del turno -->
+    <ng-container *ngIf="esTatuador">
+      <ng-container *ngIf="data.turno.estado === 'Pendiente' || data.turno.estado === 'Propuesta'">
+        <button mat-stroked-button color="warn" appNoDoubleSubmit (click)="cerrar('rechazar')">
+          <mat-icon>block</mat-icon> Rechazar
         </button>
+        <button mat-raised-button color="primary" appNoDoubleSubmit (click)="cerrar('confirmar')">
+          <mat-icon>check</mat-icon> Confirmar
+        </button>
+      </ng-container>
+
+      <ng-container *ngIf="data.turno.estado === 'Confirmada'">
+        <button mat-stroked-button color="warn" appNoDoubleSubmit (click)="cerrar('rechazar')">Cancelar</button>
+        <button mat-raised-button color="accent" appNoDoubleSubmit (click)="cerrar('completar')">
+          <mat-icon>done_all</mat-icon> Marcar completado
+        </button>
+      </ng-container>
+
+      <ng-container *ngIf="data.turno.estado === 'Rechazada' || data.turno.estado === 'Cancelada'">
+        <button mat-stroked-button color="primary" appNoDoubleSubmit (click)="cerrar('restaurar')">
+          <mat-icon>restore</mat-icon> Restaurar a pendiente
+        </button>
+      </ng-container>
     </ng-container>
+
+    <!-- SOLO CLIENTE: puede cancelar si el turno está activo -->
+    <ng-container *ngIf="!esTatuador">
+      <ng-container *ngIf="data.turno.estado === 'Pendiente' || data.turno.estado === 'Confirmada'">
+        <button mat-stroked-button color="warn" appNoDoubleSubmit (click)="cerrar('cancelar')">
+          <mat-icon>cancel</mat-icon> Cancelar turno
+        </button>
+      </ng-container>
+    </ng-container>
+
   </mat-dialog-actions>
-  
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox-overlay" *ngIf="lightboxIndex !== null" (click)="closeLightbox()">
+    <button class="lightbox-close" (click)="closeLightbox()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <button class="lightbox-nav prev" *ngIf="data.turno.imagenes!.length > 1" (click)="$event.stopPropagation(); lightboxPrev()">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <img class="lightbox-img" [src]="lightboxUrl" alt="Referencia ampliada" (click)="$event.stopPropagation()">
+    <button class="lightbox-nav next" *ngIf="data.turno.imagenes!.length > 1" (click)="$event.stopPropagation(); lightboxNext()">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+    <div class="lightbox-counter" *ngIf="data.turno.imagenes!.length > 1">
+      {{ lightboxIndex! + 1 }} / {{ data.turno.imagenes!.length }}
+    </div>
+  </div>
+
 </div>

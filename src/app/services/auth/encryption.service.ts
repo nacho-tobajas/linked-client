@@ -1,22 +1,46 @@
-import * as CryptoJS from 'crypto-js';
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EncryptionService {
-  private key = CryptoJS.enc.Hex.parse(
-    '91e87395dcdc7494f82d3a67b5fa118d264d92fe75f4a7c3d4f4d5e12348ab93'
-  ); // Tu clave de 32 bytes en Hex
-  private iv = CryptoJS.enc.Hex.parse('dcf2a4bf8b9876e5df8c2ba0a77d234b'); // Tu IV de 16 bytes en Hex
+  private cachedKey: CryptoKey | null = null;
 
-  encrypt(text: string): string {
-    const encrypted = CryptoJS.AES.encrypt(text, this.key, {
-      iv: this.iv,
-      mode: CryptoJS.mode.CBC, //Cifrado de Blockchain
-      padding: CryptoJS.pad.Pkcs7
-    });
-    return encrypted.toString();
+  constructor(private http: HttpClient) {}
+
+  async encrypt(text: string): Promise<string> {
+    const key = await this.getPublicKey();
+    const encrypted = await window.crypto.subtle.encrypt(
+      { name: 'RSA-OAEP' },
+      key,
+      new TextEncoder().encode(text)
+    );
+    return btoa(String.fromCharCode(...new Uint8Array(encrypted)));
   }
 
+  private async getPublicKey(): Promise<CryptoKey> {
+    if (this.cachedKey) return this.cachedKey;
+
+    const { publicKey } = await firstValueFrom(
+      this.http.get<{ publicKey: string }>(`${environment.urlApi}auth/public-key`)
+    );
+
+    const pem = publicKey
+      .replace('-----BEGIN PUBLIC KEY-----', '')
+      .replace('-----END PUBLIC KEY-----', '')
+      .replace(/\s/g, '');
+    const binaryDer = Uint8Array.from(atob(pem), c => c.charCodeAt(0));
+
+    this.cachedKey = await window.crypto.subtle.importKey(
+      'spki',
+      binaryDer,
+      { name: 'RSA-OAEP', hash: 'SHA-256' },
+      false,
+      ['encrypt']
+    );
+    return this.cachedKey;
+  }
 }

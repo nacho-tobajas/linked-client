@@ -1,156 +1,326 @@
-@import "src/assets/styles/_variables.scss"; // Asegúrate de tener tus colores aquí
+@use 'sass:color';
+@use "src/assets/styles/_variables.scss" as *;
 
-// Contenedor principal para centrar todo en pantalla
-.login-container {
+// ─── Layout ────────────────────────────────────────────────────────────────
+.auth-wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+// ─── Panel de marca ─────────────────────────────────────────────────────────
+.brand-panel {
+  display: none;
+  position: relative;
+  overflow: hidden;
+  flex: 0 0 42%;
+  background: $main-color;
+  align-items: center;
+  justify-content: center;
+
+  @media (min-width: 768px) { display: flex; }
+
+  .brand-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+    animation: fadeSlideUp 0.7s ease both;
+  }
+
+  .brand-tagline {
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 0.9rem;
+    line-height: 1.7;
+    margin: 0;
+    letter-spacing: 0.03em;
+  }
+
+  // Patrón de puntos
+  .brand-dots {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  // Degradado sutil en borde derecho
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+    z-index: 1;
+  }
+}
+
+// ─── Marca (ícono + nombre) ──────────────────────────────────────────────────
+.brand-mark {
+  position: relative;
+  width: 72px;
+  height: 44px;
+  margin: 0 auto 20px;
+
+  .ring {
+    position: absolute;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 5px solid rgba(255, 255, 255, 0.9);
+
+    &.ring-a { left: 0; }
+    &.ring-b { left: 28px; border-color: rgba(255, 255, 255, 0.45); }
+  }
+
+  &.sm {
+    width: 52px;
+    height: 32px;
+    margin: 0 8px 0 0;
+
+    .ring {
+      width: 32px;
+      height: 32px;
+      border-width: 3.5px;
+      &.ring-b { left: 20px; }
+    }
+  }
+}
+
+.brand-logo {
+  width: 128px;
+  height: 128px;
+  object-fit: contain;
+  margin-bottom: 16px;
+}
+
+.brand-name {
+  display: block;
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: #fff;
+  margin-bottom: 12px;
+
+  .brand-panel & { font-size: 2.8rem; }
+
+  .ink {
+    font-style: italic;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+  }
+}
+
+// ─── Panel de formulario ─────────────────────────────────────────────────────
+.form-panel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bs-body-bg);
+  padding: 32px 24px;
+
+  @media (min-width: 768px) {
+    background-color: var(--card-background-color);
+  }
+}
+
+.form-inner {
+  width: 100%;
+  max-width: 400px;
+  --mat-form-field-container-height: 48px;
+  --mat-form-field-container-vertical-padding: 10px;
+  animation: fadeSlideUp 0.6s ease both;
+  animation-delay: 0.1s;
+}
+
+// ─── Marca mobile ────────────────────────────────────────────────────────────
+.mobile-brand {
+  display: flex;
+  align-items: center;
+  margin-bottom: 32px;
+
+  .brand-mark .ring {
+    border-color: $main-color;
+    &.ring-b { border-color: rgba($main-color, 0.4); }
+  }
+
+  .brand-name {
+    color: var(--title-text-color);
+    font-size: 1.6rem;
+    margin: 0;
+  }
+
+  @media (min-width: 768px) { display: none; }
+}
+
+// ─── Header del formulario ───────────────────────────────────────────────────
+.form-header {
+  margin-bottom: 28px;
+
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--title-text-color);
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+  }
+
+  p {
+    color: var(--text-secondary-color);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+}
+
+// ─── Campos ──────────────────────────────────────────────────────────────────
+.field-group {
+  margin-bottom: 18px;
+}
+
+.field-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-color);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+
+.forgot-link {
+  font-size: 0.8rem;
+  color: #2e7d32;
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.2s;
+
+  &:hover { opacity: 0.7; text-decoration: underline; }
+
+  :root.dark-theme & { color: #81c784; }
+}
+
+.field {
+  width: 100%;
+
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    background: var(--bs-body-bg);
+    border-radius: 8px;
+  }
+
+  ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+    margin-top: 2px;
+  }
+}
+
+// ─── Captcha ─────────────────────────────────────────────────────────────────
+.captcha-wrap {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  /* Alinea el contenido arriba */
-  padding-top: 10vh;
-  min-height: 100vh;
-  background-color: #f5f7fa; // Un gris muy suave de fondo
-  padding: 20px;
-}
+  margin: 0 0 18px;
 
-.login-card {
-  width: 100%;
-  max-width: 420px; // Un ancho estándar cómodo
-  padding: 2.5rem 2rem;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); // Sombra suave y difusa
-  background: #fff;
-  text-align: center; // Centra textos por defecto
-
-  // --- Header ---
-  .card-header {
-    margin-bottom: 2rem;
-
-    .icon-circle {
-      width: 60px;
-      height: 60px;
-      background-color: rgba($main-color, 0.1); // Color primario suave
-      color: $main-color;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 1rem auto;
-
-      mat-icon {
-        font-size: 30px;
-        width: 30px;
-        height: 30px;
-      }
-    }
-
-    h2 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: #333;
-      margin: 0 0 0.5rem 0;
-    }
-
-    .subtitle {
-      color: #666;
-      font-size: 0.95rem;
-      margin: 0;
-    }
-  }
-
-  // --- Campos del Formulario ---
-  .form-group {
-    margin-bottom: 1rem;
-    text-align: left; // Los inputs se ven mejor alineados a la izquierda
-  }
-
-  .full-width {
-    width: 100%;
-  }
-
-  // Ajuste de iconos dentro de los inputs
-  ::ng-deep .mat-form-field-prefix .mat-icon {
-    margin-right: 8px;
-    color: #999;
-  }
-
-  // --- Links y Acciones ---
-  .forgot-password {
-    text-align: right;
-    margin-bottom: 1.5rem;
-    margin-top: -0.5rem;
-
-    a {
-      font-size: 0.85rem;
-      color: $main-color;
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s;
-
-      &:hover {
-        color: darken($main-color, 15%);
-        text-decoration: underline;
-      }
-    }
-  }
-
-  .captcha-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 1.5rem;
-    transform: scale(0.9); // Ajuste visual si el captcha es muy ancho
-    transform-origin: center;
-  }
-
-  .btn-submit {
-    width: 100%;
-    padding: 0.8rem;
-    font-size: 1rem;
-    font-weight: 600;
-    letter-spacing: 1px;
+  ::ng-deep re-captcha > div {
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba($main-color, 0.3); // Sombra de color
-    margin-bottom: 1.5rem;
+    border: 1.5px solid var(--line-divider);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    transition: border-color 0.2s;
 
-    &:disabled {
-      box-shadow: none;
+    &:hover {
+      border-color: #2e7d32;
     }
   }
 
-  // --- Footer ---
-  .card-footer {
-    border-top: 1px solid #eee;
-    padding-top: 1.5rem;
-    font-size: 0.9rem;
-    color: #666;
-
-    a {
-      color: $main-color;
-      font-weight: 600;
-      text-decoration: none;
-      margin-left: 5px;
-
-      &:hover {
-        text-decoration: underline;
-      }
+  // Dark mode: invierte el widget para que no quede un bloque blanco
+  :root.dark-theme & {
+    ::ng-deep re-captcha > div {
+      filter: invert(0.88) hue-rotate(180deg) brightness(0.85);
+      border-color: var(--line-divider);
     }
   }
-}
 
-// Responsive para móviles
-@media (max-width: 480px) {
-  .login-container {
-    padding: 15px;
-    background-color: #fff; // En móvil a veces queda mejor todo blanco
-  }
-
-  .login-card {
-    box-shadow: none; // Quitamos sombra para diseño "plano" en móvil
-    padding: 1rem 0;
-    max-width: 100%;
+  @media (max-width: 380px) {
+    transform: scale(0.85);
+    transform-origin: center top;
+    margin-bottom: -11px;
   }
 }
 
-// Fixes para navegadores específicos (quitar iconos raros en passwords)
+// ─── Botón principal ─────────────────────────────────────────────────────────
+.btn-primary {
+  width: 100%;
+  height: 48px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 8px;
+  --mdc-protected-button-container-color: #2e7d32;
+  --mdc-protected-button-label-text-color: #ffffff;
+  box-shadow: 0 4px 14px rgba(46, 125, 50, 0.35);
+  transition: box-shadow 0.2s, transform 0.1s;
+
+  &:not(:disabled):hover {
+    box-shadow: 0 6px 20px rgba(46, 125, 50, 0.45);
+    transform: translateY(-1px);
+  }
+  &:not(:disabled):active { transform: translateY(0); }
+  &:disabled { box-shadow: none; }
+}
+
+// ─── Footer ───────────────────────────────────────────────────────────────────
+.form-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line-divider);
+  font-size: 0.875rem;
+  color: var(--text-secondary-color);
+}
+
+.link-action {
+  display: inline-flex;
+  align-items: center;
+  color: #2e7d32;
+  font-weight: 700;
+  font-size: 0.875rem;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1.5px solid #2e7d32;
+  transition: background 0.18s, color 0.18s;
+
+  &:hover {
+    background: #2e7d32;
+    color: #fff;
+  }
+
+  :root.dark-theme & {
+    color: #81c784;
+    border-color: #81c784;
+    &:hover { background: #81c784; color: #1b2e1c; }
+  }
+}
+
+// ─── Animación ───────────────────────────────────────────────────────────────
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ─── Ocultar controles nativos de contraseña ────────────────────────────────
 input[type="password"]::-ms-reveal,
 input[type="password"]::-ms-clear,
 input[type="password"]::-webkit-contacts-auto-fill-button,

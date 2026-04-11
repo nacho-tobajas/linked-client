@@ -1,107 +1,168 @@
-@import '../../../assets/styles/_variables';
+@use "../../../assets/styles/_variables" as *;
 
-/* --- CONTENEDOR PRINCIPAL --- */
+/* ============================================================
+   LAYOUT PRINCIPAL
+   ============================================================ */
+
+/* Mobile: ancho completo, alto ajustado al contenido */
 .card-container {
+  position: relative;
   display: flex;
   justify-content: center;
-  align-items: center;
-  width: 100vw;
+  align-items: flex-start;
+  width: 100%;
+  overflow-x: hidden;
 
   .personal-details-card,
   .edit-form-card {
     width: 100%;
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 1em;
+    max-width: 100%;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 20px 16px;
+    box-sizing: border-box;
+    overflow-x: hidden;
   }
 
-  .profile-title {
-    font-size: 1.7em;
-    margin-bottom: 0.7em;
-    text-transform: uppercase;
-  }
-
-  /* --- HEADER --- */
-  .mat-mdc-card-header {
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1em;
-    margin: 1em 0;
-
-    .mat-card-header-text {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-  }
-
-  /* --- CONTENIDO --- */
-  .mat-mdc-card-content {
-    margin: 1.2em 0;
-  }
-
-  /* --- BOTONES --- */
-  .action-buttons {
-    display: flex;
-    justify-content: flex-start;
-    gap: 20px;
-
-    .edit-button {
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      font-size: 12px;
-
-      span {
-        text-decoration: underline;
-      }
-
-      .mat-icon {
-        font-size: 20px;
-      }
-    }
-  }
-
-  .full-width {
-    width: 100%;
-  }
-
-  /* --- RESPONSIVE TABLET --- */
-  @media (min-width: 600px) {
+  /* Tablet */
+  @media (min-width: 768px) {
+    padding: 2rem 1.5rem;
 
     .personal-details-card,
     .edit-form-card {
-      padding: 1.5em;
-      max-width: 500px;
-    }
-
-    .action-buttons {
-      gap: 25px;
-    }
-
-    .edit-button {
-      font-size: 14px;
-
-      .mat-icon {
-        font-size: 22px;
-      }
+      max-width: 780px;
+      margin: 0 auto;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+      padding: 2.5rem;
     }
   }
 
-  /* --- RESPONSIVE DESKTOP --- */
-  @media (min-width: 992px) {
+  /* Desktop */
+  @media (min-width: 1200px) {
+    padding: 2.5rem 2rem;
 
     .personal-details-card,
     .edit-form-card {
-      padding: 2em;
-      max-width: 500px;
+      max-width: 960px;
+      padding: 3rem 4rem;
+    }
+  }
+
+  /* Desktop grande */
+  @media (min-width: 1600px) {
+    .personal-details-card,
+    .edit-form-card {
+      max-width: 1100px;
+      padding: 3.5rem 5rem;
     }
   }
 }
 
-/* --- FOTO DE PERFIL (SOLO UNA) --- */
+/* ============================================================
+   HEADER DE LA CARD
+   ============================================================ */
+.profile-title {
+  font-size: 1.7em;
+  margin-bottom: 0.7em;
+  text-transform: uppercase;
+  color: var(--title-text-color);
+}
+
+.mat-mdc-card-header {
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+  margin: 1em 0;
+
+  .mat-card-header-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+.mat-mdc-card-content {
+  margin: 1.2em 0;
+}
+
+/* ============================================================
+   TEXTO DE CONTENIDO
+   ============================================================ */
+.mat-mdc-card-content p,
+.mat-mdc-card-content b {
+  color: var(--text-color);
+}
+
+/* ============================================================
+   BOTONES DE ACCIÓN (vista + edición)
+   ============================================================ */
+.action-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 12px 4px;
+
+  /* Botones pill (modo vista) */
+  .edit-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    min-height: 44px;
+    border: 1px solid var(--line-divider);
+    border-radius: 20px;
+    cursor: pointer;
+    transition:
+      background-color 0.2s,
+      box-shadow 0.2s,
+      border-color 0.2s;
+    font-size: 0.9rem;
+    color: var(--text-color);
+    background-color: transparent;
+    white-space: nowrap;
+    flex: 0 0 auto;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      color: var(--text-color);
+    }
+
+    span {
+      font-weight: 500;
+    }
+
+    &:hover {
+      background-color: var(--light-gray-background-color);
+      border-color: var(--text-secondary-color);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  /* Botones Angular Material (modo edición) */
+  button[mat-stroked-button],
+  button[mat-raised-button] {
+    min-height: 44px;
+    flex: 1 1 auto;
+  }
+
+  @media (min-width: 768px) {
+    gap: 16px;
+    padding: 16px 0;
+  }
+}
+
+/* ============================================================
+   FOTO DE PERFIL — vista
+   ============================================================ */
 .profile-picture-container {
   position: relative;
   width: 70px;
@@ -118,7 +179,7 @@
     position: absolute;
     bottom: 0;
     right: 0;
-    background-color: white;
+    background-color: var(--card-background-color);
     border-radius: 50%;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
     transform: translate(25%, 25%);
@@ -126,231 +187,84 @@
     min-width: 18px;
     min-height: 18px;
     font-size: 14px;
+
+    mat-icon {
+      color: var(--text-color);
+    }
   }
 
   @media (min-width: 600px) {
     width: 80px;
     height: 80px;
   }
-
   @media (min-width: 992px) {
     width: 100px;
     height: 100px;
   }
 }
 
-/* --- FOTO DOBLE --- */
-.profile-picture-dual-horizontal {
+/* ============================================================
+   FOTO ÚNICA — modo edición
+   ============================================================ */
+.profile-picture-edit-container {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2.5em;
+  justify-content: flex-start;
+  margin-bottom: 0.75rem;
+}
 
-  .profile-picture-large-container {
-    .profile-picture-large {
-      width: 160px;
-      height: 160px;
-      border-radius: 50%;
-      object-fit: cover;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-    }
+.profile-picture-single-wrapper {
+  position: relative;
+  display: inline-flex;
+
+  .profile-picture-single {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
 
-  .profile-picture-small-container {
-    position: relative;
+  .edit-photo-btn {
+    position: absolute;
+    bottom: -2px;
+    right: -6px;
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+    padding: 0;
+    line-height: 1;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--card-background-color);
+    border-radius: 50%;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease;
 
-    .profile-picture-small {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      border: 3px solid white;
-      object-fit: cover;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    mat-icon {
+      font-size: 13px;
+      width: 13px;
+      height: 13px;
+      line-height: 13px;
+      color: var(--text-color);
     }
 
-    .edit-icon {
-      position: absolute;
-      bottom: 0;
-      right: -10px;
-      background-color: white;
-      border-radius: 50%;
-      box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
-      min-width: 20px;
-      /* más chico */
-      min-height: 20px;
-      font-size: 14px;
-      /* más chico */
-      color: #444;
-      transition: transform 0.2s ease;
-    }
-
-    .edit-icon:hover {
+    &:hover:not([disabled]) {
       transform: scale(1.1);
     }
   }
 
   @media (min-width: 768px) {
-    gap: 3em;
-
-    .profile-picture-large-container .profile-picture-large {
-      width: 180px;
-      height: 180px;
-    }
-
-    .profile-picture-small-container .profile-picture-small {
-      width: 90px;
-      height: 90px;
+    .profile-picture-single {
+      width: 96px;
+      height: 96px;
     }
   }
 }
 
-.action-buttons {
-  display: flex;
-  justify-content: space-evenly;
-  gap: 16px;
-  padding: 16px;
-
-  .action-button-raised {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    background-color: var(--button-background-light, #f0f0f0);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    font-size: 0.9rem;
-    color: var(--text-color, #333);
-
-    mat-icon {
-      font-size: 20px;
-      width: 20px;
-      height: 20px;
-    }
-
-    &:hover {
-      transform: translateY(-2px); // Efecto levantar
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); // Sombra más pronunciada
-    }
-
-    span {
-      text-decoration: none;
-    }
-
-    &.primary {
-      background-color: var(--primary-color, #3f51b5); // Tu color primario
-      color: var(--primary-contrast-color, #fff); // Color de texto para primario (usualmente blanco)
-
-      mat-icon {
-        color: var(--primary-contrast-color, #fff);
-      }
-    }
-
-    &.stroked-warn {
-      // Un estilo diferente para el segundo botón
-      background-color: transparent;
-      color: var(--warn-color, #f44336); // Tu color warn
-      border: 1px solid var(--warn-color-light-border, #ffcdd2); // Borde suave warn (un tono claro)
-      box-shadow: none;
-
-      mat-icon {
-        color: var(--warn-color, #f44336);
-      }
-
-      &:hover {
-        background-color: var(--warn-color-hover-light, #ffebee); // Fondo muy claro al pasar
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); // Sombra suave al pasar
-        transform: none; // Sin efecto levantar si es 'stroked'
-      }
-    }
-  }
-}
-
-.action-buttons {
-  display: flex;
-  justify-content: center; // Centrados
-  flex-wrap: wrap; // Permite que pasen a la línea de abajo si no caben
-  gap: 12px; // Espacio entre botones (un poco menos que antes)
-  padding: 16px 8px;
-
-  .edit-button {
-    // Mantenemos tu clase .edit-button
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 16px; // Padding ajustado
-    border: 1px solid #bbb; // Borde con tu variable --line-divider
-    border-radius: 20px; // Píldora
-    cursor: pointer;
-    transition: background-color 0.2s, box-shadow 0.2s, border-color 0.2s;
-    font-size: 0.9rem;
-    color: var(--text-color, #414e3b); // Tu variable --text-color
-    background-color: transparent; // Fondo transparente por defecto
-    white-space: nowrap; // 👈 EVITA QUE EL TEXTO BAJE DE LÍNEA
-
-    mat-icon {
-      font-size: 18px;
-      width: 18px;
-      height: 18px;
-    }
-
-    span {
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    &:hover {
-      background-color: var(--light-gray-background-color, #f5f5f5); // Tu variable --light-gray-background-color
-      border-color: #bbb; // Oscurece un poco el borde
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-
-    // --- Colores Específicos ---
-
-    // Botón Editar Perfil (Principal)
-    &.primary {
-      border-color: $main-color; // Usa tu $main-color SCSS
-      color: $main-color;
-
-      mat-icon {
-        color: $main-color;
-      }
-
-      &:hover {
-        // Usa un lighten de tu color principal o una variable CSS si la tienes
-        background-color: lighten($main-color, 50%); // Muy claro para hover
-        // background-color: var(--primary-hover-light-bg, lighten($main-color, 50%));
-      }
-    }
-
-    // Botón Cambiar Contraseña (Secundario/Neutro)
-    // Dejamos el estilo por defecto (borde gris) para diferenciarlo
-    // Si quieres un color específico (ej. rojo suave), puedes crear una clase .warn
-    /*
-    &.warn {
-        border-color: var(--warn-color-soft, #f5c6cb); // Ejemplo rojo suave
-        color: var(--warn-color-dark, #dc3545);      // Ejemplo rojo oscuro
-        mat-icon { color: var(--warn-color-dark, #dc3545); }
-        &:hover {
-           background-color: var(--warn-color-hover-light, #f8d7da); // Ejemplo fondo rojo muy claro
-        }
-    }
-    */
-  }
-}
-
-.especialidades-container {
-
-  b {
-    display: block; //Salto de linea
-    margin-bottom: 0.5rem;
-
-  }
-}
-
+/* ============================================================
+   ESPECIALIDADES
+   ============================================================ */
 .especialidades-view {
   mat-chip {
     font-size: 0.75rem;
@@ -360,10 +274,797 @@
   }
 }
 
-.tatuador-section-title-view {
-  font-size: 1rem;
+/* ============================================================
+   SECCIONES DE DATOS — modo vista
+   ============================================================ */
+.section-block {
+  background-color: var(--light-gray-background-color);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.section-block-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-secondary-color);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding-bottom: 0.6rem;
+  margin-bottom: 0.25rem;
+  border-bottom: 1px solid var(--line-divider);
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: var(--text-secondary-color);
+  }
+
+  .instagram-status-badge {
+    margin-left: auto;
+  }
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--line-divider);
+  flex-wrap: wrap;
+
+  &:last-child {
+    border-bottom: none;
+  }
+  &.info-row--wrap {
+    align-items: flex-start;
+  }
+}
+
+.info-icon {
+  font-size: 17px !important;
+  width: 17px !important;
+  height: 17px !important;
+  flex-shrink: 0;
+  color: var(--text-secondary-color) !important;
+}
+
+.info-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary-color);
+  white-space: nowrap;
+
+  @media (min-width: 480px) {
+    min-width: 140px;
+    flex-shrink: 0;
+  }
+}
+
+.info-value {
+  font-size: 0.9rem;
+  color: var(--text-color);
+  flex: 1;
+  min-width: 0;
+}
+
+.ig-icon-small {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  margin-right: 12px;
+
+  svg {
+    width: 17px;
+    height: 17px;
+    fill: #e1306c;
+  }
+}
+
+.ig-link {
+  color: #e1306c;
+  text-decoration: none;
   font-weight: 500;
-  margin-top: 1rem;
+
+  &:hover { text-decoration: underline; }
+}
+
+.instagram-icon-header {
+  display: flex;
+  align-items: center;
+  svg {
+    fill: var(--text-secondary-color);
+  }
+}
+
+/* ============================================================
+   SECCIONES DEL FORMULARIO — modo edición
+   ============================================================ */
+.form-section {
+  margin-bottom: 1.75rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  .profile-picture-edit-container {
+    margin-bottom: 0;
+  }
+}
+
+.form-section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-secondary-color);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding-bottom: 0.6rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--line-divider);
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: var(--text-secondary-color);
+  }
+}
+
+.instagram-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 12px;
+
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+  }
+
+  &.disconnected {
+    color: #616161;
+    background-color: #eeeeee;
+    mat-icon {
+      color: #757575;
+    }
+  }
+
+  &.connected {
+    color: #1b5e20;
+    background-color: #c8e6c9;
+    mat-icon {
+      color: #2e7d32;
+    }
+  }
+}
+
+.instagram-account-id-text {
+  font-size: 0.78rem;
+  color: var(--text-secondary-color);
   margin-bottom: 0.5rem;
-  color: #333;
+}
+
+/* ============================================================
+   INSTAGRAM — mensajes de feedback
+   ============================================================ */
+.instagram-message {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.instagram-message-success {
+  color: #4caf50;
+  mat-icon {
+    color: #4caf50;
+  }
+}
+.instagram-message-error {
+  color: #e53935;
+  mat-icon {
+    color: #e53935;
+  }
+}
+
+.instagram-expires {
+  font-size: 0.8rem;
+  color: var(--text-secondary-color);
+  margin-bottom: 0.75rem;
+}
+
+/* ============================================================
+   INSTAGRAM — panel advertencia OAuth
+   ============================================================ */
+.instagram-preflight-warning {
+  border: 1px solid #f5a623;
+  border-radius: 12px;
+  background-color: #fffdf5;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+  font-size: 0.88rem;
+  color: var(--text-color);
+
+  .instagram-preflight-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+    color: #b26a00;
+
+    .preflight-warning-icon {
+      color: #f5a623;
+      font-size: 22px;
+      width: 22px;
+      height: 22px;
+    }
+  }
+
+  p {
+    margin-bottom: 0.6rem;
+  }
+  .preflight-steps-title {
+    margin-top: 0.5rem;
+  }
+
+  .preflight-steps {
+    padding-left: 1.2rem;
+    margin-bottom: 0.6rem;
+    li {
+      margin-bottom: 0.3rem;
+    }
+  }
+
+  .preflight-note {
+    font-size: 0.82rem;
+    color: var(--text-secondary-color);
+    font-style: italic;
+    margin-bottom: 0.75rem;
+  }
+
+  .preflight-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: 0.5rem;
+  }
+}
+
+/* ============================================================
+   BOTONES META / INSTAGRAM — rediseño
+   ============================================================ */
+
+/* Cancelar (preflight) */
+.btn-preflight-cancel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  min-height: 40px;
+  background-color: transparent;
+  color: var(--text-color);
+  border: 1px solid var(--line-divider);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: var(--text-color);
+  }
+
+  &:hover {
+    background-color: var(--light-gray-background-color);
+    border-color: var(--text-secondary-color);
+  }
+}
+
+/* Continuar con Instagram */
+.btn-instagram-connect {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 22px;
+  min-height: 44px;
+  background: linear-gradient(
+    45deg,
+    #f09433,
+    #e6683c,
+    #dc2743,
+    #cc2366,
+    #bc1888
+  );
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(188, 24, 136, 0.35);
+  transition:
+    filter 0.2s,
+    transform 0.15s,
+    box-shadow 0.2s;
+  letter-spacing: 0.2px;
+
+  svg {
+    flex-shrink: 0;
+  }
+
+  &:hover:not(:disabled) {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(188, 24, 136, 0.45);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+
+.instagram-actions {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 10px;
+
+  .btn-instagram-sync,
+  .btn-instagram-disconnect {
+    flex: 1 1 0%;
+    justify-content: center;
+  }
+}
+
+/* Sincronizar posts */
+.btn-instagram-sync {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px;
+  min-height: 44px;
+  background: linear-gradient(135deg, #405de6 0%, #833ab4 50%, #e1306c 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(225, 48, 108, 0.3);
+  transition:
+    opacity 0.2s,
+    transform 0.15s,
+    box-shadow 0.2s;
+  letter-spacing: 0.2px;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: #fff;
+  }
+
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(225, 48, 108, 0.45);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+
+/* Desvincular */
+.btn-instagram-disconnect {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px;
+  min-height: 44px;
+  background-color: transparent;
+  color: #e53935;
+  border: 1.5px solid rgba(229, 57, 53, 0.35);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    transform 0.15s;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: #e53935;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: rgba(229, 57, 53, 0.06);
+    border-color: #e53935;
+    transform: translateY(-1px);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+/* ============================================================
+   PANEL CONFIRMACIÓN CAMBIO DE CONTRASEÑA
+   ============================================================ */
+.password-confirm-panel {
+  border: 1px solid var(--line-divider);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  margin: 0.5rem 0 0;
+  font-size: 0.88rem;
+
+  .password-confirm-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+    color: var(--text-color);
+
+    .password-confirm-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  p {
+    color: var(--text-color);
+    margin-bottom: 1rem;
+  }
+
+  .password-confirm-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
+
+.btn-password-confirm {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  min-height: 44px;
+  background-color: var(--primary-color, #4a90e2);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: #fff;
+  }
+
+  &:hover:not(:disabled) {
+    opacity: 0.88;
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+/* ============================================================
+   DARK MODE
+   ============================================================ */
+:host-context(.dark-theme) {
+  /* Todo el texto en blanco */
+  color: #ffffff;
+
+  p,
+  b,
+  span,
+  h4,
+  h3,
+  h2,
+  label,
+  li,
+  em,
+  strong {
+    color: #ffffff;
+  }
+
+  /* Todos los iconos en blanco */
+  mat-icon {
+    color: #ffffff;
+  }
+
+  /* Bloques de sección (vista) */
+  .section-block {
+    background-color: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--line-divider);
+  }
+
+  .section-block-header,
+  .form-section-header {
+    border-bottom-color: var(--line-divider);
+    mat-icon {
+      color: rgba(255, 255, 255, 0.45);
+    }
+  }
+
+  .info-icon {
+    color: rgba(255, 255, 255, 0.45) !important;
+  }
+  .info-label {
+    color: var(--text-secondary-color);
+  }
+  .info-value {
+    color: var(--text-color);
+  }
+  .instagram-icon-header svg {
+    fill: rgba(255, 255, 255, 0.55);
+  }
+
+  /* Botones pill: texto e icono blancos, borde visible */
+  .action-buttons .edit-button {
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.3);
+
+    mat-icon {
+      color: #ffffff;
+    }
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+  }
+
+  /* Foto edit-icon (vista) y edit-photo-btn (edición) */
+  .profile-picture-container .edit-icon,
+  .edit-photo-btn {
+    background-color: var(--card-background-color);
+    mat-icon {
+      color: #ffffff;
+    }
+  }
+
+  /* Badge estado Instagram */
+  .instagram-status-badge.disconnected {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.12);
+    mat-icon {
+      color: rgba(255, 255, 255, 0.7);
+    }
+  }
+
+  .instagram-status-badge.connected {
+    color: #a5d6a7;
+    background-color: rgba(46, 125, 50, 0.3);
+    mat-icon {
+      color: #81c784;
+    }
+  }
+
+  /* ID y expiración */
+  .instagram-account-id-text,
+  .instagram-expires {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  /* Panel advertencia OAuth */
+  .instagram-preflight-warning {
+    background-color: rgba(245, 166, 35, 0.1);
+    border-color: rgba(245, 166, 35, 0.45);
+
+    .instagram-preflight-header {
+      color: #ffb74d;
+    }
+
+    p,
+    li,
+    .preflight-note {
+      color: rgba(255, 255, 255, 0.85);
+    }
+  }
+
+  /* Botón cancelar preflight */
+  .btn-preflight-cancel {
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.25);
+
+    mat-icon {
+      color: #ffffff;
+    }
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.45);
+    }
+  }
+
+  /* Panel confirmación contraseña */
+  .password-confirm-panel {
+    border-color: rgba(255, 255, 255, 0.15);
+
+    .password-confirm-header {
+      color: #ffffff;
+    }
+  }
+}
+
+/* Aviso foto bloqueada por Instagram */
+.instagram-photo-blocked-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: var(--text-secondary-color);
+  margin: 0.5rem 0 0 0;
+  text-align: left;
+  justify-content: center;
+
+  mat-icon {
+    font-size: 1rem;
+    width: 1rem;
+    height: 1rem;
+    color: rgba(255, 255, 255, 0.5);
+  }
+}
+
+/* ============================================================
+   OVERLAY DE CARGA INSTAGRAM
+   ============================================================ */
+.instagram-loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  border-radius: inherit;
+  gap: 1rem;
+
+  .instagram-loading-text {
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin: 0;
+    letter-spacing: 0.02em;
+  }
+}
+
+.instagram-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: instagram-spin 0.75s linear infinite;
+}
+
+@keyframes instagram-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================================
+   LOCALIDAD
+   ============================================================ */
+.location-field-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+
+  .location-input {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .btn-verify-location {
+    height: 56px;
+    flex-shrink: 0;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.82rem;
+  }
+
+  .btn-gps {
+    height: 56px;
+    width: 56px;
+    flex-shrink: 0;
+  }
+}
+
+.location-verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(46, 125, 50, 0.08);
+  border: 1px solid rgba(46, 125, 50, 0.25);
+  font-size: 0.8rem;
+  color: #2e7d32;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: #2e7d32;
+  }
+}
+
+:host-context(.dark-theme) {
+  .location-verified-badge {
+    background: rgba(165, 214, 167, 0.1);
+    border-color: rgba(165, 214, 167, 0.25);
+    color: #a5d6a7;
+
+    mat-icon {
+      color: #a5d6a7;
+    }
+  }
 }

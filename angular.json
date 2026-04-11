@@ -18,7 +18,7 @@
           "builder": "@angular-devkit/build-angular:application",
           "options": {
             "aot": true,
-            "allowedCommonJsDependencies": [],
+            "allowedCommonJsDependencies": ["leaflet"],
             "outputPath": {
               "base": "dist/dmcoffers-client"
             },
@@ -35,7 +35,8 @@
             "styles": [
               "src/styles.scss",
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
-              "./node_modules/bootstrap/scss/bootstrap.scss"
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/leaflet/dist/leaflet.css"
             ],
             "scripts": [
               "./node_modules/bootstrap/dist/js/bootstrap.min.js"

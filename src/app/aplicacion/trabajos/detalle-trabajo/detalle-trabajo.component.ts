@@ -9,11 +9,12 @@ import { MatIcon } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
 import { ServerUrlPipe } from '../../../pipes/server-url.pipe';
+import { NoDoubleSubmitDirective } from 'src/app/shared/directives/no-double-submit.directive';
 @Component({
     selector: 'app-detalle-trabajo',
     templateUrl: './detalle-trabajo.component.html',
     styleUrl: './detalle-trabajo.component.scss',
-    imports: [NgIf, MatIcon, NgFor, MatIconButton, MatDialogClose, MatDivider, DatePipe, ServerUrlPipe]
+    imports: [NgIf, MatIcon, NgFor, MatIconButton, MatDialogClose, MatDivider, DatePipe, ServerUrlPipe, NoDoubleSubmitDirective]
 })
 export class DetalleTrabajoComponent implements OnInit {
   currentImageIndex = 0;

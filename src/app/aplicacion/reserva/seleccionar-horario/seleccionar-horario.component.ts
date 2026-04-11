@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Tatuador } from 'src/app/models/tatuador/tatuador.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location, NgIf, NgFor } from '@angular/common';
@@ -7,19 +7,23 @@ import { AgendaService } from '../../agenda/agenda.service';
 import { SolicitarTurnoDto, TurnosService } from 'src/app/services/turnos/turnos.service';
 import { ReservaStateService } from 'src/app/services/reserva/reserva-state.service';
 import { MatIconButton } from '@angular/material/button';
+import { NoDoubleSubmitDirective } from 'src/app/shared/directives/no-double-submit.directive';
+import { MatRipple } from '@angular/material/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatCalendar } from '@angular/material/datepicker';
 import { FormsModule } from '@angular/forms';
+import { environment } from 'src/environments/environment';
 
 @Component({
     selector: 'app-seleccionar-horario',
     templateUrl: './seleccionar-horario.component.html',
     styleUrl: './seleccionar-horario.component.scss',
-    imports: [MatIconButton, MatIcon, NgIf, MatCalendar, NgFor, FormsModule]
+    imports: [MatIconButton, MatRipple, MatIcon, NgIf, MatCalendar, NgFor, FormsModule, NoDoubleSubmitDirective]
 })
-export class SeleccionarHorarioComponent {
+export class SeleccionarHorarioComponent implements OnInit {
 
   minDate: Date;
+  maxDate: Date;
   isSaving = false;
 
   constructor(private router: Router,
@@ -32,6 +36,10 @@ export class SeleccionarHorarioComponent {
   ){
     this.minDate = new Date();
     this.minDate.setDate(this.minDate.getDate() + 1);
+
+    // Cargamos los próximos 6 meses
+    this.maxDate = new Date();
+    this.maxDate.setMonth(this.maxDate.getMonth() + 6);
   }
 
   // Datos del Turno
@@ -40,19 +48,30 @@ export class SeleccionarHorarioComponent {
   selectedDate: Date | null = null;
   selectedTime: string = '';
 
-  // Horarios  
+  // Horarios
   horarios: string[] = [];
   isLoadingHorarios = false;
   errorHorarios: string | null = null;
 
-  // Descripción 
+  // Fechas bloqueadas
+  private fechasBloqueadasSet = new Set<string>();
+  isLoadingFechas = false;
+
+  // Descripción
   descripcionCliente: string = '';
-  
+
   // Imágenes
   selectedFiles: File[] = [];
   previewImages: string[] = [];
   maxFiles = 3;
-  
+
+  /** Función que MatCalendar usa para habilitar/deshabilitar fechas */
+  readonly dateFilter = (date: Date | null): boolean => {
+    if (!date) return false;
+    const iso = date.toISOString().split('T')[0];
+    return !this.fechasBloqueadasSet.has(iso);
+  };
+
   ngOnInit(): void {
     const idStr = this.route.snapshot.paramMap.get('tatuadorId');
     if (idStr) {
@@ -60,24 +79,53 @@ export class SeleccionarHorarioComponent {
       this.tatuadorService.getTatuadores().subscribe(tatuadores => {
         this.selectedTatuador = tatuadores.find(t => t.idUser === this.tatuadorId) || null;
         if (!this.selectedTatuador) {
-          console.error('Tatuador no encontrado');
           this.router.navigate(['/reserva/listado']);
+        } else {
+          this.cargarFechasBloqueadas();
         }
       });
     } else {
-      console.error('No se proporcionó ID de tatuador');
       this.router.navigate(['/reserva/listado']);
+    }
+
+    const imgs = this.reservaStateService.getImagenes();
+    if (imgs.length > 0) {
+      this.selectedFiles = [...imgs];
+      imgs.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.previewImages.push(e.target.result);
+        };
+        reader.readAsDataURL(file);
+      });
     }
   }
 
-  onDateSelected(date: Date): void {
+  private cargarFechasBloqueadas(): void {
+    if (!this.tatuadorId) return;
+    this.isLoadingFechas = true;
+
+    this.agendaService.getFechasBloqueadas(this.tatuadorId, this.minDate, this.maxDate).subscribe({
+      next: (fechas) => {
+        this.fechasBloqueadasSet = new Set(fechas);
+        this.isLoadingFechas = false;
+      },
+      error: () => {
+        // No bloquear el flujo si falla — el backend igual valida al confirmar
+        this.isLoadingFechas = false;
+      }
+    });
+  }
+
+  onDateSelected(date: Date | null): void {
+    if (!date) return;
     this.selectedDate = date;
-    this.horarios = []; // Limpiar
-    this.selectedTime = ''; // Resetear
+    this.horarios = [];
+    this.selectedTime = '';
     this.isLoadingHorarios = true;
     this.errorHorarios = null;
 
-    if (!this.tatuadorId) return; 
+    if (!this.tatuadorId) return;
 
     this.agendaService.getHorariosDisponibles(this.tatuadorId, date).subscribe({
       next: (slots) => {
@@ -106,35 +154,28 @@ export class SeleccionarHorarioComponent {
   canConfirm(): boolean {
     return !!(this.selectedDate && this.selectedTime && this.descripcionCliente.trim() !== '' && this.selectedFiles.length > 0);
   }
-  
+
   removeImage(index: number): void {
-    // Elimina el archivo de la lista que se subirá al servidor
     this.selectedFiles.splice(index, 1);
-    // Elimina la URL de la lista que se usa para la vista previa
     this.previewImages.splice(index, 1);
   }
 
   onFileSelected(event: any): void {
     const files = event.target.files;
-    
+
     if (files) {
       const totalFiles = this.selectedFiles.length + files.length;
-      
-      // Valida que no se pase del máximo
+
       if (totalFiles > this.maxFiles) {
         alert(`Solo puedes subir un máximo de ${this.maxFiles} imágenes.`);
-        event.target.value = null; // Limpia el input
+        event.target.value = null;
         return;
       }
 
-      // Itera sobre los archivos seleccionados
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        
-        // Guarda el archivo (para el backend)
         this.selectedFiles.push(file);
 
-        // Genera la vista previa (para el frontend)
         const reader = new FileReader();
         reader.onload = (e: any) => {
           this.previewImages.push(e.target.result);
@@ -142,9 +183,8 @@ export class SeleccionarHorarioComponent {
         reader.readAsDataURL(file);
       }
     }
-    
-    // Limpia el input para permitir seleccionar el mismo archivo de nuevo si se borra
-    event.target.value = null; 
+
+    event.target.value = null;
   }
 
   confirmarReserva(): void {
@@ -154,16 +194,13 @@ export class SeleccionarHorarioComponent {
     }
     this.isSaving = true;
 
-    // Calcular Fechas ISO para el DTO
     const [hInicio, mInicio] = this.selectedTime.split(':');
     const fecha_hora_inicio = new Date(this.selectedDate);
     fecha_hora_inicio.setHours(parseInt(hInicio), parseInt(mInicio), 0, 0);
 
-    // 60 min ?? Revisar esto
     const fecha_hora_fin = new Date(fecha_hora_inicio);
     fecha_hora_fin.setMinutes(fecha_hora_fin.getMinutes() + 60);
 
-    // Crear el DTO
     const solicitudDto: SolicitarTurnoDto = {
       tatuadorId: this.tatuadorId,
       fecha_hora_inicio: fecha_hora_inicio.toISOString(),
@@ -171,21 +208,15 @@ export class SeleccionarHorarioComponent {
       descripcion_cliente: this.descripcionCliente
     };
 
-    console.log('Enviando al servicio:', this.selectedFiles);
-
     this.turnosService.solicitarTurno(solicitudDto, this.selectedFiles).subscribe({
       next: (turnoCreado) => {
-        console.log('Turno creado:', turnoCreado);
-        
         const datosParaConfirmar = {
             tatuador: this.selectedTatuador,
-            fecha_hora_inicio: fecha_hora_inicio.toISOString(), 
-            // Añadir datos
+            fecha_hora_inicio: fecha_hora_inicio.toISOString(),
         };
-        
-        // Guardamos en el servicio de estado
+
         this.reservaStateService.setDatos(datosParaConfirmar);
-                
+        this.reservaStateService.clearImagenes();
 
         this.router.navigate(['/reserva/confirmacion']);
       },
@@ -197,7 +228,13 @@ export class SeleccionarHorarioComponent {
     });
   }
 
+  getPhotoUrl(photo?: string): string {
+    if (!photo) return 'assets/images/default-profile.jpg';
+    if (photo.startsWith('http')) return photo;
+    return environment.urlImg + photo;
+  }
+
   goBack(): void {
-    this.location.back(); 
+    this.location.back();
   }
 }

@@ -1,4 +1,4 @@
-@import "src/assets/styles/_variables.scss";
+@use "src/assets/styles/_variables.scss" as *;
 
 
 .nav-main-container{
@@ -39,7 +39,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  color: var(--white-color);
+  color: var(--menu-text-color);
   flex-shrink: 0;
 }
 
