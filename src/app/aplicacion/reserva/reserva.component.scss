@@ -1,0 +1,90 @@
+@use "src/assets/styles/_variables.scss" as *;
+
+// Contenedor Principal (Layout Base)
+.mobile-container {
+  width: 100%;
+  min-height: 100vh;
+  background: var(--body-background-color);
+  position: relative;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* ========== Header (Si lo usas aquí) ========== */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid #e5e5e5;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+}
+
+/* ========== Estilos de Pantalla ========== */
+.screen-content {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.screen-title {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: left;
+  margin-bottom: 2rem;
+  color: #222;
+
+  &::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: $secondary-light-color;
+    margin-top: 10px;
+    border-radius: 2px;
+  }
+}
+
+/* ========== Responsive Desktop (El cambio clave) ========== */
+@media (min-width: 769px) {
+
+
+  .mobile-container {
+    max-width: 100%;
+    border-radius: 0;
+    box-shadow: none;
+    background: var(--body-background-color);
+  }
+
+  .screen-content {
+    padding: 3rem 4rem;
+  }
+}
+
+/* ========== Responsive Mobile ========== */
+@media (max-width: 768px) {
+  .screen-content {
+    padding: 1rem;
+  }
+
+  .screen-title {
+    text-align: center;
+    font-size: 1.5rem;
+
+    &::after {
+      margin: 10px auto 0 auto;
+    }
+  }
+}

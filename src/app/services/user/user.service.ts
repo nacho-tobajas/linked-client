@@ -58,6 +58,15 @@ export class UserService {
       .pipe(catchError(this.handleError));
   }
 
+  updateProfilePhoto(id: number, image: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('image', image);
+
+    return this.http
+      .patch(`${this.endpoint}/${id}/profile-photo`, formData)
+      .pipe(catchError(this.handleError));
+  }
+
   private handleError(error: HttpErrorResponse) {
     if (error.status === 0) {
       console.error('Se ha producido un error ', error.error);
@@ -80,6 +89,9 @@ export class UserService {
 
   getRoles(): Observable<RolApl[] | undefined> {
     return this.http.get<RolApl[]>(`${this.endpoint}/getAllRoles`)
+  }
+  getUserRolByidRole(idRole: string): Observable<RolApl> {
+    return this.http.get<RolApl>(`${this.endpoint}/getUserRolByidRole/${idRole}`);
   }
 
 }

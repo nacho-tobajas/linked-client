@@ -1,3 +1,4 @@
+import { Especialidad } from '../aplicacion/gestion-sistema/especialidades/especialidades.model.js';
 import { Page } from './pagination';
 
 export class User {
@@ -20,6 +21,16 @@ export class User {
   status?: boolean;
   modificationuser?: string;
   modificationtimestamp?: string | null = null;
+  profile_photo?: string;
+  estudio?: string;
+  fecha_inicio_actividad?: Date;
+  antiguedad?: number;
+  especialidades?: Especialidad[];
+  localidad?: string;
+  lat?: number;
+  lng?: number;
+  instagram_handle?: string;
+
 }
 
 export interface UserPage extends Page<User> {

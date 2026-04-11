@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 // Breakpoints
   $breakpoints: (
     "xs": 0,
@@ -13,7 +15,7 @@
 
   // Mixin para media queries
   @mixin respond-to($breakpoint) {
-    @media (min-width: map-get($breakpoints, $breakpoint)) {
+    @media (min-width: map.get($breakpoints, $breakpoint)) {
       @content;
     }
   }

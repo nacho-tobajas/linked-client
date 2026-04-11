@@ -1,0 +1,47 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
+
+export interface InstagramStatus {
+  connected: boolean;
+  instagram_user_id?: string;
+  expires_at?: Date;
+}
+
+export interface InstagramSyncResult {
+  message: string;
+  synced: number;
+  skipped: number;
+  deleted: number;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class InstagramService {
+
+  private apiUrl = `${environment.urlApi}instagram`;
+
+  constructor(private http: HttpClient) { }
+
+  /** Redirige el navegador al flujo OAuth de Meta (NO es una llamada HTTP interna) */
+  connectInstagram(tatuadorId: number, token: string): void {
+    window.location.href = `${this.apiUrl}/auth?tatuadorId=${tatuadorId}&token=${encodeURIComponent(token)}`;
+  }
+
+  /** Obtiene el estado de vinculación de Instagram del tatuador autenticado */
+  getStatus(): Observable<InstagramStatus> {
+    return this.http.get<InstagramStatus>(`${this.apiUrl}/status`);
+  }
+
+  /** Importa los posts de Instagram del tatuador como Trabajos */
+  syncPosts(): Observable<InstagramSyncResult> {
+    return this.http.post<InstagramSyncResult>(`${this.apiUrl}/sync`, {});
+  }
+
+  /** Desvincula la cuenta de Instagram */
+  disconnect(): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/disconnect`);
+  }
+}

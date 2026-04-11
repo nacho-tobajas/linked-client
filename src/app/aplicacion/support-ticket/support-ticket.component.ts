@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { SupportTicket } from './support-ticket.model';
 import { SupportTicketService } from './support-ticket.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -7,15 +8,26 @@ import { SupportTicketCreateComponent } from './support-ticket-create/support-ti
 import { SupportTicketDetailComponent } from './support-ticket-detail/support-ticket-detail.component';
 import { SupportTicketDeleteComponent } from './support-ticket-delete/support-ticket-delete.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
+import { MatIcon } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
+import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
+import { DatePipe } from '@angular/common';
 @Component({
-  selector: 'app-support-ticket',
-  templateUrl: './support-ticket.component.html',
-  styleUrls: ['./support-ticket.component.scss'],
-  standalone: false
+    selector: 'app-support-ticket',
+    templateUrl: './support-ticket.component.html',
+    styleUrls: ['./support-ticket.component.scss'],
+    imports: [MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, MatIcon, FormsModule, MatFormField, MatLabel, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, MatSelect, MatOption, MatButton, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatIconButton, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, DatePipe]
 })
-export class SupportTicketComponent {
+export class SupportTicketComponent implements OnInit, OnDestroy {
   supportTickets: SupportTicket[] = [];
   filteredTickets: SupportTicket[] = [];
+  private destroy$ = new Subject<void>();
 
   filterFechaCarga: Date | null = null;
   filterUsuario: string | null = null
@@ -34,16 +46,21 @@ export class SupportTicketComponent {
     this.setupResponsiveColumns();
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   private setupResponsiveColumns(): void {
-    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
-      if (result.matches) {
-        // pantalla pequeña: oculto la columna 'user'
-        this.displayedColumns = ['id', 'fechaCarga', 'status', 'actions'];
-      } else {
-        // pantalla grande: muestro todas
-        this.displayedColumns = ['id', 'fechaCarga', 'user', 'status', 'actions'];
-      }
-    });
+    this.breakpointObserver.observe([Breakpoints.Handset])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(result => {
+        if (result.matches) {
+          this.displayedColumns = ['id', 'fechaCarga', 'status', 'actions'];
+        } else {
+          this.displayedColumns = ['id', 'fechaCarga', 'user', 'status', 'actions'];
+        }
+      });
   }
 
   getCreateComponent() {

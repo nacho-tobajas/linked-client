@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { ThemeService } from 'src/app/core/services/theme.service';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
     selector: 'app-theme-toggle-button',
@@ -17,7 +19,7 @@ import { ThemeService } from 'src/app/core/services/theme.service';
             ])
         ])
     ],
-    standalone: false
+    imports: [MatIconButton, MatIcon]
 })
 export class ThemeToggleComponent {
   isDarkTheme: boolean;

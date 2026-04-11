@@ -1,23 +1,32 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { LoginService } from '../../services/auth/login.service';
 import { LoginRequest } from '../../models/loginRequest';
 import { ErrorDialogComponent } from 'src/app/components/error-dialog/error-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { EncryptionService } from 'src/app/services/auth/encryption.service';
 import { ProximamenteService } from 'src/app/services/proximamente.service';
+import { MatIcon } from '@angular/material/icon';
+import { MatFormField, MatError, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { NgIf } from '@angular/common';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { RecaptchaComponent } from 'ng-recaptcha-angular19';
+import { NoDoubleSubmitDirective } from 'src/app/shared/directives/no-double-submit.directive';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
-  standalone: false
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss'],
+    imports: [FormsModule, ReactiveFormsModule, MatIcon, MatFormField, MatInput, NgIf, MatError, MatIconButton, MatSuffix, RouterLink, RecaptchaComponent, MatButton, NoDoubleSubmitDirective]
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   loginError: string = '';
-  hide = true; 
+  hide = true;
+  captchaValid = false;
+  captchaToken: string | null = null;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -43,15 +52,12 @@ export class LoginComponent implements OnInit {
     return this.loginForm.get('password');
   }
 
-  get encryptedPassword() {
-    return this.encryptionService.encrypt(this.passwordControl?.value || '');
-  }
-
-  login() {
-    if (this.loginForm.valid) {
+  async login() {
+    if (this.loginForm.valid && this.captchaToken) {
       const loginRequest: LoginRequest = {
         username: this.username?.value,
-        password: this.encryptedPassword
+        password: await this.encryptionService.encrypt(this.passwordControl?.value),
+        recaptchaToken: this.captchaToken
       };
 
       this.loginService.login(loginRequest).subscribe({
@@ -63,6 +69,8 @@ export class LoginComponent implements OnInit {
         complete: () => {
           this.router.navigateByUrl('/inicio');
           this.loginForm.reset();
+          this.captchaToken = null; 
+          this.captchaValid = false;
         },
       });
     } else {
@@ -79,5 +87,10 @@ export class LoginComponent implements OnInit {
     this.dialog.open(ErrorDialogComponent, {
       data: { message: errorMessage, type: 'error' },
     });
+  }
+
+  onCaptchaResolved(token: string | null) {
+  this.captchaToken = token;
+  this.captchaValid = !!token; // true si el token existe
   }
 }

@@ -10,9 +10,8 @@ describe('DropdownSelectorComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [DropdownSelectComponent],
-      imports:[MatFormField, MatLabel, MatSelect]
-    });
+    imports: [MatFormField, MatLabel, MatSelect, DropdownSelectComponent]
+});
     fixture = TestBed.createComponent(DropdownSelectComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

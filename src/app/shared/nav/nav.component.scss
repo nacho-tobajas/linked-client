@@ -1,4 +1,4 @@
-@import "src/assets/styles/_variables.scss";
+@use "src/assets/styles/_variables.scss" as *;
 
 
 .nav-main-container{
@@ -28,8 +28,8 @@
   flex-shrink: 0;
 
   img.logo {
-    width: 75px;
-    height: 75px;
+    width: 100px;
+    height: 100px;
     cursor: pointer;
   }
 }
@@ -39,7 +39,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  color: var(--white-color);
+  color: var(--menu-text-color);
   flex-shrink: 0;
 }
 
@@ -118,8 +118,8 @@
     text-align: center;
 
     img.logo {
-      width: 60px;
-      height: 60px;
+      width: 100px;
+      height: 100px;
     }
   }
 

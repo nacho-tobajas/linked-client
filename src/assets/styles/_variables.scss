@@ -1,133 +1,84 @@
+@use 'sass:color';
+
 //colores principales
-$main-color: #673ab7;
-$main-header-color: #48185c;
-$side-nav-primary-color: #48185c;
-$section-title-main-color: #6c3483;
-$gral-box-shadow:#2e2e2e36;
-$nav-bar-background-color: #371148;
+$main-color: #393e31;
+$main-color-hover: color.adjust($main-color, $lightness: 10%);
+$secondary-light-color: #4a513e;
+$main-header-color: #393e31;
+$side-nav-primary-color: #414e3b;
+$section-title-main-color: #5d6a58;
+$gral-box-shadow: #2e2e2e36;
+$nav-bar-background-color: #393e31;
 
 :root,
 .light-theme {
   //body
-  --body-background-color:#ffffff;
+  --body-background-color: #ffffff;
   --bs-body-bg: #f5f5f5;
-  --title-text-color: #f5f5f5;
+  --title-text-color: #393e31;
 
   //menu
-  --menu-text-color: whitesmoke;
-  --menu-arrow-color: white;
-  --menu-open-button: #48185c;
+  --menu-text-color: #f5f5f5;
+  --menu-arrow-color: #ccd0d0;
+  --menu-open-button: #393e31;
 
-  //unclisified colors
+  //unclassified colors
   --light-gray-background-color: #f5f5f5;
   --white-color: #ffffff;
-  --text-color: #f8f8f8;
-  --button-text-color:#f5f5f5;
-  --input-text-color:#f5f5f5;
-  --line-divider: #e0e0e0;
+  --card-background-color: #ffffff;
+  --text-color: #414e3b;
+  --text-secondary-color: #666666;
+  --button-text-color: #f5f5f5;
+  --input-text-color: #414e3b;
+  --line-divider: #dde0da;
 
   //dropdown component
-  --dropdown-label-txt-color: #673ab7;
-  --dropdown-txt-arrow-inside-color: #535353;
+  --dropdown-label-txt-color: #393e31;
+  --dropdown-txt-arrow-inside-color: #7a7e73;
 
   //Titulos para cada listado gestionar sistema
-  --title-crud-h3: Black;
+  --title-crud-h3: #1c1c1c;
 
   //carousel
-  --carousel-dot-color: #371148;
-  --carousel-arrow-color: #371148;
-
-  //game-item
-  --game-card-bg-color: #eeeeee;
-  --game-card-border-color:#dadada;
-  --game-card-title-color: #2c2c2c;
-  --game-card-subtitle-color: #2c2c2c;
-  --game-card-price-txt-color:#920909;
-
-  --game-item-border-bottom:  1px black solid;
-  --game-item-border-bottom-hover:  2px rgb(82, 10, 87) solid;
-  --game-item-bg-color:#ececec;
-  --game-list-item-titulo: #222222;
-  --game-list-item-price: #505050;
-
-  //biblioteca de juegos
-  --titulo-bilbioteca-juegos: #444444;
-  --sub-titulo-bilbioteca-juegos: #777777;
-
-  //whishlist
-  --titulo-whish-list-section: #444444;
-
-  //cart
-  --cart-title-h2-color: #1d1c1c;
-  --cart-total-price-color:#1b1a1a;
-  --cart-card-bg-color: whitesmoke;
-  --cart-card-title-txt-color:  #1d1c1c;
-  --cart-unfilled-txt-msg: #303030;
-  --cart-unit-price-txt-color: #303030; 
+  --carousel-dot-color: #5d6a58;
+  --carousel-arrow-color: #393e31;
 
   //footer
-  --footer-text-color: whitesmoke;
+  --footer-text-color: #ccd0d0;
 }
+
 .dark-theme {
-  //body
-  --bs-body-bg:#181717;
-  --body-background-color:#1e1e1e;
-  --title-text-color: #e7db28;
+  //body — gris verdáceo, no demasiado oscuro
+  --body-background-color: #2e332b;
+  --bs-body-bg: #2a2e27;
+  --title-text-color: #d0dbc8;
 
   //menu
-  --menu-text-color: whitesmoke;
-  --menu-arrow-color: white;
-  --menu-open-button: white;
+  --menu-text-color: #d8e2d4;
+  --menu-arrow-color: #a4ae9c;
+  --menu-open-button: #383d33;
 
-  //unclisified colors
-  --light-gray-background-color: #1e1e1e;
-  --white-color: #121212;
-  --text-color:  #e7db28;
-  --button-text-color: #e7db28;
-  --input-text-color: #e7db28;
-  --line-divider: #696969;
+  //unclassified colors
+  --light-gray-background-color: #383d33;
+  --white-color: #383d33;
+  --card-background-color: #404840;
+  --text-color: #c4d0bc;
+  --text-secondary-color: #a4ae9c;
+  --button-text-color: #d4ddd0;
+  --input-text-color: #d4ddd0;
+  --line-divider: #484e42;
 
   //dropdown component
-  --dropdown-label-txt-color: whitesmoke;
-    --dropdown-txt-arrow-inside-color: whitesmoke;
+  --dropdown-label-txt-color: #c8d4c0;
+  --dropdown-txt-arrow-inside-color: #8a9884;
 
   //Titulos para cada listado gestionar sistema
-  --title-crud-h3: white;
+  --title-crud-h3: #c8d4c0;
 
   //carousel
-  --carousel-dot-color: #c7c2ca;
-  --carousel-arrow-color: #b19415;
-  
-
-  //game-item
-  --game-card-bg-color: #121313;
-  --game-card-border-color:#313030;
-  --game-card-title-color: #dadada;
-  --game-card-subtitle-color: #dadada;
-  --game-card-price-txt-color:#cabe10;
-  
-  --game-item-border-bottom:  1.3px #e53ae5 solid;
-  --game-item-border-bottom-hover:  2px rgb(82, 10, 87) solid;
-  --game-item-bg-color:#353435;
-  --game-list-item-titulo: #ebebeb;
-  --game-list-item-price: rgb(175, 164, 11);
-
-  //biblioteca de juegos
-  --titulo-bilbioteca-juegos:  #e9e9e9;
-  --sub-titulo-bilbioteca-juegos: #b8b8b8;
-
-  //whishlist
-  --titulo-whish-list-section:  #e9e9e9;
-
-   //cart
-  --cart-title-h2-color: whitesmoke;
-  --cart-total-price-color:whitesmoke;
-  --cart-card-bg-color: #303030;
-  --cart-card-title-txt-color: whitesmoke;
-  --cart-unfilled-txt-msg: whitesmoke;
-  --cart-unit-price-txt-color: whitesmoke; 
+  --carousel-dot-color: #6b7866;
+  --carousel-arrow-color: #c0cbb8;
 
   //footer
-  --footer-text-color: whitesmoke;
-  
+  --footer-text-color: #6b7866;
 }

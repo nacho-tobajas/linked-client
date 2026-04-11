@@ -7,12 +7,6 @@ button:hover .theme-icon {
   transform: rotate(20deg) scale(1.1);
 }
 
-/* Ejemplo de estilos de modo oscuro */
-body.dark-theme {
-  background: #121212;
-  color: white;
-}
-
 button {
   transition: transform 0.3s ease;
   &:active {

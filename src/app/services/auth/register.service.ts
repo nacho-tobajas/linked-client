@@ -13,4 +13,15 @@ export class RegisterService {
   register(user: User): Observable<any> {
     return this.http.post<any>(`${environment.urlHost}users/register`, user);
   }
+
+  registerTatuador(user: User): Observable<any> {
+    return this.http.post<any>(`${environment.urlHost}users/register-tatuador`, user);
+  }
+
+  checkAvailability(field: 'username' | 'email', value: string): Observable<{ available: boolean }> {
+    return this.http.get<{ available: boolean }>(
+      `${environment.urlHost}auth/check-availability`,
+      { params: { field, value } }
+    );
+  }
 }

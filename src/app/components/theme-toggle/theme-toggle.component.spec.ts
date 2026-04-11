@@ -10,9 +10,8 @@ describe('ThemeToggleComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ThemeToggleComponent],
-      imports: [MatIconModule, NoopAnimationsModule]
-    });
+    imports: [MatIconModule, NoopAnimationsModule, ThemeToggleComponent]
+});
     fixture = TestBed.createComponent(ThemeToggleComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -1,0 +1,636 @@
+@use 'sass:color';
+@use '../../../assets/styles/variables' as *;
+
+/* ============================================================
+   HOST
+   ============================================================ */
+:host {
+  display: block;
+  width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* ============================================================
+   CONTENEDOR
+   ============================================================ */
+.buscar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem 3rem;
+  box-sizing: border-box;
+
+  @media (min-width: 600px) { padding: 0 1.5rem 3rem; }
+  @media (min-width: 900px) { padding: 0 2rem 3rem; }
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero-section {
+  padding: 2rem 0 1.75rem;
+  border-bottom: 1px solid var(--line-divider);
+  margin-bottom: 1.75rem;
+
+  .hero-text {
+    h1 {
+      margin: 0 0 0.5rem;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--title-text-color);
+
+      @media (min-width: 600px) { font-size: 2rem; }
+    }
+
+    p {
+      margin: 0;
+      color: var(--text-secondary-color);
+      font-size: 0.95rem;
+      max-width: 600px;
+      line-height: 1.55;
+    }
+  }
+}
+
+/* ============================================================
+   LAYOUT PRINCIPAL (panel + mapa)
+   ============================================================ */
+.main-layout {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+  align-items: flex-start;
+
+  @media (max-width: 899px) {
+    flex-direction: column;
+  }
+}
+
+/* ── Panel de controles ── */
+.search-panel {
+  width: 320px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  @media (max-width: 899px) {
+    width: 100%;
+  }
+}
+
+.panel-section {
+  background: var(--card-background-color);
+  border: 1px solid var(--line-divider);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--title-text-color);
+}
+
+.step-badge {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: $section-title-main-color;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ── Step hint ── */
+.step-hint {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--text-secondary-color);
+}
+
+/* ── Estilo chip buttons (selector) ── */
+.estilo-chips-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.estilo-chip-btn {
+  padding: 4px 12px;
+  border-radius: 16px;
+  background: var(--light-gray-background-color);
+  border: 1px solid var(--line-divider);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  line-height: 1.6;
+
+  &:hover {
+    border-color: $section-title-main-color;
+  }
+
+  &.selected {
+    background: $section-title-main-color;
+    border-color: $section-title-main-color;
+    color: #fff;
+  }
+}
+
+/* ── Botón ubicación ── */
+.btn-location {
+  width: 100%;
+  justify-content: center;
+  gap: 8px;
+
+  &:disabled { opacity: 0.6; }
+}
+
+.btn-spinner-wrap {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* ── OR divider ── */
+.or-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary-color);
+  font-size: 0.75rem;
+
+  &::before, &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line-divider);
+  }
+
+  span {
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+  }
+}
+
+/* ── Location text input ── */
+.location-input-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.location-text-input {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--line-divider);
+  background: var(--card-background-color);
+  color: var(--text-color);
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.2s;
+  min-width: 0;
+
+  &:focus {
+    border-color: $section-title-main-color;
+  }
+
+  &::placeholder {
+    color: var(--text-secondary-color);
+  }
+}
+
+.btn-geocode {
+  flex-shrink: 0;
+
+  &:disabled { opacity: 0.5; }
+}
+
+/* ── Slider de radio ── */
+.radio-control {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.radio-label {
+  font-size: 0.82rem;
+  color: var(--text-secondary-color);
+}
+
+.radius-slider {
+  width: 100%;
+  accent-color: $section-title-main-color;
+  cursor: pointer;
+}
+
+.slider-marks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: var(--text-secondary-color);
+}
+
+/* ── Botón buscar ── */
+.btn-buscar {
+  width: 100%;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+}
+
+/* ── Banner informativo ── */
+.info-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgba(93, 106, 88, 0.08);
+  border: 1px solid rgba(93, 106, 88, 0.2);
+  font-size: 0.8rem;
+  color: var(--text-color);
+  line-height: 1.45;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: $section-title-main-color;
+    margin-top: 1px;
+  }
+}
+
+/* ── Panel del mapa ── */
+.map-panel {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  @media (max-width: 899px) {
+    width: 100%;
+  }
+}
+
+.leaflet-map {
+  width: 100%;
+  height: 480px;
+  border-radius: 12px;
+  border: 1px solid var(--line-divider);
+  overflow: hidden;
+  z-index: 0;
+
+  @media (max-width: 899px) {
+    height: 320px;
+  }
+}
+
+.map-legend {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.78rem;
+  color: var(--text-secondary-color);
+  padding: 0 4px;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+
+  &.legend-user   { background: #1976d2; }
+  &.legend-artist { background: $section-title-main-color; }
+}
+
+/* ============================================================
+   RESULTADOS
+   ============================================================ */
+.results-section {
+  border-top: 1px solid var(--line-divider);
+  padding-top: 1.75rem;
+}
+
+.results-header {
+  margin-bottom: 1.25rem;
+
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 4px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--title-text-color);
+
+    mat-icon { font-size: 22px; width: 22px; height: 22px; color: $section-title-main-color; }
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-secondary-color);
+  }
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+
+  @media (min-width: 600px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 900px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (min-width: 1100px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ── Tarjeta de artista ── */
+.artist-card {
+  position: relative;
+  background: var(--card-background-color);
+  border: 1px solid var(--line-divider);
+  border-radius: 14px;
+  padding: 1.1rem 1rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: box-shadow 0.2s, transform 0.15s, border-color 0.2s;
+
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    border-color: rgba(93, 106, 88, 0.4);
+  }
+}
+
+.card-avatar-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.card-avatar {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--card-background-color);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+.card-info {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.card-name {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--title-text-color);
+}
+
+.card-username {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--text-secondary-color);
+}
+
+.card-meta {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.78rem;
+  color: var(--text-secondary-color);
+
+  mat-icon {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &.meta-distance {
+    font-weight: 600;
+    color: $section-title-main-color;
+  }
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 4px;
+}
+
+.tag {
+  background: var(--light-gray-background-color);
+  padding: 2px 9px;
+  border-radius: 12px;
+  font-size: 0.72rem;
+  color: var(--text-color);
+}
+
+.tag-more {
+  background: transparent;
+  border: 1px solid var(--line-divider);
+  color: var(--text-secondary-color);
+}
+
+.card-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: auto;
+  align-items: center;
+}
+
+.btn-portfolio,
+.btn-reservar {
+  flex: 1;
+  font-size: 0.78rem;
+}
+
+.btn-instagram {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  color: #e1306c;
+  transition: background 0.15s, transform 0.15s;
+  padding: 0;
+
+  .ig-icon {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+  }
+
+  &:hover {
+    background: rgba(225, 48, 108, 0.1);
+    transform: scale(1.1);
+  }
+}
+
+/* ── Estado vacío ── */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-secondary-color);
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    display: block;
+    margin: 0 auto 0.75rem;
+    opacity: 0.4;
+  }
+
+  p { margin: 0; font-size: 0.95rem; }
+}
+
+/* ============================================================
+   MARCADORES DEL MAPA (estilos globales via ::ng-deep)
+   ============================================================ */
+:host ::ng-deep {
+  .artist-map-marker {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 3px solid $section-title-main-color;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    overflow: hidden;
+    background: var(--card-background-color);
+
+    .marker-avatar {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .user-map-marker {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #1976d2;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+
+    .material-icons { font-size: 18px; line-height: 1; }
+  }
+
+  .map-popup {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 160px;
+    font-size: 0.82rem;
+    line-height: 1.4;
+
+    strong { font-size: 0.9rem; color: #333; }
+    span { color: #555; }
+    .popup-dist b { color: $section-title-main-color; }
+  }
+
+  .leaflet-popup-content-wrapper {
+    border-radius: 10px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+  }
+}
+
+/* ============================================================
+   DARK MODE
+   ============================================================ */
+:host-context(.dark-theme) {
+  .panel-section {
+    background: var(--card-background-color);
+    border-color: var(--line-divider);
+  }
+
+  .location-text-input {
+    background: var(--card-background-color);
+    border-color: var(--line-divider);
+    color: var(--text-color);
+  }
+
+  .estilo-chip-btn {
+    background: rgba(255,255,255,0.06);
+    border-color: var(--line-divider);
+    color: var(--text-color);
+
+    &.selected {
+      background: $section-title-main-color;
+      border-color: $section-title-main-color;
+      color: #fff;
+    }
+  }
+
+  .artist-card {
+    background: var(--card-background-color);
+    border-color: var(--line-divider);
+
+    &:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+      border-color: rgba(93, 106, 88, 0.5);
+    }
+  }
+
+  .info-banner {
+    background: rgba(93, 106, 88, 0.12);
+    border-color: rgba(93, 106, 88, 0.3);
+  }
+
+  ::ng-deep {
+    .map-popup { strong { color: #e0e0e0; } span { color: #b0b0b0; } }
+    .leaflet-popup-content-wrapper { background: #333; color: #e0e0e0; }
+    .leaflet-popup-tip { background: #333; }
+  }
+}

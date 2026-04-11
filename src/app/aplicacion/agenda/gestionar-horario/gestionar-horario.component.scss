@@ -1,0 +1,228 @@
+@use '../../../../assets/styles/_variables' as *;
+
+:host {
+  display: block;
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ============================================================
+   TÍTULO DEL DIÁLOGO
+   ============================================================ */
+.dialog-title-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 0;
+
+  span { flex-grow: 1; }
+}
+
+/* ============================================================
+   CONTENIDO Y ACCIONES DEL DIÁLOGO
+   ============================================================ */
+mat-dialog-content {
+  padding: 8px 10px 16px;
+  max-height: 80vh;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  width: 100%;
+
+  @media (min-width: 600px) {
+    padding: 8px 20px 20px;
+  }
+}
+
+mat-dialog-actions {
+  padding: 12px 20px;
+  border-top: 1px solid var(--line-divider);
+}
+
+/* ============================================================
+   ESTADOS DE CARGA / ERROR
+   ============================================================ */
+.loading-spinner,
+.error-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  gap: 1rem;
+  color: var(--text-secondary-color);
+
+  p { margin: 0; }
+}
+
+.error-message {
+  color: #f44336;
+  mat-icon { font-size: 36px; width: 36px; height: 36px; }
+}
+
+/* ============================================================
+   GRID DE DÍAS
+   Mobile-first: 2 columnas → 4 (tablet) → 7 (desktop)
+   ============================================================ */
+.dias-container {
+  display: grid;
+  margin-bottom: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+
+  /* Mobile: 2 columnas, gap mínimo */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+
+  /* Tablet */
+  @media (min-width: 600px) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  /* Desktop: todos los días a la vez */
+  @media (min-width: 900px) {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 8px;
+  }
+}
+
+/* ============================================================
+   TARJETA DE DÍA
+   ============================================================ */
+.dia-card {
+  padding: 0.55rem 0.5rem;
+  border-radius: 10px;
+  background-color: var(--light-gray-background-color);
+  border: 1px solid var(--line-divider);
+  transition: border-color 0.2s, background-color 0.2s;
+  box-sizing: border-box;
+  min-width: 0;           /* Clave: permite que grid la comprima */
+  overflow: hidden;
+
+  &.dia-card--activo {
+    background-color: var(--card-background-color);
+    border-color: $section-title-main-color;
+  }
+
+  @media (min-width: 600px) {
+    padding: 0.8rem 0.85rem;
+  }
+
+  @media (min-width: 900px) {
+    padding: 0.65rem 0.5rem;
+  }
+}
+
+/* ============================================================
+   CABECERA DEL DÍA (nombre + toggle)
+   ============================================================ */
+.dia-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.4rem;
+  margin-bottom: 0.45rem;
+  border-bottom: 1px solid var(--line-divider);
+  min-width: 0;
+
+  h3 {
+    margin: 0;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--title-text-color);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* Desktop: nombre encima, toggle debajo */
+  @media (min-width: 900px) {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    padding-bottom: 0.35rem;
+    margin-bottom: 0.4rem;
+
+    h3 {
+      font-size: 0.76rem;
+      text-align: center;
+      white-space: normal;
+      word-break: break-word;
+    }
+  }
+}
+
+/* ============================================================
+   INPUTS (hora inicio, fin, duración)
+   ============================================================ */
+.dia-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+
+  @media (min-width: 900px) {
+    gap: 6px;
+  }
+}
+
+mat-form-field {
+  width: 100%;
+  min-width: 0;
+
+  /* Mobile: reduce texto para caber en columnas estrechas */
+  --mdc-outlined-text-field-label-text-size: 0.68rem;
+  --mdc-outlined-text-field-input-text-size: 0.78rem;
+
+  @media (min-width: 600px) {
+    --mdc-outlined-text-field-label-text-size: 0.8rem;
+    --mdc-outlined-text-field-input-text-size: 0.88rem;
+  }
+
+  /* Desktop: campos de menor altura */
+  @media (min-width: 900px) {
+    --mdc-outlined-text-field-container-height: 44px;
+    --mat-form-field-container-height: 44px;
+    --mdc-outlined-text-field-label-text-size: 0.72rem;
+    --mdc-outlined-text-field-input-text-size: 0.8rem;
+  }
+}
+
+/* ============================================================
+   DÍA LIBRE / DESHABILITADO
+   ============================================================ */
+.dia-disabled-message {
+  color: var(--text-secondary-color);
+  font-style: italic;
+  text-align: center;
+  font-size: 0.75rem;
+  padding: 0.5rem 0;
+
+  @media (min-width: 900px) {
+    padding: 0.35rem 0;
+    font-size: 0.72rem;
+  }
+}
+
+/* ============================================================
+   DARK MODE
+   ============================================================ */
+:host-context(.dark-theme) {
+  .dia-card {
+    background-color: rgba(255, 255, 255, 0.04);
+    border-color: var(--line-divider);
+
+    &.dia-card--activo {
+      background-color: rgba(255, 255, 255, 0.08);
+      border-color: rgba(93, 106, 88, 0.7);
+    }
+  }
+
+  .dia-header h3 { color: var(--title-text-color); }
+  .dia-disabled-message { color: var(--text-secondary-color); }
+  mat-dialog-actions { border-top-color: var(--line-divider); }
+}

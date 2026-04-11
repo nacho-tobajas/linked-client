@@ -1,28 +1,49 @@
 <mat-dialog-content class="info-dialog-content">
   <mat-card class="info-card">
+    
     <mat-card-header>
       <div mat-card-avatar class="info-avatar">
-        <mat-icon color="primary">info</mat-icon>
+        <mat-icon>local_florist</mat-icon> </div>
+      <div class="header-text">
+        <mat-card-title>¿Qué es <strong>Linked</strong>?</mat-card-title>
+        <mat-card-subtitle>Tu conexión con el mundo de los tatuajes</mat-card-subtitle>
       </div>
-      <mat-card-title>¿Qué es <strong>DMC Offers</strong>?</mat-card-title>
     </mat-card-header>
 
     <mat-card-content>
-      <p>
-        <strong>DMC Offers</strong> es una plataforma donde podés ver precios y lanzamientos diarios
-        de videojuegos y software en plataformas como Steam, Epic Games y Ubisoft.
+      <p class="intro-text">
+        <strong>Linked</strong> es la plataforma que une a artistas del tatuaje con clientes que buscan su próxima pieza de arte.
       </p>
-      <p>
-        También podés agregar juegos a tu <strong>wishlist</strong>, <strong>carrito</strong> y <strong>biblioteca virtual</strong>.
-      </p>
-      <p>
-        <mat-icon class="inline-icon" color="accent">login</mat-icon>
-        <strong>No es necesario registrarse</strong> para explorar, pero para comprar o guardar sí necesitás iniciar sesión.
-      </p>
+
+      <div class="features-box">
+        <div class="feature-row">
+          <mat-icon class="inline-icon">calendar_today</mat-icon>
+          <span>Gestiona tus <strong>turnos y agenda</strong> fácilmente.</span>
+        </div>
+        <div class="feature-row">
+          <mat-icon class="inline-icon">photo_library</mat-icon>
+          <span>Explora <strong>portfolios</strong> y guarda tus tatuajes favoritos.</span>
+        </div>
+      </div>
+
+      <div class="note-text">
+        <mat-icon class="inline-icon" color="accent">lock_open</mat-icon>
+        <span>Puedes explorar libremente, pero necesitas <strong>iniciar sesión</strong> para reservar o subir tus trabajos.</span>
+      </div>
     </mat-card-content>
 
-    <mat-card-actions align="end">
-      <button mat-stroked-button color="primary" (click)="onClose()">Entendido</button>
+
+    <mat-card-actions align="end" class="action-buttons">
+      <button
+        mat-raised-button
+        class="create-button"
+        type="submit"
+        (click)="onClose()"
+      
+      >
+        Entendido!
+      </button>
     </mat-card-actions>
+
   </mat-card>
 </mat-dialog-content>

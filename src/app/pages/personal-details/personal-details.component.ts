@@ -1,149 +1,531 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { User } from '../../models/user.model';
 import { UserService } from '../../services/user/user.service';
 import { LoginService } from 'src/app/services/auth/login.service';
-import { FormBuilder, Validators } from '@angular/forms';
-import { DatePipe } from '@angular/common';
-import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DatePipe, NgIf, NgFor } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin, Subscription, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
+import { Especialidad } from 'src/app/aplicacion/gestion-sistema/especialidades/especialidades.model';
+import { TatuadorService } from 'src/app/services/user/tatuador.service';
+import { TatuadorComponent } from './tatuador/tatuador.component';
+import { MatCard, MatCardHeader, MatCardAvatar, MatCardTitle, MatCardSubtitle, MatCardContent, MatCardActions } from '@angular/material/card';
+import { MatDivider } from '@angular/material/divider';
+import { MatChip, MatChipsModule } from '@angular/material/chips';
+import { MatIcon } from '@angular/material/icon';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatFormField, MatHint, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatTooltip } from '@angular/material/tooltip';
+import { ServerUrlPipe } from '../../pipes/server-url.pipe';
+import { InstagramService, InstagramStatus } from '../../services/instagram/instagram.service';
+import { GeocodingService, GeoResult } from '../../services/geocoding/geocoding.service';
+import { ForgotPasswordService } from 'src/app/services/auth/forgotpass.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { NoDoubleSubmitDirective } from 'src/app/shared/directives/no-double-submit.directive';
 
 
 @Component({
-  selector: 'app-personal-details',
-  templateUrl: './personal-details.component.html',
-  styleUrls: ['./personal-details.component.scss'],
-  providers: [DatePipe],
-  standalone: false
+    selector: 'app-personal-details',
+    templateUrl: './personal-details.component.html',
+    styleUrls: ['./personal-details.component.scss'],
+    providers: [DatePipe],
+    imports: [MatChipsModule, NgIf, NgFor, MatCard, MatCardHeader, MatCardAvatar, MatCardTitle, MatCardSubtitle, MatDivider, MatCardContent, MatChip, MatCardActions, MatIcon, MatIconButton, FormsModule, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatHint, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, TatuadorComponent, MatButton, DatePipe, ServerUrlPipe, MatSnackBarModule, MatProgressSpinner, MatTooltip, MatAutocompleteModule, NoDoubleSubmitDirective]
 })
-export class PersonalDetailsComponent implements OnInit {
-  errorMessage: String = '';
+export class PersonalDetailsComponent implements OnInit, OnDestroy {
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+  @ViewChild(TatuadorComponent) tatuadorComponentRef!: TatuadorComponent;
+
+  previewImageUrl: string | ArrayBuffer | null = null;
+  environment: string = '';
+  errorMessage: string = '';
   userId: number | null = null;
   user?: User;
   userLoginOn: boolean = false;
   editMode: boolean = false;
   userRol: string | null = null;
+  especialidades: Especialidad[] = [];
   today: Date = new Date();
+  selectedFile: File | null = null;
   private subscriptions: Subscription = new Subscription();
 
+  // Cambio de contraseña
+  showPasswordConfirm: boolean = false;
+  passwordResetLoading: boolean = false;
+
+  // Instagram
+  instagramStatus: InstagramStatus = { connected: false };
+  instagramLoading: boolean = false;
+  instagramLoadingMessage: string = '';
+  instagramMessage: string = '';
+  instagramMessageIsError: boolean = false;
+  showInstagramWarning: boolean = false;
+
   registerForm = this.formBuilder.group({
-    id: this.formBuilder.control<string | null>(null),
-    surname: this.formBuilder.control<string | null>(null,),
-    realname: this.formBuilder.control<string | null>(null,),
+    id: this.formBuilder.control<number | null>(null),
+    surname: this.formBuilder.control<string | null>(null),
+    realname: this.formBuilder.control<string | null>(null),
     username: this.formBuilder.control<string | null>(null, Validators.required),
     email: this.formBuilder.control<string | null>(null, Validators.required),
-    birth_date: this.formBuilder.control<Date | null>(null, Validators.required)
+    birth_date: this.formBuilder.control<Date | null>(null, Validators.required),
+    profileImage: this.formBuilder.control<File | null>(null),
+    localidad: this.formBuilder.control<string | null>(null),
+    instagram_handle: this.formBuilder.control<string | null>(null),
   });
+
+  // Coordenadas geocodificadas, no en el formulario reactive sino como propiedades
+  geocodedLat: number | null = null;
+  geocodedLng: number | null = null;
+  geocodedDisplayName: string | null = null;
+  isGeocoding = false;
+  isGPSLocating = false;
+  locationSuggestions: GeoResult[] = [];
 
   constructor(
     private userService: UserService,
+    private tatuadorService: TatuadorService,
     private formBuilder: FormBuilder,
     private loginService: LoginService,
-    private router: Router
-  ) { }
+    private router: Router,
+    private route: ActivatedRoute,
+    private instagramService: InstagramService,
+    private geocodingService: GeocodingService,
+    private forgotPasswordService: ForgotPasswordService,
+    private snackBar: MatSnackBar,
+  ) {}
 
   ngOnInit(): void {
-    // Obtener el userId desde UserService
-    this.userService.getUserId().subscribe((id) => {
-      this.userId = id;
-      if (this.userId) {
-        this.loadUserData(this.userId);
-      }
-    });
-
-    // Suscribirse al estado de userLoginOn
-    this.loginService.userLoginOn.subscribe({
-      next: (userLoginOn) => {
-        this.userLoginOn = userLoginOn;
-        if (!this.userLoginOn) {
-          this.router.navigate(['/inicio']); // Redirige a la página de inicio si no está logueado
-        }
-      },
-    });
-  }
-
-  loadUserData(userId: number) {
-    // Reemplaza environment.userId con this.userId
-    this.userService.getUser(userId).subscribe({
-      next: (userData) => {
-        this.user = userData;
-
-        this.registerForm.controls.id.setValue(
-          userData.idUser.toString() ?? ''
-        );
-
-        this.registerForm.controls.realname.setValue(this.user.realname ?? '');
-        this.registerForm.controls.surname.setValue(this.user.surname ?? '');
-        this.registerForm.controls.birth_date.setValue(
-          this.user.birth_date ? new Date(this.user.birth_date) : null
-        );
-        this.registerForm.controls.username.setValue(this.user.username!);
-        this.registerForm.controls.email.setValue(this.user.email!);
-
-        this.loadUserRol();
-      },
-      error: (errorData) => {
-        this.errorMessage = errorData;
-      }
-    });
-
-  }
-
-  loadUserRol(): void {
+    this.loadUserSession();
+    this.watchLoginState();
+    this.handleInstagramCallback();
     this.subscriptions.add(
-      this.loginService.userRol.subscribe({
-        next: (role) => {
-          this.userRol = role; // Asigna el rol
-        },
-        error: (err) => {
-          console.error('Error al obtener el rol del usuario', err);
-        },
+      this.registerForm.get('localidad')!.valueChanges.pipe(
+        debounceTime(400),
+        distinctUntilChanged(),
+        filter((q): q is string => typeof q === 'string' && q.length >= 3),
+        switchMap(q => this.geocodingService.suggestions(q))
+      ).subscribe(results => {
+        this.locationSuggestions = results;
       })
     );
   }
 
-  get realname() {
-    return this.registerForm.controls.realname;
+  // ----------------------------------------------------------
+  // Cambio de contraseña
+  // ----------------------------------------------------------
+
+  requestPasswordChange(): void {
+    this.showPasswordConfirm = true;
   }
 
-  get surname() {
-    return this.registerForm.controls.surname;
+  cancelPasswordChange(): void {
+    this.showPasswordConfirm = false;
   }
 
-  get email() {
-    return this.registerForm.controls.email;
+  confirmPasswordChange(): void {
+    if (!this.user?.email) return;
+    this.passwordResetLoading = true;
+    this.forgotPasswordService.forgotPassword(this.user.email).subscribe({
+      next: () => {
+        this.passwordResetLoading = false;
+        this.showPasswordConfirm = false;
+        this.snackBar.open(`Se envió un correo a ${this.user!.email} con el enlace para cambiar la contraseña.`, 'OK', { duration: 6000 });
+      },
+      error: () => {
+        this.passwordResetLoading = false;
+        this.snackBar.open('Error al enviar el correo. Intentá de nuevo.', 'Cerrar', { duration: 4000 });
+      }
+    });
   }
 
-  get birth_date() {
-    return this.registerForm.controls.birth_date;
+  // ----------------------------------------------------------
+  // Instagram
+  // ----------------------------------------------------------
+
+  private handleInstagramCallback(): void {
+    const igParam = this.route.snapshot.queryParamMap.get('instagram');
+    const reason = this.route.snapshot.queryParamMap.get('reason');
+
+    if (igParam === 'success') {
+      this.instagramMessage = 'Instagram vinculado correctamente.';
+      this.instagramMessageIsError = false;
+    } else if (igParam === 'denied') {
+      this.instagramMessage = 'Vinculación cancelada.';
+      this.instagramMessageIsError = false;
+    } else if (igParam === 'error') {
+      this.instagramMessageIsError = true;
+      if (reason === 'no_business_account') {
+        this.instagramMessage =
+          'Tu cuenta de Instagram no es de tipo Creador ni Empresa. ' +
+          'Convertí tu cuenta desde la app de Instagram antes de intentar vincularla.';
+      } else {
+        this.instagramMessage = 'Ocurrió un error al vincular tu cuenta de Instagram. Intentá de nuevo.';
+      }
+    }
+
+    if (igParam) {
+      this.router.navigate([], { queryParams: {}, replaceUrl: true });
+    }
   }
 
-  get username() {
-    return this.registerForm.controls.username;
+  private loadInstagramStatus(): void {
+    this.instagramService.getStatus().subscribe({
+      next: (status) => (this.instagramStatus = status),
+      error: () => (this.instagramStatus = { connected: false })
+    });
   }
 
-  savePersonalDetailsData() {
-    if (this.registerForm.valid && this.userId) {
-      this.userService
-        .updateUser(this.userId, this.registerForm.value as unknown as User)
-        .subscribe({
-          next: () => {
-            this.editMode = false;
-            this.user = this.registerForm.value as unknown as User;
-            location.reload();
-          },
-          error: (errorData) => console.error(errorData),
+  connectInstagram(): void {
+    this.showInstagramWarning = true;
+  }
+
+  confirmConnectInstagram(): void {
+    this.showInstagramWarning = false;
+    if (this.userRol !== 'Tatuador') {
+      this.instagramMessage = 'Solo los tatuadores pueden vincular su cuenta de Instagram.';
+      this.instagramMessageIsError = true;
+      return;
+    }
+    if (this.userId) {
+      this.instagramService.connectInstagram(this.userId, this.loginService.userToken);
+    }
+  }
+
+  cancelConnectInstagram(): void {
+    this.showInstagramWarning = false;
+  }
+
+  syncInstagramPosts(): void {
+    this.instagramLoading = true;
+    this.instagramLoadingMessage = 'Sincronizando posts...';
+    this.instagramMessage = '';
+    this.instagramService.syncPosts().subscribe({
+      next: (res) => {
+        this.instagramMessage = res.message;
+        this.instagramMessageIsError = false;
+        this.instagramLoading = false;
+        if (this.userId) this.loadUserData(this.userId);
+      },
+      error: (err) => {
+        this.instagramMessage = err?.error?.message || 'Error al sincronizar los posts.';
+        this.instagramMessageIsError = true;
+        this.instagramLoading = false;
+        this.loadInstagramStatus();
+      }
+    });
+  }
+
+  disconnectInstagram(): void {
+    this.instagramLoading = true;
+    this.instagramLoadingMessage = 'Desvinculando cuenta...';
+    this.instagramService.disconnect().subscribe({
+      next: () => {
+        this.instagramStatus = { connected: false };
+        this.instagramMessage = 'Cuenta de Instagram desvinculada.';
+        this.instagramLoading = false;
+        if (this.userId) this.loadUserData(this.userId);
+      },
+      error: () => {
+        this.instagramMessage = 'Error al desvincular.';
+        this.instagramLoading = false;
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
+  private loadUserSession(): void {
+    this.userService.getUserId().subscribe((id) => {
+      this.userId = id;
+      if (id) this.loadUserData(id);
+    });
+  }
+
+  private watchLoginState(): void {
+    this.subscriptions.add(
+      this.loginService.userLoginOn.subscribe((logged) => {
+        this.userLoginOn = logged;
+        if (!logged) this.router.navigate(['/inicio']);
+      })
+    );
+  }
+
+  // ----------------------------------------------------------
+  // Cargar datos del usuario
+  // ----------------------------------------------------------
+  private loadUserData(id: number): void {
+    this.userService.getUser(id).subscribe({
+      next: (data) => {
+        this.user = data;
+        this.registerForm.patchValue({
+          surname: data.surname ?? '',
+          realname: data.realname ?? '',
+          username: data.username ?? '',
+          email: data.email ?? '',
+          birth_date: data.birth_date ? new Date(data.birth_date) : null,
+          localidad: data.localidad ?? '',
+          instagram_handle: data.instagram_handle ?? '',
+        }, { emitEvent: false });
+        // Restaurar coordenadas previas si existen
+        this.geocodedLat = data.lat ?? null;
+        this.geocodedLng = data.lng ?? null;
+        this.geocodedDisplayName = data.localidad ?? null;
+        this.loadUserRol();
+        this.loadEspecialidades();
+      },
+      error: (err) => (this.errorMessage = err?.message || 'Error al cargar datos'),
+    });
+  }
+
+  private loadEspecialidades(): void {
+  if (!this.userId || !this.user) {
+    console.warn("Intentando cargar especialidades sin userId o sin objeto user inicializado.");
+    return;
+  }
+
+  this.tatuadorService.getEspecialidadesTatuador(this.userId).subscribe({
+      next: (res) => {
+        if (this.user) { 
+            this.user.especialidades = res;
+        }
+      },
+      error: (err) => {
+          console.error("Error al cargar especialidades del tatuador:", err);
+          if(this.user) {
+              this.user.especialidades = [];
+          }
+      }
+  });
+  }
+
+  private loadUserRol(): void {
+    this.subscriptions.add(
+      this.loginService.userRol.subscribe({
+        next: (role) => {
+          this.userRol = role;
+          if (role === 'Tatuador') this.loadInstagramStatus();
+        },
+        error: (err) => console.error('Error al obtener el rol', err),
+      })
+    );
+  }
+
+  /* ── Geocodificación ── */
+
+  onLocationSelected(event: MatAutocompleteSelectedEvent): void {
+    const selected = this.locationSuggestions.find(s => s.displayName === event.option.value);
+    if (selected) {
+      this.geocodedLat = selected.lat;
+      this.geocodedLng = selected.lng;
+      this.geocodedDisplayName = selected.displayName;
+    }
+    this.locationSuggestions = [];
+  }
+
+  verificarLocalidad(): void {
+    const query = this.registerForm.get('localidad')?.value?.trim();
+    if (!query) return;
+    this.isGeocoding = true;
+    this.geocodingService.geocode(query).subscribe(result => {
+      this.isGeocoding = false;
+      if (result) {
+        this.geocodedLat = result.lat;
+        this.geocodedLng = result.lng;
+        this.geocodedDisplayName = result.displayName;
+        this.snackBar.open(`Ubicación encontrada: ${result.displayName.split(',').slice(0, 2).join(',')}`, 'OK', { duration: 4000 });
+      } else {
+        this.geocodedLat = null;
+        this.geocodedLng = null;
+        this.geocodedDisplayName = null;
+        this.snackBar.open('No se encontró esa localidad. Intentá con un nombre más específico.', 'Cerrar', { duration: 4000 });
+      }
+    });
+  }
+
+  usarGPS(): void {
+    if (!navigator.geolocation) {
+      this.snackBar.open('Tu navegador no soporta geolocalización.', 'Cerrar', { duration: 3000 });
+      return;
+    }
+    this.isGPSLocating = true;
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        this.geocodingService.reverseGeocode(pos.coords.latitude, pos.coords.longitude).subscribe(result => {
+          this.isGPSLocating = false;
+          if (result) {
+            this.geocodedLat = result.lat;
+            this.geocodedLng = result.lng;
+            this.geocodedDisplayName = result.displayName;
+            this.registerForm.patchValue({ localidad: result.displayName }, { emitEvent: false });
+            this.snackBar.open(`Ubicación detectada: ${result.displayName.split(',').slice(0, 2).join(',')}`, 'OK', { duration: 4000 });
+          } else {
+            this.isGPSLocating = false;
+            this.snackBar.open('No se pudo determinar tu ubicación.', 'Cerrar', { duration: 3000 });
+          }
         });
-    }
+      },
+      () => {
+        this.isGPSLocating = false;
+        this.snackBar.open('No se pudo obtener el GPS. Verificá los permisos del navegador.', 'Cerrar', { duration: 4000 });
+      },
+      { enableHighAccuracy: true, timeout: 8000 }
+    );
   }
 
+  /** Manejo del archivo seleccionado */
+ 
+  get isPhotoBlockedByInstagram(): boolean {
+    return this.userRol === 'Tatuador' && this.instagramStatus.connected;
+  }
+
+  triggerFileInput(): void {
+    if (this.isPhotoBlockedByInstagram) return;
+    this.fileInput.nativeElement.click();
+  }
+
+  onFileSelected(event: any): void {
+  const file = event.target.files?.[0];
+    if (!file) return;
+
+    const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    const maxSizeMB = 3;
+
+    if (!validTypes.includes(file.type)) {
+      this.errorMessage = 'Solo se permiten imágenes JPG, PNG o WEBP.';
+      this.previewImageUrl = null;
+      return;
+    }
+    if (file.size > maxSizeMB * 1024 * 1024) {
+      this.errorMessage = `El archivo no puede superar ${maxSizeMB}MB.`;
+      this.previewImageUrl = null;
+      return;
+    }
+
+    this.selectedFile = file;
+    this.errorMessage = '';
+
+    // Vista previa
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.previewImageUrl = reader.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // ----------------------------------------------------------
+  // Guardar cambios (todos los endpoints)
+  // ----------------------------------------------------------
+
+  especialidadesSeleccionadas: number[] = [];
+
+  onEspecialidadesChange(especialidades: Especialidad[]): void {
+    this.especialidadesSeleccionadas = especialidades.map(e => e.id);
+  }
+
+  onUpdateProfile(): void {
+  if (!this.userId || !this.user) {
+    return;
+  }
+
+  if (this.registerForm.invalid) {
+    return;
+  }
+
+    const requests = [];
+
+    // 1. Actualizar datos del usuario
+  const formValues = this.registerForm.value;
+
+  let tatuadorData: { estudio?: string | null, fecha_inicio_actividad?: Date | null } = {
+    estudio: this.user?.estudio ?? null,
+    fecha_inicio_actividad: this.user?.fecha_inicio_actividad ?? null,
+    };
+
+    if (this.userRol === 'Tatuador' && this.tatuadorComponentRef) {
+        tatuadorData = this.tatuadorComponentRef.getTatuadorData();
+    }
+
+  const updatedUser: Partial<User> = {
+    ...this.user,
+    realname: formValues.realname ?? undefined,
+    surname: formValues.surname ?? undefined,
+    username: formValues.username ?? undefined,
+    email: formValues.email ?? undefined,
+    birth_date: formValues.birth_date
+      ? new Date(formValues.birth_date)
+      : undefined,
+    estudio: tatuadorData.estudio ?? undefined,
+    fecha_inicio_actividad: tatuadorData.fecha_inicio_actividad ? new Date(tatuadorData.fecha_inicio_actividad) : undefined,
+    localidad: formValues.localidad ?? undefined,
+    lat: this.geocodedLat ?? undefined,
+    lng: this.geocodedLng ?? undefined,
+    instagram_handle: formValues.instagram_handle ?? undefined,
+  };
+
+    requests.push(this.userService.updateUser(this.userId, updatedUser));
+
+    // 2. Subir imagen si hay nueva y no está bloqueada por Instagram
+    if (this.selectedFile && !this.isPhotoBlockedByInstagram) {
+      requests.push(this.userService.updateProfilePhoto(this.userId, this.selectedFile));
+    }
+
+    //  3. Si es tatuador, actualizar especialidades
+if (this.userRol === 'Tatuador' && this.especialidadesSeleccionadas.length >= 0) {
+  requests.push(
+      this.tatuadorService.assignEspecialidades(this.userId, this.especialidadesSeleccionadas)
+    );
+  }
+
+    //  Ejecutar todas las llamadas juntas
+    forkJoin(requests).subscribe({
+      next: (responses) => {
+        this.editMode = false;
+        this.selectedFile = null;
+        this.fileInput.nativeElement.value = '';
+        this.previewImageUrl = null;
+        
+        if (this.userId) {
+        this.loadUserData(this.userId); 
+      }
+      },
+      error: (err) => {
+        console.error('Error al guardar perfil', err);
+        this.errorMessage = 'Error al guardar los cambios.';
+      },
+    });
+  }
+
+  // ----------------------------------------------------------
+  // Cancelar edición
+  // ----------------------------------------------------------
+  onCancel(): void {
+    this.editMode = false;
+    this.selectedFile = null;
+    this.fileInput.nativeElement.value = '';
+    this.previewImageUrl = null;
+    if (this.userId) this.loadUserData(this.userId);
+  }
+
+  /** Formatea la fecha al escribir */
   onDateInput(event: any) {
-    let value: string = event.target.value.replace(/\D/g, ''); // solo números
-    if (value.length >= 2) {
-      value = value.slice(0, 2) + '/' + value.slice(2);
-    }
-    if (value.length >= 5) {
-      value = value.slice(0, 5) + '/' + value.slice(5, 9);
-    }
+    let value: string = event.target.value.replace(/\D/g, '');
+    if (value.length >= 2) value = value.slice(0, 2) + '/' + value.slice(2);
+    if (value.length >= 5) value = value.slice(0, 5) + '/' + value.slice(5, 9);
     event.target.value = value;
   }
+
+  // Getters de conveniencia
+  get realname() { return this.registerForm.controls.realname; }
+  get surname() { return this.registerForm.controls.surname; }
+  get email() { return this.registerForm.controls.email; }
+  get birth_date() { return this.registerForm.controls.birth_date; }
+  get username() { return this.registerForm.controls.username; }
+
 }

@@ -1,0 +1,62 @@
+<!-- Hero header — ancho completo, fuera del contenedor restringido -->
+<div class="favs-hero">
+    <div class="favs-hero-bg">
+      <span class="hero-shape s1"></span>
+      <span class="hero-shape s2"></span>
+    </div>
+    <div class="favs-hero-content">
+      <div class="favs-hero-icon">
+        <mat-icon>favorite</mat-icon>
+      </div>
+      <div>
+        <h1 class="favs-hero-title">Mis Favoritos</h1>
+        <p class="favs-hero-sub">Publicaciones que marcaste con Me Gusta</p>
+      </div>
+    </div>
+
+    <!-- Stats — solo cuando hay items -->
+    <div class="favs-stats" *ngIf="!isLoading && trabajosFavoritos.length > 0">
+      <div class="stat-pill">
+        <mat-icon>collections</mat-icon>
+        <span>{{ trabajosFavoritos.length }} publicación{{ trabajosFavoritos.length !== 1 ? 'es' : '' }}</span>
+      </div>
+      <div class="stat-pill">
+        <mat-icon>palette</mat-icon>
+        <span>{{ uniqueArtistsCount }} artista{{ uniqueArtistsCount !== 1 ? 's' : '' }}</span>
+      </div>
+    </div>
+  </div>
+
+<div class="favs-screen">
+
+  <!-- Skeleton loader -->
+  <div class="gallery-grid" *ngIf="isLoading">
+    <div class="skeleton-card" *ngFor="let i of [1,2,3,4,5,6]"></div>
+  </div>
+
+  <!-- Grid de favoritos -->
+  <div class="gallery-grid" *ngIf="!isLoading && trabajosFavoritos.length > 0">
+    <app-post-trabajo
+      *ngFor="let trabajo of trabajosFavoritos"
+      [trabajo]="trabajo"
+      [isLiked]="favorites.has(trabajo.id)"
+      [showArtistInfo]="true"
+      (toggleLike)="onToggleLike($event)"
+      (click)="abrirDetalle(trabajo)">
+    </app-post-trabajo>
+  </div>
+
+  <!-- Estado vacío -->
+  <div class="empty-state" *ngIf="!isLoading && trabajosFavoritos.length === 0">
+    <div class="empty-icon-wrap">
+      <mat-icon>favorite_border</mat-icon>
+    </div>
+    <h2 class="empty-title">Aún no tienes favoritos</h2>
+    <p class="empty-desc">
+      Explorá las publicaciones y presioná
+      <mat-icon class="inline-icon">favorite_border</mat-icon>
+      en las que más te gusten
+    </p>
+  </div>
+
+</div>

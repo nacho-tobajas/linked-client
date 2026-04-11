@@ -1,6 +1,5 @@
-import { LOCALE_ID, NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, LOCALE_ID, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -29,6 +28,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatTabsModule } from '@angular/material/tabs';
 
 import { FooterComponent } from './shared/footer/footer.component';
 import { HeaderComponent } from './shared/header/header.component';
@@ -68,39 +69,43 @@ import { registerLocaleData } from '@angular/common';
 import localeEsAr from '@angular/common/locales/es-AR';
 import { HttpErrorInterceptor } from './services/auth/http-error.interceptor';
 import { CUSTOM_DATE_FORMATS, CustomDateAdapter } from './components/custom-date-adapter/custom-date-adapter.js';
+import { CalendarioComponent } from "./components/calendario/calendario.component";
+import { ReservaComponent } from './aplicacion/reserva/reserva.component';
+import { CaptchaComponent } from './components/captcha/captcha.component';
+import { RECAPTCHA_V3_SITE_KEY, RecaptchaFormsModule, RecaptchaModule, RecaptchaV3Module } from 'ng-recaptcha-angular19';
+import { NgxCaptchaModule } from 'ngx-captcha';
+import { EspecialidadesComponent } from './aplicacion/gestion-sistema/especialidades/especialidades.component';
+import { EspecialidadCreateComponent } from './aplicacion/gestion-sistema/especialidades/especialidad-create/especialidad-create.component';
+import { EspecialidadDetailComponent } from './aplicacion/gestion-sistema/especialidades/especialidad-detail/especialidad-detail.component';
+import { EspecialidadUpdateComponent } from './aplicacion/gestion-sistema/especialidades/especialidad-update/especialidad-update.component';
+import { EspecialidadDeleteComponent } from './aplicacion/gestion-sistema/especialidades/especialidad-delete/especialidad-delete.component';
+import { TatuadorComponent } from './pages/personal-details/tatuador/tatuador.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { ListadoTatuadoresComponent } from './aplicacion/reserva/listado-tatuadores/listado-tatuadores.component';
+import { SeleccionarHorarioComponent } from './aplicacion/reserva/seleccionar-horario/seleccionar-horario.component';
+import { ConfirmacionReservaComponent } from './aplicacion/reserva/confirmacion-reserva/confirmacion-reserva.component';
+import { GestionarHorarioComponent } from './aplicacion/agenda/gestionar-horario/gestionar-horario.component';
+import { AgendaComponent } from './aplicacion/agenda/agenda.component';
+import { AgendaDetalleComponent } from './aplicacion/agenda/agenda-detalle/agenda-detalle.component';
+import { MisReservasComponent } from './aplicacion/mis-reservas/mis-reservas.component';
+import { PortfolioComponent } from './aplicacion/trabajos/portfolio/portfolio/portfolio.component';
+import { SubirTrabajoComponent } from './aplicacion/trabajos/subir-trabajo/subir-trabajo/subir-trabajo.component';
+import { PostTrabajoComponent } from './components/post-trabajo/post-trabajo.component';
+import { DetalleTrabajoComponent } from './aplicacion/trabajos/detalle-trabajo/detalle-trabajo.component';
+import { ServerUrlPipe } from './pipes/server-url.pipe';
+import { EditarTurnoComponent } from './aplicacion/agenda/editar-turno/editar-turno.component';
+import { BrowserModule } from '@angular/platform-browser';
+import { TatuajesFavoritosComponent } from './aplicacion/tatuajes-favoritos/tatuajes-favoritos.component';
 
 
 registerLocaleData(localeEsAr); // 👈 Esto registra el locale
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        ErrorDialogComponent,
-        FooterComponent,
-        HeaderComponent,
-        LoginComponent,
-        NavComponent,
-        PersonalDetailsComponent,
-        ConfirmComponent,
-        SupportTicketComponent,
-        SupportTicketCreateComponent,
-        SupportTicketDeleteComponent,
-        SupportTicketDetailComponent,
-        SupportTicketUpdateComponent,
-        RegisterComponent,
-        HomeComponent,
-        NotAuthorizedComponent,
-        SoporteComponent,
-        UsuariosComponent,
-        UpdateRolComponent,
-        SweItemMenuComponent,
-        LoadingOverlayComponent,
-        HelpDialogComponent,
-        ThemeToggleComponent,
-        DropdownSelectComponent,
-        ResetPassComponent,
-        ForgotPassComponent
+    declarations: [AppComponent],
+    exports: [
+        ServerUrlPipe
     ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     bootstrap: [AppComponent], imports: [CommonModule,
         BrowserModule,
         FormsModule,
@@ -128,17 +133,73 @@ registerLocaleData(localeEsAr); // 👈 Esto registra el locale
         MatSidenavModule,
         MatMenuModule,
         MatProgressSpinnerModule,
+        MatSliderModule,
+        MatSlideToggleModule,
         CarouselModule,
         MatChipsModule,
         MatTooltipModule,
-        MatSliderModule
-    ]
-    , providers: [
-        RegisterService,
+        MatSliderModule,
+        CalendarioComponent,
+        MatSliderModule,
+        MatAutocompleteModule,
+        RecaptchaModule,
+        RecaptchaFormsModule,
+        RecaptchaV3Module,
+        NgxCaptchaModule,
+        MatTabsModule, ErrorDialogComponent,
+        FooterComponent,
+        HeaderComponent,
+        LoginComponent,
+        NavComponent,
+        PersonalDetailsComponent,
+        ConfirmComponent,
+        SupportTicketComponent,
+        SupportTicketCreateComponent,
+        SupportTicketDeleteComponent,
+        SupportTicketDetailComponent,
+        SupportTicketUpdateComponent,
+        RegisterComponent,
+        HomeComponent,
+        NotAuthorizedComponent,
+        SoporteComponent,
+        UsuariosComponent,
+        UpdateRolComponent,
+        SweItemMenuComponent,
+        LoadingOverlayComponent,
+        HelpDialogComponent,
+        ThemeToggleComponent,
+        DropdownSelectComponent,
+        ResetPassComponent,
+        ForgotPassComponent,
+        ReservaComponent,
+        CaptchaComponent,
+        EspecialidadesComponent,
+        EspecialidadCreateComponent,
+        EspecialidadDetailComponent,
+        EspecialidadUpdateComponent,
+        EspecialidadDeleteComponent,
+        TatuadorComponent,
+        ListadoTatuadoresComponent,
+        SeleccionarHorarioComponent,
+        ConfirmacionReservaComponent,
+        GestionarHorarioComponent,
+        AgendaComponent,
+        AgendaDetalleComponent,
+        MisReservasComponent,
+        PortfolioComponent,
+        SubirTrabajoComponent,
+        PostTrabajoComponent,
+        DetalleTrabajoComponent,
+        ServerUrlPipe,
+        EditarTurnoComponent,
+        TatuajesFavoritosComponent],
+    providers: [
         RegisterService,
         SweItemMenuService,
         { provide: DateAdapter, useClass: CustomDateAdapter },
+        { provide: LOCALE_ID, useValue: 'es-AR' },
         { provide: MAT_DATE_FORMATS, useValue: CUSTOM_DATE_FORMATS },
+        { provide: RECAPTCHA_V3_SITE_KEY, useValue: '6LfpC-ErAAAAAJxd1G8rldVAIzoe7ZdQY3By5j-o' },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: JwtInterceptorService,
@@ -149,9 +210,12 @@ registerLocaleData(localeEsAr); // 👈 Esto registra el locale
             useClass: LoadingInterceptor,
             multi: true
         },
-        provideHttpClient(withInterceptorsFromDi()),
-        { provide: LOCALE_ID, useValue: 'es-AR' },
-        { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true }
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: HttpErrorInterceptor,
+            multi: true
+        },
+        provideHttpClient(withInterceptorsFromDi())
     ]
 })
 export class AppModule { }

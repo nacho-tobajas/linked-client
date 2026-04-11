@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginService } from '../../services/auth/login.service';
 import { LoginRequest } from '../../models/loginRequest';
@@ -7,13 +7,20 @@ import { ErrorDialogComponent } from 'src/app/components/error-dialog/error-dial
 import { MatDialog } from '@angular/material/dialog';
 import { EncryptionService } from 'src/app/services/auth/encryption.service';
 import { ResetPasswordService } from 'src/app/services/auth/resetpass.service';
+import { MatCard, MatCardHeader, MatCardTitle, MatCardContent, MatCardActions } from '@angular/material/card';
+import { MatFormField, MatLabel, MatError, MatSuffix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { NgIf } from '@angular/common';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { NoDoubleSubmitDirective } from 'src/app/shared/directives/no-double-submit.directive';
 
 
 @Component({
-  selector: 'app-reset-pass',
-  templateUrl: './resetPass.component.html',
-  standalone: false,
-  styleUrls: ['./resetPass.component.scss']
+    selector: 'app-reset-pass',
+    templateUrl: './resetPass.component.html',
+    styleUrls: ['./resetPass.component.scss'],
+    imports: [FormsModule, ReactiveFormsModule, MatCard, MatCardHeader, MatCardTitle, MatCardContent, MatFormField, MatLabel, MatInput, NgIf, MatError, MatIconButton, MatSuffix, MatIcon, MatCardActions, MatButton, NoDoubleSubmitDirective]
 })
 export class ResetPassComponent implements OnInit {
   ResetPassForm: FormGroup;
@@ -45,9 +52,9 @@ export class ResetPassComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  resetPass(){
+  async resetPass(){
     this.token = this.tokenControl?.value;
-    this.password = this.encryptionService.encrypt(this.newPasswordControl?.value);
+    this.password = await this.encryptionService.encrypt(this.newPasswordControl?.value);
 
     if (this.ResetPassForm.valid) {
       this.resetPasswordService.resetPassword(this.token, this.password).subscribe({

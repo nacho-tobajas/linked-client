@@ -1,0 +1,44 @@
+<div class="post-tile mat-elevation-z2">
+  
+  <div class="image-wrapper">
+    
+    <img [src]="trabajo.fotos[currentImageIndex].image_path | serverUrl" 
+         class="tile-image" 
+         loading="lazy"
+         (error)="hasError = true"
+         [hidden]="hasError"
+         alt="Tatuaje">
+
+    @if (hasError) {
+        <div class="error-placeholder">
+            <mat-icon>image_not_supported</mat-icon>
+            <span>Imagen no disponible</span>
+        </div>
+    }
+
+    @if (trabajo.fotos.length > 1) {
+        
+        @if (currentImageIndex > 0) {
+            <button class="nav-btn prev" (click)="prevImage($event)">
+                <mat-icon>chevron_left</mat-icon>
+            </button>
+        }
+
+        @if (currentImageIndex < trabajo.fotos.length - 1) {
+            <button class="nav-btn next" (click)="nextImage($event)">
+                <mat-icon>chevron_right</mat-icon>
+            </button>
+        }
+
+        <div class="photo-counter">
+            {{ currentImageIndex + 1 }}/{{ trabajo.fotos.length }}
+        </div>
+
+    }
+
+  </div>
+
+  <div class="tile-overlay">
+      </div>
+
+</div>

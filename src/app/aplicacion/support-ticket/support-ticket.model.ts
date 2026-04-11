@@ -6,4 +6,9 @@ export class SupportTicket {
   modificationuser?: string;
   modificationtimestamp?: string | null = null;
   description: string | null = null;
+  category?: string | null = null;
+  priority?: string | null = null;
+  url_pagina?: string | null = null;
+  user_agent?: string | null = null;
+  screenshot?: string | null = null;
 }

@@ -1,39 +1,56 @@
+@use 'sass:color';
+
 /* Borde del mat-form-field */
 ::ng-deep .mat-mdc-form-field {
-  --mdc-outlined-text-field-outline-color: #673ab7; /* color del borde */
-  --mdc-outlined-text-field-hover-outline-color: #7e57c2; /* hover */
-  --mdc-outlined-text-field-focused-outline-color: #9575cd; /* focus */
+  /* color del borde en estados normales */
+  --mdc-outlined-text-field-outline-color: var(--dropdown-label-txt-color);
+  /* hover: un poco más claro para dar contraste */
+  --mdc-outlined-text-field-hover-outline-color: #5d6a58;
+  /* coincide con $section-title-main-color */
+  /* focus: usar el color principal */
+  --mdc-outlined-text-field-focused-outline-color: #393e31;
+  /* $main-color */
+
+  /* color de label */
   --mdc-outlined-text-field-label-text-color: var(--dropdown-label-txt-color);
-  --mdc-outlined-text-field-hover-label-text-color: #550f85;
-  --mdc-outlined-text-field-focus-label-text-color: #9575cd;
+  --mdc-outlined-text-field-hover-label-text-color: #5d6a58;
+  /* tono intermedio */
+  --mdc-outlined-text-field-focus-label-text-color: #393e31;
+  /* tono principal */
 }
 
 /* Texto y label */
 ::ng-deep .mat-mdc-select-value,
 ::ng-deep .mat-mdc-select-placeholder,
 ::ng-deep .mat-mdc-form-field-label,
-::ng-deep.mat-mdc-select-arrow{
-  color: var(--dropdown-txt-arrow-inside-color)!important; /* texto */
+::ng-deep .mat-mdc-select-arrow {
+  color: var(--dropdown-txt-arrow-inside-color) !important;
 }
 
 /* Fondo del trigger */
 ::ng-deep .mat-mdc-select-trigger {
-  border-radius: 4px;
+  border-radius: 6px;
+  background-color: var(--light-gray-background-color);
+  color: var(--text-color);
 }
 
 /* Panel desplegable */
 ::ng-deep .mat-mdc-select-panel {
-  background-color: #e9e9e9 !important;
-  color: #fff !important;
+  background-color: var(--body-background-color) !important;
+  color: var(--text-color) !important;
+  border: 1px solid var(--line-divider);
 }
 
 /* Opción hover */
 ::ng-deep .mat-mdc-option:hover {
-  background-color: #c97bf7 !important;
+  background-color: color.adjust(#393e31, $lightness: 20%) !important;
+  /* tono más claro del main-color */
+  color: var(--white-color) !important;
 }
 
 /* Opción seleccionada */
 ::ng-deep .mat-mdc-option.mdc-list-item--selected {
-  background-color: #c9c9c9 !important;
-  color: white !important;
+  background-color: #393e31 !important;
+  /* $main-color */
+  color: var(--white-color) !important;
 }

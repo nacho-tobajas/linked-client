@@ -27,7 +27,7 @@ describe('AppComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
+    imports: [
         FormsModule,
         NoopAnimationsModule,
         MatCardModule,
@@ -38,15 +38,16 @@ describe('AppComponent', () => {
         RouterOutlet,
         MatToolbarModule,
         MatMenuModule,
-        MatSnackBarModule
-      ],
-      declarations: [AppComponent, HeaderComponent, NavComponent, FooterComponent],
-      providers: [
+        MatSnackBarModule,
+        HeaderComponent, NavComponent, FooterComponent
+    ],
+    declarations: [AppComponent],
+    providers: [
         LoginService,
         provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting() 
-      ]
-    }).compileComponents();
+        provideHttpClientTesting()
+    ]
+}).compileComponents();
 
     service = TestBed.inject(LoginService);
   });

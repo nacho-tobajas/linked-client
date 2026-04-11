@@ -13,22 +13,22 @@ describe('ConfirmComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ConfirmComponent],
-      providers: [
+    imports: [ConfirmComponent],
+    providers: [
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
         {
-          provide: MatDialogRef,
-          useValue: {
-            close: jasmine.createSpy('close')
-          }
+            provide: MatDialogRef,
+            useValue: {
+                close: jasmine.createSpy('close')
+            }
         },
         {
-          provide: MAT_DIALOG_DATA,
-          useValue: {}
+            provide: MAT_DIALOG_DATA,
+            useValue: {}
         }
-      ]
-    });
+    ]
+});
     fixture = TestBed.createComponent(ConfirmComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

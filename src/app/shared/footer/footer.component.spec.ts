@@ -15,17 +15,17 @@ describe('FooterComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [FooterComponent],
-      imports: [
+    imports: [
         MatFormFieldModule,
-        MatToolbarModule
-      ],
-      providers: [
+        MatToolbarModule,
+        FooterComponent
+    ],
+    providers: [
         { provide: MAT_DIALOG_DATA, useValue: { MatFormField } },
         provideHttpClient(),
         provideHttpClientTesting()
-      ] 
-    });
+    ]
+});
     fixture = TestBed.createComponent(FooterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

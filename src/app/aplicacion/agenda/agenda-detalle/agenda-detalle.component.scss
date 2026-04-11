@@ -1,0 +1,420 @@
+@use '../../../../assets/styles/variables' as *;
+
+// CONTENEDOR PRINCIPAL
+.detail-container {
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  max-height: 800px;
+  overflow: hidden;
+  background-color: var(--card-background-color);
+  position: relative;
+
+  @media (max-width: 768px) {
+    height: 100%;
+    max-height: 100%;
+    width: 100%;
+  }
+}
+
+// HEADER
+.dialog-header {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: var(--card-background-color);
+  z-index: 10;
+
+  .persona-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .avatar-persona {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--line-divider);
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: var(--title-text-color);
+    }
+
+    .subtitle {
+      margin: 2px 0 0 0;
+      color: var(--text-secondary-color);
+      font-size: 0.9rem;
+    }
+  }
+
+  .estado-badge {
+    flex-shrink: 0;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    &.status-pendiente  { background-color: #fff8e1; color: #f57f17; border: 1px solid #ffe0b2; }
+    &.status-confirmada { background-color: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+    &.status-completada { background-color: #e0f7fa; color: #006064; border: 1px solid #b2ebf2; }
+    &.status-propuesta  { background-color: #ede7f6; color: #512da8; border: 1px solid #d1c4e9; }
+    &.status-rechazada,
+    &.status-cancelada  { background-color: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
+  }
+}
+
+// MENSAJE DE ESTADO (solo cliente)
+.status-message {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+
+  mat-icon { flex-shrink: 0; }
+  p { margin: 0; }
+
+  &.info-pendiente  { background: #fff8e1; color: #f57f17; }
+  &.info-confirmada { background: #e8f5e9; color: #2e7d32; }
+  &.info-completada { background: #e0f7fa; color: #006064; }
+  &.info-propuesta  { background: #ede7f6; color: #512da8; }
+  &.info-cancelada,
+  &.info-rechazada  { background: #ffebee; color: #c62828; }
+}
+
+// PESTAÑAS
+.full-height-tabs {
+  flex: 1;
+  overflow: hidden;
+
+  ::ng-deep .mat-mdc-tab-body-wrapper {
+    height: 100%;
+  }
+}
+
+// PESTAÑA 1: DETALLES
+.content-scroll {
+  height: 100%;
+  overflow-y: auto;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+  background: var(--light-gray-background-color);
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid var(--line-divider);
+  position: relative;
+  padding-right: 40px;
+
+  .floating-edit-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    color: var(--text-secondary-color);
+    background: transparent;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      line-height: 1;
+    }
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+      color: $main-color;
+    }
+  }
+
+  .info-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-color);
+    font-size: 0.95rem;
+
+    mat-icon {
+      color: var(--text-secondary-color);
+      font-size: 22px;
+      width: 22px;
+      height: 22px;
+    }
+  }
+}
+
+.section {
+  margin-top: 28px;
+
+  h3 {
+    font-size: 1rem;
+    color: var(--title-text-color);
+    margin-bottom: 12px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--line-divider);
+    padding-bottom: 6px;
+    display: inline-block;
+  }
+
+  .descripcion-text {
+    background: var(--card-background-color);
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid var(--line-divider);
+    border-left: 4px solid $main-color;
+    color: var(--text-color);
+    line-height: 1.6;
+  }
+}
+
+.galeria {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 8px 4px 16px 4px;
+
+  .img-wrapper {
+    flex: 0 0 120px;
+    height: 120px;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid var(--line-divider);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+  }
+}
+
+// PESTAÑA 2: CHAT
+.chat-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: var(--bs-body-bg);
+  position: relative;
+}
+
+.messages-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.message-bubble {
+  max-width: 75%;
+  padding: 12px 16px;
+  border-radius: 16px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  position: relative;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+  .msg-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    margin-bottom: 6px;
+    opacity: 0.8;
+    font-weight: 600;
+  }
+
+  /* Mensajes del OTRO (Cliente) -> Izquierda */
+  &:not(.own-message) {
+    background: var(--card-background-color);
+    color: var(--text-color);
+    align-self: flex-start;
+    border-bottom-left-radius: 2px;
+
+    .msg-header strong {
+      color: #d32f2f;
+    }
+  }
+
+  /* Mensajes PROPIOS (Tatuador) -> Derecha */
+  &.own-message {
+    background: $main-color;
+    color: #fff;
+    align-self: flex-end;
+    border-bottom-right-radius: 2px;
+
+    .msg-header strong {
+      display: none;
+    }
+
+    .msg-header small {
+      color: rgba(255, 255, 255, 0.7);
+    }
+  }
+}
+
+.no-messages {
+  text-align: center;
+  margin-top: 60px;
+  color: var(--text-secondary-color);
+  font-style: italic;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+
+  &::before {
+    content: 'chat_bubble_outline';
+    font-family: 'Material Icons';
+    font-size: 48px;
+    opacity: 0.5;
+  }
+}
+
+/* Input Fijo Abajo */
+.chat-input-area {
+  flex: 0 0 auto;
+  padding: 12px 16px;
+  background: var(--card-background-color);
+  border-top: 1px solid var(--line-divider);
+  display: flex;
+  align-items: center;
+
+  .full-width {
+    width: 100%;
+  }
+
+  ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
+
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    background-color: var(--light-gray-background-color);
+    border-radius: 24px;
+    padding-left: 12px;
+  }
+}
+
+// LIGHTBOX
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  background: rgba(0, 0, 0, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-img {
+  min-width: min(80%, 320px);
+  min-height: min(40vh, 280px);
+  max-width: 92%;
+  max-height: 88%;
+  object-fit: contain;
+  border-radius: 6px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+
+  @media (min-width: 768px) {
+    min-width: min(45vw, 640px);
+    min-height: min(55vh, 520px);
+    max-width: 85vw;
+    max-height: 90vh;
+  }
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  transition: background 0.2s;
+
+  mat-icon { font-size: 20px; width: 20px; height: 20px; }
+
+  &:hover { background: rgba(255, 255, 255, 0.3); }
+}
+
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  transition: background 0.2s;
+
+  mat-icon { font-size: 24px; width: 24px; height: 24px; }
+
+  &:hover { background: rgba(255, 255, 255, 0.3); }
+  &.prev { left: 12px; }
+  &.next { right: 12px; }
+}
+
+.lightbox-counter {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.85rem;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 3px 10px;
+  border-radius: 12px;
+}
+
+// PIE DE DIÁLOGO
+mat-dialog-actions {
+  padding: 16px 24px;
+  margin: 0;
+  background: var(--card-background-color);
+  border-top: 1px solid var(--line-divider);
+}
