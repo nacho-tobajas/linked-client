@@ -92,11 +92,11 @@ tatuador: Tatuador | null = null;
 
   abrirDetalle(trabajo: Trabajo) {
      const dialogRef = this.dialog.open(DetalleTrabajoComponent, {
-      width: '900px',
+      width: '460px',
       maxWidth: '100vw',
       maxHeight: '90vh',
       panelClass: 'custom-modal-panel',
-      data: { 
+      data: {
           trabajo: trabajo,
           isLiked: this.misLikes.has(trabajo.id)
       }

@@ -1,73 +1,295 @@
+@use 'sass:color';
 @use "src/assets/styles/_variables.scss" as *;
 
-::ng-deep mat-error {
-  margin-top: -1.2em;
+// ─── Layout ────────────────────────────────────────────────────────────────
+.auth-wrapper {
+  display: flex;
+  min-height: 100vh;
 }
 
-.forgot-password-card {
+// ─── Panel de marca ─────────────────────────────────────────────────────────
+.brand-panel {
+  display: none;
+  position: relative;
+  overflow: hidden;
+  flex: 0 0 42%;
+  background: $main-color;
+  align-items: center;
+  justify-content: center;
+
+  @media (min-width: 768px) { display: flex; }
+
+  .brand-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+    animation: fadeSlideUp 0.7s ease both;
+  }
+
+  .brand-tagline {
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 0.9rem;
+    line-height: 1.7;
+    margin: 0;
+    letter-spacing: 0.03em;
+  }
+
+  .brand-dots {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+    z-index: 1;
+  }
+}
+
+// ─── Marca ───────────────────────────────────────────────────────────────────
+.brand-mark {
+  position: relative;
+  width: 72px;
+  height: 44px;
+  margin: 0 auto 20px;
+
+  .ring {
+    position: absolute;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 5px solid rgba(255, 255, 255, 0.9);
+
+    &.ring-a { left: 0; }
+    &.ring-b { left: 28px; border-color: rgba(255, 255, 255, 0.45); }
+  }
+
+  &.sm {
+    width: 52px;
+    height: 32px;
+    margin: 0 8px 0 0;
+
+    .ring {
+      width: 32px;
+      height: 32px;
+      border-width: 3.5px;
+      &.ring-b { left: 20px; }
+    }
+  }
+}
+
+.brand-logo {
+  width: 128px;
+  height: 128px;
+  object-fit: contain;
+  margin-bottom: 16px;
+}
+
+.brand-name {
+  display: block;
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: #fff;
+  margin-bottom: 12px;
+
+  .brand-panel & { font-size: 2.8rem; }
+
+  .ink {
+    font-style: italic;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+  }
+}
+
+// ─── Panel de formulario ─────────────────────────────────────────────────────
+.form-panel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bs-body-bg);
+  padding: 32px 24px;
+
+  @media (min-width: 768px) {
+    background-color: var(--card-background-color);
+  }
+}
+
+.form-inner {
+  width: 100%;
   max-width: 400px;
-  margin: 2em auto;
-  padding: 2em;
+  --mat-form-field-container-height: 48px;
+  --mat-form-field-container-vertical-padding: 10px;
+  animation: fadeSlideUp 0.6s ease both;
+  animation-delay: 0.1s;
+}
+
+// ─── Marca mobile ────────────────────────────────────────────────────────────
+.mobile-brand {
+  display: flex;
+  align-items: center;
+  margin-bottom: 32px;
+
+  .brand-mark .ring {
+    border-color: $main-color;
+    &.ring-b { border-color: rgba($main-color, 0.4); }
+  }
+
+  .brand-name {
+    color: var(--title-text-color);
+    font-size: 1.6rem;
+    margin: 0;
+  }
+
+  @media (min-width: 768px) { display: none; }
+}
+
+// ─── Header del formulario ───────────────────────────────────────────────────
+.form-header {
+  margin-bottom: 28px;
+
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--title-text-color);
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+  }
+
+  p {
+    color: var(--text-secondary-color);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+}
+
+// ─── Campos ──────────────────────────────────────────────────────────────────
+.field-group {
+  margin-bottom: 18px;
+}
+
+.field-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-color);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.field {
+  width: 100%;
+
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    background: var(--bs-body-bg);
+    border-radius: 8px;
+  }
+
+  ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+    margin-top: 2px;
+  }
+}
+
+// ─── Captcha ─────────────────────────────────────────────────────────────────
+.captcha-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 0 0 18px;
+
+  ::ng-deep re-captcha > div {
+    border-radius: 8px;
+    border: 1.5px solid var(--line-divider);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    transition: border-color 0.2s;
+
+    &:hover {
+      border-color: #2e7d32;
+    }
+  }
+
+  :root.dark-theme & {
+    ::ng-deep re-captcha > div {
+      filter: invert(0.88) hue-rotate(180deg) brightness(0.85);
+      border-color: var(--line-divider);
+    }
+  }
+
+  @media (max-width: 380px) {
+    transform: scale(0.85);
+    transform-origin: center top;
+    margin-bottom: -11px;
+  }
+}
+
+// ─── Botón principal ─────────────────────────────────────────────────────────
+.btn-primary {
+  width: 100%;
+  height: 48px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   border-radius: 8px;
+  --mdc-protected-button-container-color: #2e7d32;
+  --mdc-protected-button-label-text-color: #ffffff;
+  box-shadow: 0 4px 14px rgba(46, 125, 50, 0.35);
+  transition: box-shadow 0.2s, transform 0.1s;
 
-  .forgot-password-card-header {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 1.5em;
+  &:not(:disabled):hover {
+    box-shadow: 0 6px 20px rgba(46, 125, 50, 0.45);
+    transform: translateY(-1px);
+  }
+  &:not(:disabled):active { transform: translateY(0); }
+  &:disabled { box-shadow: none; }
+}
+
+// ─── Footer / Volver al login ─────────────────────────────────────────────────
+.form-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line-divider);
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-secondary-color);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 20px;
+  transition: color 0.18s, background 0.18s;
+
+  mat-icon {
+    font-size: 1rem;
+    width: 1rem;
+    height: 1rem;
+    line-height: 1rem;
   }
 
-  .forgot-password-card-title {
-    color: $main-color;
-    font-size: 1.8em;
-    font-weight: bold;
-  }
-
-  .full-width {
-    width: 100%;
-    margin-bottom: 1.2em;
-  }
-
-  .login-card-actions {
-    display: flex;
-    justify-content: center;
-    padding-top: 1.5em;
-  }
-
-  .login-button {
-    width: 100%;
-    padding: 0.8em;
-  }
-
-  .forgot-password-button {
-    width: 100%;
-    padding: 0.8em;
-    font-weight: bold;
-    background-color: $main-color;
-    color: white;
+  &:hover {
+    color: var(--title-text-color);
+    background: var(--light-gray-background-color);
   }
 }
 
-
-@media (max-width: 600px) {
-  .forgot-password-card {
-    width: 100%;
-    border-radius: 12px;
-    padding: 1.5em;
-  }
-
-  .forgot-password-card-title {
-    font-size: 1.6em;
-  }
-}
-
-@media (min-width: 600px) and (max-width: 992px) {
-  .forgot-password-card {
-    max-width: 500px;
-  }
-}
-
-@media (min-width: 992px) {
-  .forgot-password-card {
-    max-width: 600px;
-  }
+// ─── Animación ───────────────────────────────────────────────────────────────
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
 }

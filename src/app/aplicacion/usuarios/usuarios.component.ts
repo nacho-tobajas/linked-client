@@ -13,7 +13,7 @@ import { MatSelect, MatOption } from '@angular/material/select';
 import { MatInput } from '@angular/material/input';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
-import { NgFor, NgIf, NgClass } from '@angular/common';
+import { NgFor, NgIf, NgClass, Location } from '@angular/common';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
@@ -55,8 +55,11 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   constructor(
     private userService: UserService,
     private solicitudService: SolicitudTatuadorService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private location: Location
   ) {}
+
+  goBack(): void { this.location.back(); }
 
   ngOnInit(): void {
     this.loadAll();

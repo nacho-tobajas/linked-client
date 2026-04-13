@@ -1,31 +1,29 @@
 <!-- Hero header — ancho completo, fuera del contenedor restringido -->
-<div class="favs-hero">
-    <div class="favs-hero-bg">
-      <span class="hero-shape s1"></span>
-      <span class="hero-shape s2"></span>
+<div class="page-hero">
+  <div class="hero-content">
+    <button mat-icon-button class="back-btn" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="hero-icon-wrap">
+      <mat-icon>favorite</mat-icon>
     </div>
-    <div class="favs-hero-content">
-      <div class="favs-hero-icon">
-        <mat-icon>favorite</mat-icon>
-      </div>
-      <div>
-        <h1 class="favs-hero-title">Mis Favoritos</h1>
-        <p class="favs-hero-sub">Publicaciones que marcaste con Me Gusta</p>
-      </div>
-    </div>
-
-    <!-- Stats — solo cuando hay items -->
-    <div class="favs-stats" *ngIf="!isLoading && trabajosFavoritos.length > 0">
-      <div class="stat-pill">
-        <mat-icon>collections</mat-icon>
-        <span>{{ trabajosFavoritos.length }} publicación{{ trabajosFavoritos.length !== 1 ? 'es' : '' }}</span>
-      </div>
-      <div class="stat-pill">
-        <mat-icon>palette</mat-icon>
-        <span>{{ uniqueArtistsCount }} artista{{ uniqueArtistsCount !== 1 ? 's' : '' }}</span>
-      </div>
+    <div>
+      <h1 class="hero-title">Mis Favoritos</h1>
+      <p class="hero-sub">Publicaciones que marcaste con Me Gusta</p>
     </div>
   </div>
+</div>
+
+<div class="favs-stats" *ngIf="!isLoading && trabajosFavoritos.length > 0">
+  <div class="stat-pill">
+    <mat-icon>collections</mat-icon>
+    <span>{{ trabajosFavoritos.length }} publicación{{ trabajosFavoritos.length !== 1 ? 'es' : '' }}</span>
+  </div>
+  <div class="stat-pill">
+    <mat-icon>palette</mat-icon>
+    <span>{{ uniqueArtistsCount }} artista{{ uniqueArtistsCount !== 1 ? 's' : '' }}</span>
+  </div>
+</div>
 
 <div class="favs-screen">
 

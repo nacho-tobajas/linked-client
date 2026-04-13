@@ -1,21 +1,33 @@
+<div class="page-hero">
+  <div class="hero-content">
+    <button mat-icon-button class="back-btn" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="hero-icon-wrap">
+      <mat-icon>event_note</mat-icon>
+    </div>
+    <div>
+      <h1 class="hero-title">Mi Agenda</h1>
+      <p class="hero-sub">Gestioná tus turnos y horarios.</p>
+    </div>
+  </div>
+</div>
+
 <div>
   <div class="gestionar-agenda-container">
-    <div class="header-agenda">
-      <h2>Agenda de Turnos</h2>
-      <button
-        mat-raised-button
-        class="create-button"
-        aria-label="Configurar horario habitual"
-        (click)="abrirConfiguracionHorario()"
-      >
-        <mat-icon>settings</mat-icon>
-        Gestionar Horarios
-      </button>
-    </div>
-
-    <mat-divider></mat-divider>
-
     <section class="turnos-section">
+      <div class="btn-gestionar-row">
+        <button
+          mat-raised-button
+          class="create-button"
+          aria-label="Configurar horario habitual"
+          (click)="abrirConfiguracionHorario()"
+        >
+          <mat-icon>settings</mat-icon>
+          Gestionar Horarios
+        </button>
+      </div>
+
       <div class="filtro-crud">
         <mat-accordion>
           <mat-expansion-panel>
@@ -60,7 +72,10 @@
                     (dateChange)="aplicarFiltro()"
                     placeholder="dd/mm/yyyy"
                   />
-                  <mat-datepicker-toggle matIconSuffix [for]="pickerDesde"></mat-datepicker-toggle>
+                  <mat-datepicker-toggle
+                    matIconSuffix
+                    [for]="pickerDesde"
+                  ></mat-datepicker-toggle>
                   <mat-datepicker #pickerDesde></mat-datepicker>
                 </mat-form-field>
 
@@ -75,12 +90,20 @@
                     (dateChange)="aplicarFiltro()"
                     placeholder="dd/mm/yyyy"
                   />
-                  <mat-datepicker-toggle matIconSuffix [for]="pickerHasta"></mat-datepicker-toggle>
+                  <mat-datepicker-toggle
+                    matIconSuffix
+                    [for]="pickerHasta"
+                  ></mat-datepicker-toggle>
                   <mat-datepicker #pickerHasta></mat-datepicker>
                 </mat-form-field>
 
                 <div class="filter-actions">
-                  <button mat-button type="button" color="warn" (click)="resetFiltro()">
+                  <button
+                    mat-button
+                    type="button"
+                    color="warn"
+                    (click)="resetFiltro()"
+                  >
                     Limpiar Filtros
                   </button>
                   <button mat-raised-button class="normal-button" type="submit">
@@ -92,6 +115,7 @@
           </mat-expansion-panel>
         </mat-accordion>
       </div>
+
       <div *ngIf="isLoadingTurnos" class="loading-spinner">
         <mat-spinner diameter="40"></mat-spinner> Cargando turnos...
       </div>
@@ -104,9 +128,10 @@
       </div>
 
       <div
-        class="tabla-crud normal-table"
+        class="tabla-crud"
         *ngIf="!isLoadingTurnos && !errorTurnos"
       >
+        <div class="tabla-scroll">
         <table
           mat-table
           [dataSource]="dataSource"
@@ -198,6 +223,7 @@
             </td>
           </tr>
         </table>
+        </div>
 
         <mat-paginator
           [pageSizeOptions]="[5, 10, 20]"

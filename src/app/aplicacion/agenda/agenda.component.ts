@@ -14,28 +14,27 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { EditarTurnoComponent } from './editar-turno/editar-turno.component';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { MatDivider } from '@angular/material/divider';
 import { MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
 import { FormsModule } from '@angular/forms';
 import { MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
 import { MatSelect, MatOption } from '@angular/material/select';
 import { MatInput } from '@angular/material/input';
 import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
-import { NgIf, NgClass, DatePipe } from '@angular/common';
+import { NgIf, NgClass, DatePipe, Location } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
-    selector: 'app-agenda',
-    templateUrl: './agenda.component.html',
-    styleUrl: './agenda.component.scss',
-    imports: [MatButton, MatIcon, MatDivider, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, FormsModule, MatFormField, MatLabel, MatSelect, MatOption, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgIf, MatProgressSpinner, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, NgClass, MatIconButton, MatTooltip, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow, MatPaginator, DatePipe]
+  selector: 'app-agenda',
+  templateUrl: './agenda.component.html',
+  styleUrl: './agenda.component.scss',
+  imports: [MatButton, MatIcon, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle, FormsModule, MatFormField, MatLabel, MatSelect, MatOption, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgIf, MatProgressSpinner, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, NgClass, MatIconButton, MatTooltip, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow, MatPaginator, DatePipe]
 })
 export class AgendaComponent implements OnInit, OnDestroy {
 
   displayedColumns: string[] = ['fecha', 'hora', 'cliente', 'estado', 'acciones'];
-  dataSource = new MatTableDataSource<TurnoSesion>([]); 
-  
+  dataSource = new MatTableDataSource<TurnoSesion>([]);
+
   filteredTurnos: TurnoSesion[] = [];
 
   // Filtros
@@ -47,14 +46,14 @@ export class AgendaComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatPaginator) set matPaginator(mp: MatPaginator) {
     if (mp) {
-       this.dataSource.paginator = mp;
+      this.dataSource.paginator = mp;
     }
   }
 
   @ViewChild(MatSort) set matSort(ms: MatSort) {
     if (ms) {
-       this.dataSource.sort = ms;
-       this.configurarOrdenamiento(); // Llamamos a la configuración aquí
+      this.dataSource.sort = ms;
+      this.configurarOrdenamiento(); // Llamamos a la configuración aquí
     }
   }
 
@@ -63,30 +62,33 @@ export class AgendaComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   constructor(
-    private dialog: MatDialog, 
+    private dialog: MatDialog,
     private turnosService: TurnosService,
     private snackBar: MatSnackBar,
-    private breakpointObserver: BreakpointObserver
+    private breakpointObserver: BreakpointObserver,
+    private location: Location
   ) { }
+
+  goBack(): void { this.location.back(); }
 
   configurarFiltro() {
     this.dataSource.filterPredicate = (data: TurnoSesion, filter: string) => {
-      
+
       // Parseamos el string del filtro de vuelta a un objeto
       const searchTerms = JSON.parse(filter);
 
       // Filtro por Estado
-      const coincideEstado = !searchTerms.estado || 
+      const coincideEstado = !searchTerms.estado ||
         data.estado?.toLowerCase() === searchTerms.estado.toLowerCase();
 
       // Filtro por Cliente (Username, Nombre o Apellido)
       const nombreCliente = (
-          (data.cliente?.username || '') + ' ' + 
-          (data.cliente?.realname || '') + ' ' + 
-          (data.cliente?.surname || '')
+        (data.cliente?.username || '') + ' ' +
+        (data.cliente?.realname || '') + ' ' +
+        (data.cliente?.surname || '')
       ).toLowerCase();
-      
-      const coincideNombre = !searchTerms.username || 
+
+      const coincideNombre = !searchTerms.username ||
         nombreCliente.includes(searchTerms.username.toLowerCase());
 
       // Filtro por Fecha
@@ -95,14 +97,14 @@ export class AgendaComponent implements OnInit, OnDestroy {
 
       let coincideFecha = true;
       if (searchTerms.fechaDesde) {
-          const desde = new Date(searchTerms.fechaDesde);
-          desde.setHours(0, 0, 0, 0);
-          coincideFecha = coincideFecha && (fechaTurno >= desde);
+        const desde = new Date(searchTerms.fechaDesde);
+        desde.setHours(0, 0, 0, 0);
+        coincideFecha = coincideFecha && (fechaTurno >= desde);
       }
       if (searchTerms.fechaHasta) {
-          const hasta = new Date(searchTerms.fechaHasta);
-          hasta.setHours(0, 0, 0, 0);
-          coincideFecha = coincideFecha && (fechaTurno <= hasta);
+        const hasta = new Date(searchTerms.fechaHasta);
+        hasta.setHours(0, 0, 0, 0);
+        coincideFecha = coincideFecha && (fechaTurno <= hasta);
       }
 
       return coincideEstado && coincideNombre && coincideFecha;
@@ -110,33 +112,33 @@ export class AgendaComponent implements OnInit, OnDestroy {
   }
 
   aplicarFiltro(): void {
-      if (this.filterFechaDesde && this.filterFechaHasta && this.filterFechaDesde > this.filterFechaHasta) {
-        alert('La fecha "desde" no puede ser mayor que la fecha "hasta".');
-        return;
-      }
-  
-      // Creamos el objeto de filtro
-      const filterValues = {
-        estado: this.filterEstado,
-        username: this.filterUsername,
-        fechaDesde: this.filterFechaDesde,
-        fechaHasta: this.filterFechaHasta
-      };
-  
-      // Se lo pasamos al dataSource como string (esto dispara el filterPredicate)
-      this.dataSource.filter = JSON.stringify(filterValues);
-      
-      if (this.dataSource.paginator) {
-        this.dataSource.paginator.firstPage();
-      }
+    if (this.filterFechaDesde && this.filterFechaHasta && this.filterFechaDesde > this.filterFechaHasta) {
+      alert('La fecha "desde" no puede ser mayor que la fecha "hasta".');
+      return;
+    }
+
+    // Creamos el objeto de filtro
+    const filterValues = {
+      estado: this.filterEstado,
+      username: this.filterUsername,
+      fechaDesde: this.filterFechaDesde,
+      fechaHasta: this.filterFechaHasta
+    };
+
+    // Se lo pasamos al dataSource como string (esto dispara el filterPredicate)
+    this.dataSource.filter = JSON.stringify(filterValues);
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
-  
+
   resetFiltro(): void {
-      this.filterEstado = '';
-      this.filterUsername = '';
-      this.filterFechaDesde = null;
-      this.filterFechaHasta = null;
-      this.dataSource.filter = ''; // Resetea el filtro
+    this.filterEstado = '';
+    this.filterUsername = '';
+    this.filterFechaDesde = null;
+    this.filterFechaHasta = null;
+    this.dataSource.filter = ''; // Resetea el filtro
   }
 
   // Validadores para los Datepickers (Min/Max)
@@ -161,7 +163,7 @@ export class AgendaComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadTurnos();
     this.setupResponsiveColumns();
-    this.configurarFiltro(); 
+    this.configurarFiltro();
   }
 
   ngOnDestroy(): void {
@@ -179,7 +181,7 @@ export class AgendaComponent implements OnInit, OnDestroy {
           this.displayedColumns = ['fecha', 'hora', 'cliente', 'estado', 'acciones'];
         }
       });
-  }  
+  }
 
   abrirConfiguracionHorario(): void {
     const dialogRef = this.dialog.open(GestionarHorarioComponent, {
@@ -192,15 +194,15 @@ export class AgendaComponent implements OnInit, OnDestroy {
   configurarOrdenamiento() {
     this.dataSource.sortingDataAccessor = (item: any, property: string) => {
       switch (property) {
-        case 'fecha': 
-        case 'hora': 
+        case 'fecha':
+        case 'hora':
           // Convertir a timestamp para ordenar números correctamente
           return new Date(item.fecha_hora_inicio).getTime();
-        case 'cliente': 
+        case 'cliente':
           return (item.cliente?.realname || '').toLowerCase();
-        case 'estado': 
+        case 'estado':
           return (item.estado || '').toLowerCase();
-        default: 
+        default:
           return item[property];
       }
     };
@@ -229,12 +231,12 @@ export class AgendaComponent implements OnInit, OnDestroy {
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-    
+
     // Configura el filtro para buscar en datos anidados
     this.dataSource.filterPredicate = (data: TurnoSesion, filter: string) => {
-      const dataStr = 
-        (data.cliente?.realname || '') + 
-        (data.cliente?.surname || '') + 
+      const dataStr =
+        (data.cliente?.realname || '') +
+        (data.cliente?.surname || '') +
         data.estado +
         new Date(data.fecha_hora_inicio!).toLocaleDateString('es-AR'); // "dd/MM/yyyy"
       return dataStr.toLowerCase().includes(filter);
@@ -255,15 +257,15 @@ export class AgendaComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         if (result.action === 'confirmar') {
-           this.gestionarTurno(result.turnoId, 'Confirmada'); 
+          this.gestionarTurno(result.turnoId, 'Confirmada');
         } else if (result.action === 'rechazar') {
-           this.gestionarTurno(result.turnoId, 'Rechazada');
+          this.gestionarTurno(result.turnoId, 'Rechazada');
         } else if (result.action === 'completar') {
-           this.gestionarTurno(result.turnoId, 'Completada');
+          this.gestionarTurno(result.turnoId, 'Completada');
         }
         else if (result.action === 'restaurar') {
           this.gestionarTurno(result.turnoId, 'Pendiente');
-      }
+        }
       }
     });
   }
@@ -321,7 +323,7 @@ export class AgendaComponent implements OnInit, OnDestroy {
   // Método para restaurar (deshacer rechazo)
   restaurarTurno(turno: TurnoSesion): void {
     if (confirm('¿Deseas restaurar este turno al estado Pendiente?')) {
-        this.gestionarTurno(turno.id!, 'Pendiente');
+      this.gestionarTurno(turno.id!, 'Pendiente');
     }
   }
 
@@ -329,7 +331,7 @@ export class AgendaComponent implements OnInit, OnDestroy {
   rechazarTurno(turno: TurnoSesion): void {
     // Usamos el confirm nativo o un Dialog tuyo
     if (confirm(`¿Estás seguro de RECHAZAR el turno de ${turno.cliente?.realname}?`)) {
-       this.gestionarTurno(turno.id!, 'Rechazada');
+      this.gestionarTurno(turno.id!, 'Rechazada');
     }
   }
 

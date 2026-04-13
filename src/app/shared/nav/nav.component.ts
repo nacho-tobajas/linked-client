@@ -4,6 +4,7 @@ import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ProximamenteService } from 'src/app/services/proximamente.service';
 import { HelpDialogComponent } from 'src/app/components/help-dialog/help-dialog.component';
+import { SupportTicketCreateComponent } from 'src/app/aplicacion/support-ticket/support-ticket-create/support-ticket-create.component';
 import { MatDialog } from '@angular/material/dialog';
 import { UserService } from 'src/app/services/user/user.service';
 import { NgIf } from '@angular/common';
@@ -144,8 +145,10 @@ export class NavComponent implements OnInit, OnDestroy {
   }
 
   openHelp(): void {
-    this.dialog.open(HelpDialogComponent, {
-      width: '500px'
+    this.dialog.open(SupportTicketCreateComponent, {
+      width: '620px',
+      maxWidth: '95vw',
+      disableClose: true,
     });
   }
 }

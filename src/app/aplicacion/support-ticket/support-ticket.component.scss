@@ -1,18 +1,151 @@
-.filtroCrud {
-  padding: 0px 9%;
+@use "src/assets/styles/_variables.scss" as *;
+
+/* ── Hero header ── */
+.page-hero {
+  position: relative;
+  background: var(--card-background-color);
+  box-shadow: 0 1px 0 var(--line-divider);
+  padding: 24px 20px;
+
+  @media (min-width: 600px) { padding: 28px 32px; }
 }
 
-@media (max-width: 768px) {
-  .tabla-crud {
-    overflow-x: auto;
-    padding-left: 7%;
-    padding-right: 7%;
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.back-btn {
+  color: var(--text-secondary-color);
+  flex-shrink: 0;
+  padding: 0 !important;
+
+  &:hover { color: var(--text-color); background: var(--light-gray-background-color); }
+}
+
+.hero-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(93, 106, 88, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  mat-icon { font-size: 22px; width: 22px; height: 22px; color: var(--text-color); }
+}
+
+.hero-title {
+  margin: 0 0 4px;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--title-text-color);
+  letter-spacing: -0.4px;
+
+  @media (min-width: 600px) { font-size: 2rem; }
+}
+
+.hero-sub { margin: 0; font-size: 0.85rem; color: var(--text-secondary-color); }
+
+.tickets-page {
+  padding: 24px 16px 3vh;
+  overflow-x: hidden;
+
+  @media (min-width: 768px) {
+    padding: 32px 5% 3vh;
+  }
+}
+
+.content-wrap {
+  margin: 0 auto;
+
+  @media (min-width: 768px) {
+    max-width: 65%;
+  }
+}
+
+.title-crud {
+  margin-bottom: 20px;
+
+  h3 {
+    margin: 0;
+  }
+}
+
+.filtros-accordion {
+  display: block;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.filtros-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 16px;
+  padding-top: 8px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.filtros-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 4px 0 8px;
+}
+
+.btn-buscar {
+  background-color: #2e7d32 !important;
+  color: #fff !important;
+}
+
+.tabla-wrap {
+  overflow-x: auto;
+  width: 100%;
+  margin-top: 24px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.col-center {
+  text-align: center !important;
+}
+
+.mat-column-id {
+  width: 10%;
+}
+
+.mat-column-fechaCarga {
+  width: 20%;
+  min-width: 140px;
+}
+
+.mat-column-user {
+  width: 30%;
+}
+
+.mat-column-status {
+  width: 20%;
+}
+
+.mat-column-actions {
+  width: 20%;
+}
+
+:host-context(.dark-theme) {
+  .page-hero {
+    background: var(--body-background-color);
+    box-shadow: 0 1px 0 var(--line-divider);
   }
 
-  .mat-column-fechaCarga {
-    min-width: 140px;
-  }
-
-
-
+  .hero-icon-wrap { background: rgba(93, 106, 88, 0.25); }
 }

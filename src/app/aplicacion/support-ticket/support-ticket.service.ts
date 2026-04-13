@@ -29,6 +29,14 @@ export class SupportTicketService {
     return this.http.get<SupportTicket>(`${this.endpoint}/${id}`);
   }
 
+  getMyTickets(): Observable<SupportTicket[]> {
+    return this.http.get<SupportTicket[]>(`${this.endpoint}/me/tickets`);
+  }
+
+  respondToTicket(id: number, data: { status: boolean; admin_response: string; modificationuser: string }): Observable<SupportTicket> {
+    return this.http.post<SupportTicket>(`${this.endpoint}/${id}/respond`, data);
+  }
+
   deleteSupportTicket(id: number): Observable<SupportTicket> {
     return this.http.delete<SupportTicket>(`${this.endpoint}/${id}`);
   }

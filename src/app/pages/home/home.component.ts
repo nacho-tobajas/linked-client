@@ -65,6 +65,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   abrirDetalle(trabajo: Trabajo) {
     const dialogRef = this.dialog.open(DetalleTrabajoComponent, {
       panelClass: 'custom-modal-panel',
+      width: '460px',
       maxWidth: '100vw',
       maxHeight: '90vh',
       data: {

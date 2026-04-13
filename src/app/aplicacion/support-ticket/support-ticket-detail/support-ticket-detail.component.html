@@ -1,49 +1,115 @@
-<mat-card class="detail-view-card">
-  <mat-card-header>
-    <div mat-card-avatar class="header-icon">
-      <mat-icon>support_agent</mat-icon>
-    </div>
-    <mat-card-title>Ticket N° {{ data.supportTicket.id }}</mat-card-title>
-    <mat-card-subtitle>Soporte Técnico</mat-card-subtitle>
-  </mat-card-header>
+<div class="gestionar-ticket">
 
-  <mat-card-content>
-    <div class="detail-grid">
-      <div class="detail-item">
-        <span class="label">Estado:</span>
-        <span>{{ statusLabel }}</span>
-      </div>
-
-      <div class="detail-item">
-        <span class="label">Descripción del problema:</span>
-        <span>{{ data.supportTicket.description }}</span>
-      </div>
-
-      <div class="detail-item">
-        <span class="label">Fecha de carga:</span>
-        <span>{{ data.supportTicket.creationtimestamp | date:'dd/MM/yyyy HH:mm' }}</span>
-      </div>
-
-      <div class="detail-item">
-        <span class="label">Fecha de modificación:</span>
-        <span>
-          {{ data.supportTicket.modificationtimestamp ? (data.supportTicket.modificationtimestamp | date:'dd/MM/yyyy HH:mm') : '—' }}
-        </span>
-      </div>
-
-      <div class="detail-item">
-        <span class="label">Cargado por:</span>
-        <span>{{ data.supportTicket.creationuser }}</span>
-      </div>
-
-      <div class="detail-item">
-        <span class="label">Modificado por:</span>
-        <span>{{ data.supportTicket.modificationuser || '—' }}</span>
+  <!-- Header -->
+  <div class="gt-header">
+    <div class="gt-header-left">
+      <mat-icon class="gt-icon">support_agent</mat-icon>
+      <div>
+        <h2 class="gt-title">Gestionar Ticket #{{ data.supportTicket.id }}</h2>
+        <p class="gt-subtitle">Soporte técnico</p>
       </div>
     </div>
-  </mat-card-content>
+    <span class="status-badge" [class.resolved]="data.supportTicket.status + '' === 'true'">
+      {{ data.supportTicket.status + '' === 'true' ? 'RESUELTO' : 'PENDIENTE' }}
+    </span>
+  </div>
 
-  <mat-card-actions align="end">
-    <button mat-stroked-button color="primary" (click)="onClose()">Cerrar</button>
-  </mat-card-actions>
-</mat-card>
+  <div class="gt-body">
+
+    <!-- Sección: Detalles del ticket -->
+    <section class="gt-section">
+      <h3 class="section-title">Detalles del ticket</h3>
+
+      <div class="detail-row">
+        <div class="detail-item">
+          <span class="detail-label">Usuario</span>
+          <span class="detail-value">{{ data.supportTicket.creationuser }}</span>
+        </div>
+        <div class="detail-sep"></div>
+        <div class="detail-item">
+          <span class="detail-label">Fecha de carga</span>
+          <span class="detail-value">{{ data.supportTicket.creationtimestamp | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+        <ng-container *ngIf="data.supportTicket.category">
+          <div class="detail-sep"></div>
+          <div class="detail-item">
+            <span class="detail-label">Categoría</span>
+            <span class="detail-value">{{ data.supportTicket.category }}</span>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="data.supportTicket.priority">
+          <div class="detail-sep"></div>
+          <div class="detail-item">
+            <span class="detail-label">Prioridad</span>
+            <span class="detail-value">{{ data.supportTicket.priority }}</span>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="data.supportTicket.modificationuser">
+          <div class="detail-sep"></div>
+          <div class="detail-item">
+            <span class="detail-label">Última gestión</span>
+            <span class="detail-value">{{ data.supportTicket.modificationuser }}</span>
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="description-block">
+        <span class="detail-label">Descripción del problema</span>
+        <p class="description-text">{{ data.supportTicket.description }}</p>
+      </div>
+    </section>
+
+    <div class="gt-divider"></div>
+
+    <!-- Sección: Gestión -->
+    <section class="gt-section">
+      <h3 class="section-title">Gestión y respuesta</h3>
+
+      <form [formGroup]="gestionForm">
+        <div class="field-group">
+          <label class="field-label">Estado del ticket</label>
+          <mat-form-field appearance="outline" class="field-full">
+            <mat-select formControlName="status">
+              <mat-option [value]="false">Pendiente</mat-option>
+              <mat-option [value]="true">Resuelto</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Respuesta al cliente</label>
+          <mat-form-field appearance="outline" class="field-full">
+            <textarea
+              matInput
+              formControlName="admin_response"
+              placeholder="Redactá la respuesta que recibirá el usuario por correo..."
+              rows="5">
+            </textarea>
+            <mat-error *ngIf="gestionForm.get('admin_response')?.hasError('required')">
+              La respuesta es requerida
+            </mat-error>
+          </mat-form-field>
+          <p class="field-hint">
+            <mat-icon class="hint-icon">mail_outline</mat-icon>
+            Se enviará un correo al usuario con el estado actualizado y esta respuesta.
+          </p>
+        </div>
+      </form>
+    </section>
+
+  </div>
+
+  <!-- Acciones -->
+  <div class="gt-actions">
+    <button mat-stroked-button type="button" (click)="onClose()">
+      Cerrar
+    </button>
+    <button mat-raised-button class="btn-save" type="button" appNoDoubleSubmit
+            [disabled]="gestionForm.invalid || saving"
+            (click)="onRespond()">
+      <mat-icon *ngIf="!saving">send</mat-icon>
+      <span>{{ saving ? 'Enviando...' : 'Guardar y notificar' }}</span>
+    </button>
+  </div>
+
+</div>

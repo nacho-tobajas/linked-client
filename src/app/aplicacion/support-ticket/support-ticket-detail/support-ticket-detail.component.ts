@@ -1,32 +1,78 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-
-import { SupportTicket } from '../support-ticket.model';
-import { MatCard, MatCardHeader, MatCardAvatar, MatCardTitle, MatCardSubtitle, MatCardContent, MatCardActions } from '@angular/material/card';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { NgIf, DatePipe } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
-import { DatePipe } from '@angular/common';
+import { MatFormField, MatError } from '@angular/material/form-field';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { MatInput } from '@angular/material/input';
+
+import { SupportTicket } from '../support-ticket.model';
+import { SupportTicketService } from '../support-ticket.service';
+import { UserService } from 'src/app/services/user/user.service';
+import { ErrorDialogComponent } from 'src/app/components/error-dialog/error-dialog.component';
+import { NoDoubleSubmitDirective } from 'src/app/shared/directives/no-double-submit.directive';
 
 @Component({
-    selector: 'app-support-ticket-detail',
-    templateUrl: './support-ticket-detail.component.html',
-    styleUrls: ['./support-ticket-detail.component.scss'],
-    imports: [MatCard, MatCardHeader, MatCardAvatar, MatIcon, MatCardTitle, MatCardSubtitle, MatCardContent, MatCardActions, MatButton, DatePipe]
+  selector: 'app-support-ticket-detail',
+  templateUrl: './support-ticket-detail.component.html',
+  styleUrls: ['./support-ticket-detail.component.scss'],
+  imports: [
+    ReactiveFormsModule, NgIf, DatePipe,
+    MatIcon, MatButton,
+    MatFormField, MatError, MatSelect, MatOption, MatInput,
+    NoDoubleSubmitDirective,
+  ],
 })
-export class SupportTicketDetailComponent implements OnInit{
+export class SupportTicketDetailComponent implements OnInit {
+  gestionForm: FormGroup;
+  saving = false;
+
   constructor(
+    private fb: FormBuilder,
+    private supportTicketService: SupportTicketService,
+    private userService: UserService,
+    private dialog: MatDialog,
     public dialogRef: MatDialogRef<SupportTicketDetailComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { supportTicket: SupportTicket }
-  ) {}
+  ) {
+    this.gestionForm = this.fb.group({
+      status: [data.supportTicket.status + '' === 'true'],
+      admin_response: ['', [Validators.required, Validators.minLength(10)]],
+    });
+  }
 
-  statusLabel!: string;
+  ngOnInit(): void {}
 
-  ngOnInit(): void {
-   const statusStr = this.data.supportTicket.status + '';
-   this.statusLabel = statusStr === 'true' ? 'RESUELTO' : 'PENDIENTE';
+  onRespond(): void {
+    if (this.gestionForm.invalid) return;
+    this.saving = true;
+
+    this.userService.getLoggedInUsername().subscribe((username) => {
+      const payload = {
+        status: this.gestionForm.value.status,
+        admin_response: this.gestionForm.value.admin_response,
+        modificationuser: username ?? '',
+      };
+
+      this.supportTicketService.respondToTicket(this.data.supportTicket.id, payload).subscribe({
+        next: () => {
+          this.saving = false;
+          this.dialogRef.close(true);
+        },
+        error: (err) => {
+          this.saving = false;
+          const msg = err?.error?.msg || 'Error al enviar la respuesta';
+          this.dialog.open(ErrorDialogComponent, {
+            data: { type: 'error', message: msg },
+          });
+        },
+      });
+    });
   }
 
   onClose(): void {
-    this.dialogRef.close();
+    this.dialogRef.close(false);
   }
 }

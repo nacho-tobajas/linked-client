@@ -1,13 +1,20 @@
-<div class="screen-container">
-
-  <div class="header-reservas">
-    <button mat-icon-button (click)="goBack()">
+<div class="page-hero">
+  <div class="hero-content">
+    <button mat-icon-button class="back-btn" (click)="goBack()">
       <mat-icon>arrow_back</mat-icon>
     </button>
-    <h2>Mis Reservas</h2>
+    <div class="hero-icon-wrap">
+      <mat-icon>calendar_today</mat-icon>
+    </div>
+    <div>
+      <h1 class="hero-title">Mis Reservas</h1>
+      <p class="hero-sub">Tus turnos agendados con artistas.</p>
+    </div>
   </div>
+</div>
 
-  <mat-divider></mat-divider>
+<div class="screen-container">
+  <div class="reservas-content">
 
   <div *ngIf="isLoading" class="loading-container">
     <mat-spinner diameter="40"></mat-spinner>
@@ -20,7 +27,7 @@
     <button mat-button color="primary" (click)="cargarMisReservas()">Reintentar</button>
   </div>
 
-  <div class="reservas-content" *ngIf="!isLoading && !errorCarga">
+  <div *ngIf="!isLoading && !errorCarga">
 
     <div class="reservas-grid" *ngIf="turnos.length > 0; else emptyState">
 
@@ -106,4 +113,6 @@
     </ng-template>
 
   </div>
+
+  </div><!-- /reservas-content -->
 </div>

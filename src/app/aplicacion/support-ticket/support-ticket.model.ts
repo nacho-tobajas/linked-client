@@ -11,4 +11,6 @@ export class SupportTicket {
   url_pagina?: string | null = null;
   user_agent?: string | null = null;
   screenshot?: string | null = null;
+  admin_response?: string | null = null;
+  contact_email?: string | null = null;
 }

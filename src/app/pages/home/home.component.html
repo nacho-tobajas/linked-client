@@ -3,14 +3,9 @@
        HERO
   ═══════════════════════════════════════════════════════ -->
   <section class="hero">
-    <div class="hero-bg-shapes">
-      <span class="shape shape-1"></span>
-      <span class="shape shape-2"></span>
-      <span class="shape shape-3"></span>
-    </div>
-    <div class="hero-content">
+<div class="hero-content">
+      <span class="brand-name">L<em class="ink">INK</em>ED</span>
       <p class="hero-eyebrow">La comunidad del tatuaje</p>
-      <h1 class="hero-title">Linked</h1>
       <p class="hero-subtitle" *ngIf="!userLoginOn">
         Explorá el arte de nuestros tatuadores y agendá tu próximo turno.
       </p>
@@ -65,18 +60,38 @@
           <div class="action-icon"><mat-icon>favorite</mat-icon></div>
           <span>Favoritos</span>
         </button>
+        <button
+          class="action-card"
+          routerLink="/soporte"
+          matTooltip="Mis tickets de soporte"
+        >
+          <div class="action-icon"><mat-icon>support_agent</mat-icon></div>
+          <span>Soporte</span>
+        </button>
       </ng-container>
 
       <ng-container *ngIf="userRol === 'Administrador'">
-        <button class="action-card" routerLink="/solicitudes-tatuador" matTooltip="Aprobar tatuadores">
+        <button
+          class="action-card"
+          routerLink="/solicitudes-tatuador"
+          matTooltip="Aprobar tatuadores"
+        >
           <div class="action-icon"><mat-icon>how_to_reg</mat-icon></div>
           <span>Solicitudes</span>
         </button>
-        <button class="action-card" routerLink="/usuarios" matTooltip="Gestionar usuarios">
+        <button
+          class="action-card"
+          routerLink="/usuarios"
+          matTooltip="Gestionar usuarios"
+        >
           <div class="action-icon"><mat-icon>manage_accounts</mat-icon></div>
           <span>Usuarios</span>
         </button>
-        <button class="action-card" routerLink="/support-ticket" matTooltip="Tickets de soporte">
+        <button
+          class="action-card"
+          routerLink="/support-ticket"
+          matTooltip="Tickets de soporte"
+        >
           <div class="action-icon"><mat-icon>support_agent</mat-icon></div>
           <span>Soporte</span>
         </button>
@@ -107,6 +122,14 @@
           <div class="action-icon"><mat-icon>grid_view</mat-icon></div>
           <span>Mis Publicaciones</span>
         </button>
+        <button
+          class="action-card"
+          routerLink="/soporte"
+          matTooltip="Mis tickets de soporte"
+        >
+          <div class="action-icon"><mat-icon>support_agent</mat-icon></div>
+          <span>Soporte</span>
+        </button>
       </ng-container>
     </div>
 
@@ -116,7 +139,7 @@
         <mat-icon>how_to_reg</mat-icon>
         <h2>Solicitudes de tatuador</h2>
       </div>
-      <app-solicitudes-tatuador></app-solicitudes-tatuador>
+      <app-solicitudes-tatuador [showHero]="false"></app-solicitudes-tatuador>
     </section>
 
     <!-- ══════════ FEED ══════════ -->
