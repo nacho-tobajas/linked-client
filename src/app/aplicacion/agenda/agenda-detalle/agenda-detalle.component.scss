@@ -11,8 +11,8 @@
   position: relative;
 
   @media (max-width: 768px) {
-    height: 100%;
-    max-height: 100%;
+    height: 90vh;
+    max-height: 90vh;
     width: 100%;
   }
 }
@@ -96,16 +96,36 @@
 // PESTAÑAS
 .full-height-tabs {
   flex: 1;
+  min-height: 0;
   overflow: hidden;
 
   ::ng-deep .mat-mdc-tab-body-wrapper {
-    height: 100%;
+    flex: 1 !important;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  ::ng-deep .mat-mdc-tab-body {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  ::ng-deep .mat-mdc-tab-body-content {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
 }
 
 // PESTAÑA 1: DETALLES
 .content-scroll {
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
   padding: 24px;
   box-sizing: border-box;
@@ -224,7 +244,8 @@
 .chat-layout {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   background-color: var(--bs-body-bg);
   position: relative;
 }

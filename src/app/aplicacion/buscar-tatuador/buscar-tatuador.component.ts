@@ -7,7 +7,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
@@ -93,7 +93,12 @@ export class BuscarTatuadorComponent implements OnInit, AfterViewInit, OnDestroy
     private snackBar: MatSnackBar,
     private router: Router,
     private ngZone: NgZone,
+    private location: Location,
   ) {}
+
+  goBack(): void {
+    this.location.back();
+  }
 
   ngOnInit(): void {
     this.subscriptions.add(

@@ -1,19 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { NgFor, NgIf, Location } from '@angular/common';
 import { Trabajo } from 'src/app/models/trabajos/trabajos.model';
 import { TrabajosService } from 'src/app/services/trabajos/trabajos.service';
 import { PostTrabajoComponent } from 'src/app/components/post-trabajo/post-trabajo.component';
 import { DetalleTrabajoComponent } from '../trabajos/detalle-trabajo/detalle-trabajo.component';
 import { MatDialog } from '@angular/material/dialog';
-import { NgFor, NgIf } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
+import { MatIconButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-tatuajes-favoritos',
-  imports: [NgIf, NgFor, PostTrabajoComponent, MatIcon],
+  imports: [NgIf, NgFor, PostTrabajoComponent, MatIcon, MatIconButton],
   templateUrl: './tatuajes-favoritos.component.html',
   styleUrl: './tatuajes-favoritos.component.scss'
 })
-export class TatuajesFavoritosComponent {
+export class TatuajesFavoritosComponent implements OnInit {
 
   trabajosFavoritos: Trabajo[] = [];
   favorites: Set<number> = new Set();
@@ -29,7 +30,12 @@ export class TatuajesFavoritosComponent {
   constructor(
     private trabajosService: TrabajosService,
     private dialog: MatDialog,
+    private location: Location,
   ) {}
+
+  goBack(): void {
+    this.location.back();
+  }
 
   ngOnInit(): void {
     this.cargarMisLikes();
@@ -99,6 +105,7 @@ export class TatuajesFavoritosComponent {
   abrirDetalle(trabajo: Trabajo): void {
     this.dialog.open(DetalleTrabajoComponent, {
       panelClass: 'custom-modal-panel',
+      width: '460px',
       maxWidth: '100vw',
       maxHeight: '90vh',
       data: { trabajo, isLiked: this.favorites.has(trabajo.id) }

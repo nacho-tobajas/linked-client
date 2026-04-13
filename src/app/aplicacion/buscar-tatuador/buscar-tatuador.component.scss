@@ -17,40 +17,65 @@
 .buscar-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 1rem 3rem;
+  padding: 1.75rem 1rem 3rem;
   box-sizing: border-box;
 
-  @media (min-width: 600px) { padding: 0 1.5rem 3rem; }
-  @media (min-width: 900px) { padding: 0 2rem 3rem; }
+  @media (min-width: 600px) { padding: 1.75rem 1.5rem 3rem; }
+  @media (min-width: 900px) { padding: 1.75rem 2rem 3rem; }
 }
 
 /* ============================================================
    HERO
    ============================================================ */
-.hero-section {
-  padding: 2rem 0 1.75rem;
-  border-bottom: 1px solid var(--line-divider);
-  margin-bottom: 1.75rem;
+.page-hero {
+  position: relative;
+  background: var(--card-background-color);
+  box-shadow: 0 1px 0 var(--line-divider);
+  padding: 24px 20px;
 
-  .hero-text {
-    h1 {
-      margin: 0 0 0.5rem;
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: var(--title-text-color);
-
-      @media (min-width: 600px) { font-size: 2rem; }
-    }
-
-    p {
-      margin: 0;
-      color: var(--text-secondary-color);
-      font-size: 0.95rem;
-      max-width: 600px;
-      line-height: 1.55;
-    }
-  }
+  @media (min-width: 600px) { padding: 28px 32px; }
 }
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.back-btn {
+  color: var(--text-secondary-color);
+  flex-shrink: 0;
+  padding: 0 !important;
+
+  &:hover { color: var(--text-color); background: var(--light-gray-background-color); }
+}
+
+.hero-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(93, 106, 88, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  mat-icon { font-size: 22px; width: 22px; height: 22px; color: var(--text-color); }
+}
+
+.hero-title {
+  margin: 0 0 4px;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--title-text-color);
+  letter-spacing: -0.4px;
+
+  @media (min-width: 600px) { font-size: 2rem; }
+}
+
+.hero-sub { margin: 0; font-size: 0.85rem; color: var(--text-secondary-color); }
 
 /* ============================================================
    LAYOUT PRINCIPAL (panel + mapa)
@@ -590,6 +615,13 @@
    DARK MODE
    ============================================================ */
 :host-context(.dark-theme) {
+  .page-hero {
+    background: var(--body-background-color);
+    box-shadow: 0 1px 0 var(--line-divider);
+  }
+
+  .hero-icon-wrap { background: rgba(93, 106, 88, 0.25); }
+
   .panel-section {
     background: var(--card-background-color);
     border-color: var(--line-divider);

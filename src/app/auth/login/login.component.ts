@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { LoginService } from '../../services/auth/login.service';
 import { LoginRequest } from '../../models/loginRequest';
 import { ErrorDialogComponent } from 'src/app/components/error-dialog/error-dialog.component';
+import { SupportTicketCreateComponent } from 'src/app/aplicacion/support-ticket/support-ticket-create/support-ticket-create.component';
 import { MatDialog } from '@angular/material/dialog';
 import { EncryptionService } from 'src/app/services/auth/encryption.service';
 import { ProximamenteService } from 'src/app/services/proximamente.service';
@@ -81,6 +82,14 @@ export class LoginComponent implements OnInit {
 
   showProximamente(): void {
     this.proximamenteService.mostrarMensaje();
+  }
+
+  openSupportTicket(): void {
+    this.dialog.open(SupportTicketCreateComponent, {
+      width: '620px',
+      maxWidth: '95vw',
+      disableClose: true,
+    });
   }
 
   private showErrorDialog(errorMessage: string): void {

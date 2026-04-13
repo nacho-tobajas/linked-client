@@ -29,8 +29,8 @@
 
 .main-container {
   display: flex;
-  flex: 1; // ✅ Hace que esta parte crezca para empujar el footer abajo
-  background-color: var(--body-background-color);
+  flex: 1;
+  background-color: transparent;
   align-items: flex-start;
 }
 

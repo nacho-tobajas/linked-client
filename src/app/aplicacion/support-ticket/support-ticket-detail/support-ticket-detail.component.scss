@@ -1,0 +1,224 @@
+@use "src/assets/styles/_variables.scss" as *;
+
+.gestionar-ticket {
+  display: flex;
+  flex-direction: column;
+  background: var(--card-background-color);
+  border-radius: 8px;
+  overflow: hidden;
+  max-height: 90vh;
+}
+
+// ─── Header ───────────────────────────────────────────────────────────────────
+.gt-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: $main-color;
+  padding: 20px 24px;
+  flex-shrink: 0;
+}
+
+.gt-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.gt-icon {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 2rem;
+  width: 2rem;
+  height: 2rem;
+}
+
+.gt-title {
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 2px;
+  letter-spacing: -0.01em;
+}
+
+.gt-subtitle {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  background: rgba(230, 81, 0, 0.2);
+  color: #ffb74d;
+  border: 1px solid rgba(255, 183, 77, 0.35);
+
+  &.resolved {
+    background: rgba(46, 125, 50, 0.2);
+    color: #81c784;
+    border-color: rgba(129, 199, 132, 0.35);
+  }
+}
+
+// ─── Body ─────────────────────────────────────────────────────────────────────
+.gt-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+// ─── Secciones ────────────────────────────────────────────────────────────────
+.gt-section {
+  margin-bottom: 4px;
+}
+
+.section-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-secondary-color);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin: 0 0 14px;
+}
+
+.gt-divider {
+  height: 1px;
+  background: var(--line-divider);
+  margin: 20px 0;
+}
+
+// ─── Fila de metadatos ────────────────────────────────────────────────────────
+.detail-row {
+  display: flex;
+  align-items: stretch;
+  flex-wrap: wrap;
+  gap: 0;
+  background: var(--light-gray-background-color);
+  border: 1px solid var(--line-divider);
+  border-radius: 8px;
+  padding: 14px 0;
+  margin-bottom: 16px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 3px;
+  flex: 1;
+  padding: 0 16px;
+}
+
+.detail-sep {
+  width: 1px;
+  background: var(--line-divider);
+  align-self: stretch;
+  flex-shrink: 0;
+}
+
+.detail-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-secondary-color);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.detail-value {
+  font-size: 0.88rem;
+  color: var(--text-color);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+// ─── Descripción ──────────────────────────────────────────────────────────────
+.description-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.description-text {
+  background: var(--light-gray-background-color);
+  border: 1px solid var(--line-divider);
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-color);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+// ─── Formulario de gestión ────────────────────────────────────────────────────
+.field-group {
+  margin-bottom: 12px;
+}
+
+.field-label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary-color);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+
+.field-full {
+  width: 100%;
+}
+
+.field-hint {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.78rem;
+  color: var(--text-secondary-color);
+  margin: 4px 0 0;
+
+  .hint-icon {
+    font-size: 0.95rem;
+    width: 0.95rem;
+    height: 0.95rem;
+    line-height: 0.95rem;
+    opacity: 0.7;
+  }
+}
+
+// ─── Acciones ─────────────────────────────────────────────────────────────────
+.gt-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--line-divider);
+  background: var(--card-background-color);
+  flex-shrink: 0;
+}
+
+.btn-save {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  --mdc-protected-button-container-color: #2e7d32;
+  --mdc-protected-button-label-text-color: #ffffff;
+  font-weight: 600;
+
+  mat-icon {
+    font-size: 1rem;
+    width: 1rem;
+    height: 1rem;
+    line-height: 1rem;
+  }
+}

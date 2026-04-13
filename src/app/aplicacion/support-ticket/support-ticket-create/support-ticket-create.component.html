@@ -14,24 +14,24 @@
   <mat-card-content>
     <form #ticketForm="ngForm">
 
-      <!-- Categoría y Prioridad -->
-      <div class="form-row-two">
-        <mat-form-field appearance="outline" class="form-field">
-          <mat-label>Categoría</mat-label>
-          <mat-select [(ngModel)]="supportTicket.category" name="category" required>
-            <mat-option *ngFor="let c of categorias" [value]="c">{{ c }}</mat-option>
-          </mat-select>
-        </mat-form-field>
+      <!-- Email de contacto (solo usuarios no registrados) -->
+      <mat-form-field *ngIf="isAnonymous" appearance="outline" class="form-field-full">
+        <mat-label>Correo de contacto</mat-label>
+        <input matInput type="email"
+               [(ngModel)]="supportTicket.contact_email"
+               name="contact_email"
+               required
+               placeholder="ejemplo@correo.com" />
+        <mat-hint>Recibirás la respuesta en este correo.</mat-hint>
+      </mat-form-field>
 
-        <mat-form-field appearance="outline" class="form-field">
-          <mat-label>Prioridad</mat-label>
-          <mat-select [(ngModel)]="supportTicket.priority" name="priority" required>
-            <mat-option *ngFor="let p of prioridades" [value]="p.value">
-              {{ p.label }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
+      <!-- Categoría -->
+      <mat-form-field appearance="outline" class="form-field-full">
+        <mat-label>Categoría</mat-label>
+        <mat-select [(ngModel)]="supportTicket.category" name="category" required>
+          <mat-option *ngFor="let c of categorias" [value]="c">{{ c }}</mat-option>
+        </mat-select>
+      </mat-form-field>
 
       <!-- Descripción -->
       <mat-form-field appearance="outline" class="form-field-full">

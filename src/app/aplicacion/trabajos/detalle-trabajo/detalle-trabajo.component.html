@@ -1,13 +1,11 @@
 <div class="modal-container">
 
-  <!-- Handle visual (mobile) -->
   <div class="drag-handle"></div>
 
-  <!-- COLUMNA IZQUIERDA: Imagen / Carrusel -->
+  <!-- Imagen -->
   <div class="media-column">
 
-    <!-- Botón cerrar sobre la imagen (mobile) -->
-    <button class="mobile-close-btn" mat-icon-button mat-dialog-close>
+    <button class="close-btn" mat-icon-button mat-dialog-close>
       <mat-icon>close</mat-icon>
     </button>
 
@@ -33,7 +31,7 @@
 
   </div>
 
-  <!-- COLUMNA DERECHA: Información -->
+  <!-- Información debajo de la imagen -->
   <div class="info-column">
 
     <div class="modal-header">
@@ -46,9 +44,6 @@
           <span class="username">{{ '@' + data.trabajo.tatuador?.username }}</span>
         </div>
       </div>
-      <button mat-icon-button mat-dialog-close class="header-close-btn">
-        <mat-icon>close</mat-icon>
-      </button>
     </div>
 
     <mat-divider></mat-divider>

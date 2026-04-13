@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { NgFor, NgIf, DatePipe } from '@angular/common';
+import { Component, Input, OnInit } from '@angular/core';
+import { NgFor, NgIf, DatePipe, Location } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { NoDoubleSubmitDirective } from 'src/app/shared/directives/no-double-submit.directive';
 import { MatDialog } from '@angular/material/dialog';
 import { SolicitudTatuadorService, SolicitudTatuador } from 'src/app/services/solicitud-tatuador/solicitud-tatuador.service';
@@ -15,9 +15,10 @@ import { firstValueFrom } from 'rxjs';
   selector: 'app-solicitudes-tatuador',
   templateUrl: './solicitudes-tatuador.component.html',
   styleUrls: ['./solicitudes-tatuador.component.scss'],
-  imports: [NgFor, NgIf, DatePipe, MatIcon, MatButton, NoDoubleSubmitDirective],
+  imports: [NgFor, NgIf, DatePipe, MatIcon, MatButton, MatIconButton, NoDoubleSubmitDirective],
 })
 export class SolicitudesTatuadorComponent implements OnInit {
+  @Input() showHero = true;
   solicitudes: SolicitudTatuador[] = [];
   especialidadesMap: Map<number, string> = new Map();
   loading = true;
@@ -28,7 +29,10 @@ export class SolicitudesTatuadorComponent implements OnInit {
     private espService: EspecialidadesService,
     private userService: UserService,
     private dialog: MatDialog,
-  ) {}
+    private location: Location
+  ) { }
+
+  goBack(): void { this.location.back(); }
 
   ngOnInit(): void {
     this.espService.getAllEspecialidades().subscribe((esps: Especialidad[]) => {

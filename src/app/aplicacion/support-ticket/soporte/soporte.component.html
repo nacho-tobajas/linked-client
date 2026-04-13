@@ -1,113 +1,66 @@
+<div class="page-hero">
+  <div class="hero-content">
+    <button mat-icon-button class="back-btn" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="hero-icon-wrap">
+      <mat-icon>inbox</mat-icon>
+    </div>
+    <div>
+      <h1 class="hero-title">Mis tickets</h1>
+      <p class="hero-sub">Seguí el estado de tus solicitudes de soporte.</p>
+    </div>
+  </div>
+</div>
+
 <div class="soporte-page">
 
-  <!-- Hero -->
-  <div class="soporte-hero">
-    <mat-icon class="hero-icon">support_agent</mat-icon>
-    <h1 class="hero-title">Centro de Soporte</h1>
-    <p class="hero-subtitle">Completá el formulario y te responderemos a la brevedad.</p>
+  <!-- Lista de tickets -->
+  <div class="soporte-content">
+
+    <!-- Loading -->
+    <p class="tickets-empty" *ngIf="loadingTickets">Cargando...</p>
+
+    <!-- Sin tickets -->
+    <div class="tickets-empty-state" *ngIf="!loadingTickets && myTickets.length === 0">
+      <mat-icon>confirmation_number</mat-icon>
+      <p>Todavía no enviaste ningún ticket.</p>
+      <span>Usá el botón + para enviar tu primera consulta.</span>
+    </div>
+
+    <!-- Lista -->
+    <div class="ticket-list" *ngIf="!loadingTickets && myTickets.length > 0">
+      <div class="ticket-card" *ngFor="let t of myTickets">
+
+        <div class="ticket-card-header">
+          <div class="ticket-meta">
+            <span class="ticket-id">#{{ t.id }}</span>
+            <span class="ticket-date">{{ t.creationtimestamp | date:'dd/MM/yyyy HH:mm' }}</span>
+            <span class="ticket-category" *ngIf="t.category">{{ t.category }}</span>
+          </div>
+          <span class="ticket-status" [class.resolved]="t.status + '' === 'true'">
+            {{ t.status + '' === 'true' ? 'RESUELTO' : 'PENDIENTE' }}
+          </span>
+        </div>
+
+        <p class="ticket-description">{{ t.description }}</p>
+
+        <div class="ticket-response" *ngIf="t.admin_response">
+          <div class="response-label">
+            <mat-icon>chat</mat-icon>
+            Respuesta del equipo
+          </div>
+          <p class="response-text">{{ t.admin_response }}</p>
+        </div>
+
+      </div>
+    </div>
   </div>
 
-  <!-- Formulario -->
-  <div class="soporte-card-wrap">
-    <mat-card class="soporte-card">
-
-      <mat-card-content>
-        <form #ticketForm="ngForm">
-
-          <!-- Categoría y Prioridad -->
-          <div class="form-row-two">
-            <mat-form-field appearance="outline" class="form-field">
-              <mat-label>Categoría</mat-label>
-              <mat-select [(ngModel)]="supportTicket.category" name="category" required>
-                <mat-option *ngFor="let c of categorias" [value]="c">{{ c }}</mat-option>
-              </mat-select>
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" class="form-field">
-              <mat-label>Prioridad</mat-label>
-              <mat-select [(ngModel)]="supportTicket.priority" name="priority" required>
-                <mat-option *ngFor="let p of prioridades" [value]="p.value">{{ p.label }}</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-
-          <!-- Descripción -->
-          <mat-form-field appearance="outline" class="form-field-full">
-            <mat-label>Descripción del problema</mat-label>
-            <textarea
-              matInput
-              [(ngModel)]="supportTicket.description"
-              name="descripcion"
-              required
-              rows="7"
-              placeholder="Describí con detalle qué ocurrió, qué esperabas que pasara y qué pasos seguiste."
-            ></textarea>
-            <mat-hint align="end">{{ supportTicket.description?.length || 0 }} caracteres</mat-hint>
-          </mat-form-field>
-
-          <!-- Captura de pantalla -->
-          <div class="screenshot-section">
-            <p class="screenshot-label">
-              <mat-icon>image</mat-icon>
-              Captura de pantalla
-              <span class="optional-tag">Opcional · máx. 1.5 MB</span>
-            </p>
-
-            <div *ngIf="!screenshotPreview" class="screenshot-dropzone" (click)="screenshotInput.click()">
-              <mat-icon>add_photo_alternate</mat-icon>
-              <span>Hacé clic para adjuntar una imagen</span>
-              <input #screenshotInput type="file" accept="image/*" hidden (change)="onScreenshotSelected($event)">
-            </div>
-
-            <div *ngIf="screenshotPreview" class="screenshot-preview-wrap">
-              <img [src]="screenshotPreview" class="screenshot-preview" alt="Captura adjunta">
-              <button mat-icon-button class="remove-screenshot" (click)="removeScreenshot()" matTooltip="Eliminar imagen" type="button">
-                <mat-icon>close</mat-icon>
-              </button>
-            </div>
-
-            <p *ngIf="screenshotError" class="screenshot-error">
-              <mat-icon>error_outline</mat-icon> {{ screenshotError }}
-            </p>
-          </div>
-
-          <!-- Datos técnicos -->
-          <div class="tech-info-section">
-            <p class="tech-info-label">
-              <mat-icon>info_outline</mat-icon>
-              Información técnica (enviada automáticamente)
-            </p>
-            <div class="tech-info-row">
-              <span class="tech-key">URL</span>
-              <span class="tech-value">{{ supportTicket.url_pagina }}</span>
-            </div>
-            <div class="tech-info-row">
-              <span class="tech-key">Navegador</span>
-              <span class="tech-value">{{ supportTicket.user_agent }}</span>
-            </div>
-          </div>
-
-        </form>
-      </mat-card-content>
-
-      <mat-divider></mat-divider>
-
-      <mat-card-actions class="card-actions">
-        <button
-          mat-raised-button
-          class="btn-send"
-          type="button"
-          appNoDoubleSubmit
-          [disabled]="!isFormValid() || isSending"
-          (click)="createSupportTicket()"
-        >
-          <mat-icon>send</mat-icon>
-          <span *ngIf="!isSending">Enviar ticket</span>
-          <span *ngIf="isSending">Enviando...</span>
-        </button>
-      </mat-card-actions>
-
-    </mat-card>
-  </div>
 
 </div>
+
+<!-- FAB — fuera del flex container para que position:fixed funcione correctamente -->
+<button mat-fab class="fab-nuevo" (click)="openNuevoTicket()" matTooltip="Nuevo ticket">
+  <mat-icon>add</mat-icon>
+</button>

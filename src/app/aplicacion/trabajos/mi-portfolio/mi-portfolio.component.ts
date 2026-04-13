@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { NgIf, NgFor } from '@angular/common';
+import { NgIf, NgFor, Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
+import { MatIconButton } from '@angular/material/button';
 
 import { User } from 'src/app/models/user.model';
 import { Trabajo } from 'src/app/models/trabajos/trabajos.model';
@@ -16,7 +17,7 @@ import { DetalleTrabajoComponent } from '../detalle-trabajo/detalle-trabajo.comp
 
 @Component({
   selector: 'app-mi-portfolio',
-  imports: [NgIf, NgFor, MatIcon, ServerUrlPipe, PostTileComponent, NoDoubleSubmitDirective],
+  imports: [NgIf, NgFor, MatIcon, MatIconButton, ServerUrlPipe, PostTileComponent, NoDoubleSubmitDirective],
   templateUrl: './mi-portfolio.component.html',
   styleUrl: './mi-portfolio.component.scss'
 })
@@ -39,8 +40,11 @@ export class MiPortfolioComponent implements OnInit {
     private trabajosService: TrabajosService,
     private instagramService: InstagramService,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) {}
+
+  goBack(): void { this.location.back(); }
 
   ngOnInit(): void {
     this.userService.getUserId().subscribe(id => {
@@ -95,7 +99,7 @@ export class MiPortfolioComponent implements OnInit {
 
   abrirDetalle(trabajo: Trabajo): void {
     this.dialog.open(DetalleTrabajoComponent, {
-      width: '900px',
+      width: '460px',
       maxWidth: '100vw',
       maxHeight: '90vh',
       panelClass: 'custom-modal-panel',

@@ -1,5 +1,57 @@
 @use '../../../../assets/styles/variables' as *;
 
+/* ── Hero header ── */
+.page-hero {
+  position: relative;
+  background: var(--card-background-color);
+  box-shadow: 0 1px 0 var(--line-divider);
+  padding: 24px 20px;
+
+  @media (min-width: 600px) { padding: 28px 32px; }
+}
+
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.back-btn {
+  color: var(--text-secondary-color);
+  flex-shrink: 0;
+  padding: 0 !important;
+
+  &:hover { color: var(--text-color); background: var(--light-gray-background-color); }
+}
+
+.hero-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(93, 106, 88, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  mat-icon { font-size: 22px; width: 22px; height: 22px; color: var(--text-color); }
+}
+
+.hero-title {
+  margin: 0 0 4px;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--title-text-color);
+  letter-spacing: -0.4px;
+
+  @media (min-width: 600px) { font-size: 2rem; }
+}
+
+.hero-sub { margin: 0; font-size: 0.85rem; color: var(--text-secondary-color); }
+
 /* ============================================================
    CONTENEDOR PRINCIPAL
    ============================================================ */
@@ -7,7 +59,7 @@
   position: relative;
   max-width: 900px;
   margin: 0 auto;
-  padding-bottom: 40px;
+  padding: 24px 0 40px;
 }
 
 /* ============================================================
@@ -293,6 +345,13 @@
    DARK MODE
    ============================================================ */
 :host-context(.dark-theme) {
+  .page-hero {
+    background: var(--body-background-color);
+    box-shadow: 0 1px 0 var(--line-divider);
+  }
+
+  .hero-icon-wrap { background: rgba(93, 106, 88, 0.25); }
+
   .profile-header {
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
   }

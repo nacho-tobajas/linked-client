@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NgIf, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { LoginService } from 'src/app/services/auth/login.service';
 
 import { MatCard, MatCardHeader, MatCardTitle, MatCardContent, MatCardActions } from '@angular/material/card';
 import { MatFormField, MatLabel, MatHint } from '@angular/material/form-field';
@@ -34,28 +35,31 @@ import { UserService } from 'src/app/services/user/user.service';
 export class SupportTicketCreateComponent implements OnInit {
 
   categorias = ['Bug / Error', 'Consulta general', 'Sugerencia de mejora', 'Reclamo', 'Otro'];
-  prioridades = [
-    { value: 'Baja',    label: 'Baja' },
-    { value: 'Media',   label: 'Media' },
-    { value: 'Alta',    label: 'Alta' },
-    { value: 'Urgente', label: 'Urgente' },
-  ];
 
   supportTicket: SupportTicket = new SupportTicket();
   screenshotPreview: string | null = null;
   screenshotError = '';
+  isAnonymous = false;
 
   constructor(
     private supportTicketService: SupportTicketService,
     private dialogRef: MatDialogRef<SupportTicketCreateComponent>,
     private userService: UserService,
+    private loginService: LoginService,
     private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
-    this.userService.getLoggedInUsername().subscribe({
-      next: (username) => { this.supportTicket.creationuser = username || 'Anónimo'; },
-      error: () => { this.supportTicket.creationuser = 'Anónimo'; },
+    this.loginService.userLoginOn.subscribe(loggedIn => {
+      this.isAnonymous = !loggedIn;
+      if (loggedIn) {
+        this.userService.getLoggedInUsername().subscribe({
+          next: (username) => { this.supportTicket.creationuser = username || 'Anónimo'; },
+          error: () => { this.supportTicket.creationuser = 'Anónimo'; },
+        });
+      } else {
+        this.supportTicket.creationuser = 'Anónimo';
+      }
     });
 
     this.supportTicket.url_pagina = window.location.href;
@@ -95,9 +99,12 @@ export class SupportTicketCreateComponent implements OnInit {
   }
 
   isFormValid(): boolean {
-    return !!this.supportTicket.description?.trim() &&
-           !!this.supportTicket.category &&
-           !!this.supportTicket.priority;
+    const base = !!this.supportTicket.description?.trim() && !!this.supportTicket.category;
+    if (this.isAnonymous) {
+      const email = this.supportTicket.contact_email?.trim() ?? '';
+      return base && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+    return base;
   }
 
   createSupportTicket(): void {

@@ -9,10 +9,10 @@ import { MatButton } from '@angular/material/button';
 import { NoDoubleSubmitDirective } from 'src/app/shared/directives/no-double-submit.directive';
 
 @Component({
-    selector: 'app-update-rol',
-    templateUrl: './update-rol.component.html',
-    styleUrls: ['./update-rol.component.scss'],
-    imports: [MatCard, MatCardHeader, MatCardTitle, MatCardContent, NgFor, NgIf, MatCardActions, MatButton, NoDoubleSubmitDirective]
+  selector: 'app-update-rol',
+  templateUrl: './update-rol.component.html',
+  styleUrls: ['./update-rol.component.scss'],
+  imports: [MatCard, MatCardHeader, MatCardTitle, MatCardContent, NgFor, MatCardActions, MatButton, NoDoubleSubmitDirective]
 })
 export class UpdateRolComponent {
   user: User;
