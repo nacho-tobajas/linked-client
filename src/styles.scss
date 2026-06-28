@@ -653,14 +653,18 @@ $mi-dark-tema: mat.m2-define-dark-theme((color: (primary: $mi-primary,
   --mdc-filled-text-field-label-text-color: var(--text-secondary-color);
   --mdc-filled-text-field-hover-label-text-color: var(--text-color);
   --mdc-filled-text-field-focus-label-text-color: var(--text-color);
+  --mdc-filled-text-field-supporting-text-color: var(--text-secondary-color);
+  --mdc-filled-text-field-active-indicator-color: var(--text-color);
+  --mdc-filled-text-field-hover-active-indicator-color: var(--text-color);
 
   // Form fields (outlined)
   --mdc-outlined-text-field-input-text-color: var(--text-color);
   --mdc-outlined-text-field-label-text-color: var(--text-secondary-color);
   --mdc-outlined-text-field-hover-label-text-color: var(--text-color);
   --mdc-outlined-text-field-focus-label-text-color: var(--text-color);
-  --mdc-outlined-text-field-outline-color: var(--line-divider);
-  --mdc-outlined-text-field-hover-outline-color: var(--text-secondary-color);
+  --mdc-outlined-text-field-outline-color: var(--text-color);
+  --mdc-outlined-text-field-hover-outline-color: var(--text-color);
+  --mdc-outlined-text-field-supporting-text-color: var(--text-secondary-color);
 
   // Dialog
   --mdc-dialog-container-color: var(--card-background-color);
@@ -805,7 +809,7 @@ $mi-dark-tema: mat.m2-define-dark-theme((color: (primary: $mi-primary,
     color: inherit;
   }
 
-  // Iconos dentro de botones — blancos en dark mode (mayor especificidad)
+  // Iconos dentro de botones — mismo gamma que el texto en dark mode
   button mat-icon,
   a[mat-button] mat-icon,
   a[mat-raised-button] mat-icon,
@@ -815,7 +819,7 @@ $mi-dark-tema: mat.m2-define-dark-theme((color: (primary: $mi-primary,
   .mat-mdc-icon-button mat-icon,
   .mat-mdc-outlined-button mat-icon,
   .mat-mdc-unelevated-button mat-icon {
-    color: white !important;
+    color: var(--text-color) !important;
   }
 }
 
@@ -853,6 +857,14 @@ html {
 
 .dark-theme {
   --bg-dot-color: rgba(255, 255, 255, 0.045);
+
+  // Botones con fondo de marca — iconos y texto al gamma del tema
+  .normal-button,
+  .login-button,
+  .create-button {
+    color: var(--text-color) !important;
+    mat-icon { color: var(--text-color) !important; }
+  }
 }
 
 // ─── Centrado vertical en todos los form fields ──────────────────────────────
